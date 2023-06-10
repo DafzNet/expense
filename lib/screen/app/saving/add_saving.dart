@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -50,7 +52,7 @@ class _AddFinancialGoalScreenState extends State<AddFinancialGoalScreen> {
       initialAmountController.text = widget.targetSavingModel!.currentAmount.toString();
       startDateController.text = DateFormat.yMMMEd().format(widget.targetSavingModel!.dateCreated);
       durationController.text = widget.targetSavingModel!.noOfMonth.toString();
-      platformController.text = widget.targetSavingModel!.Platform??'';
+      platformController.text = widget.targetSavingModel!.platform??'';
       motivationController.text = widget.targetSavingModel!.motivation!;
       _date = widget.targetSavingModel!.dateCreated;
     }
@@ -221,7 +223,7 @@ class _AddFinancialGoalScreenState extends State<AddFinancialGoalScreen> {
 
                                        TargetSavingModel target = TargetSavingModel(
                                         id: DateTime.now().millisecondsSinceEpoch,
-                                        Platform: platformController.text,
+                                        platform: platformController.text,
                                         noOfMonth: int.parse(durationController.text),
                                         targetPurpose: saingsForController.text,
                                         motivation: motivationController.text,

@@ -1,30 +1,43 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'budget.dart';
+import 'category_model.dart';
+import 'income_model.dart';
+
 class ExpenseModel {
   dynamic id;
   String title;
   DateTime date;
   double amount;
   String? note;
-  String? fundSource;
-
+  int? month;
+  CategoryModel? category;
+  IncomeModel? income;
+  BudgetModel? budget;
+  
   ExpenseModel({
     required this.id,
     required this.title,
     required this.date,
     required this.amount,
     this.note,
-    this.fundSource,
+    this.month,
+    this.category,
+    this.income,
+    this.budget,
   });
 
   ExpenseModel copyWith({
-    dynamic? id,
+    dynamic id,
     String? title,
     DateTime? date,
     double? amount,
     String? note,
-    String? fundSource,
+    int? month,
+    CategoryModel? category,
+    IncomeModel? income,
+    BudgetModel? budget,
   }) {
     return ExpenseModel(
       id: id ?? this.id,
@@ -32,7 +45,10 @@ class ExpenseModel {
       date: date ?? this.date,
       amount: amount ?? this.amount,
       note: note ?? this.note,
-      fundSource: fundSource ?? this.fundSource,
+      month: month ?? this.month,
+      category: category ?? this.category,
+      income: income ?? this.income,
+      budget: budget ?? this.budget,
     );
   }
 
@@ -43,7 +59,10 @@ class ExpenseModel {
       'date': date.millisecondsSinceEpoch,
       'amount': amount,
       'note': note,
-      'fundSource': fundSource,
+      'month': month,
+      'category': category?.toMap(),
+      'income': income?.toMap(),
+      'budget': budget?.toMap(),
     };
   }
 
@@ -54,7 +73,10 @@ class ExpenseModel {
       date: DateTime.fromMillisecondsSinceEpoch(map['date'] as int),
       amount: map['amount'] as double,
       note: map['note'] != null ? map['note'] as String : null,
-      fundSource: map['fundSource'] != null ? map['fundSource'] as String : null,
+      month: map['month'] != null ? map['month'] as int : null,
+      category: map['category'] != null ? CategoryModel.fromMap(map['category'] as Map<String,dynamic>) : null,
+      income: map['income'] != null ? IncomeModel.fromMap(map['income'] as Map<String,dynamic>) : null,
+      budget: map['budget'] != null ? BudgetModel.fromMap(map['budget'] as Map<String,dynamic>) : null,
     );
   }
 
@@ -64,7 +86,7 @@ class ExpenseModel {
 
   @override
   String toString() {
-    return 'ExpenseModel(id: $id, title: $title, date: $date, amount: $amount, note: $note, fundSource: $fundSource)';
+    return 'ExpenseModel(id: $id, title: $title, date: $date, amount: $amount, note: $note, month: $month, category: $category, income: $income, budget: $budget)';
   }
 
   @override
@@ -77,7 +99,10 @@ class ExpenseModel {
       other.date == date &&
       other.amount == amount &&
       other.note == note &&
-      other.fundSource == fundSource;
+      other.month == month &&
+      other.category == category &&
+      other.income == income &&
+      other.budget == budget;
   }
 
   @override
@@ -87,7 +112,10 @@ class ExpenseModel {
       date.hashCode ^
       amount.hashCode ^
       note.hashCode ^
-      fundSource.hashCode;
+      month.hashCode ^
+      category.hashCode ^
+      income.hashCode ^
+      budget.hashCode;
   }
 
 

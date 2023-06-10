@@ -1,6 +1,7 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import '../../../dbs/saving_db.dart';
 import '../../../models/savings_model.dart';
@@ -190,7 +191,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
 
                                   const SizedBox(height: 80,),
 
-                                Divider(),
+                                const Divider(),
 
                                 const SizedBox(height: 20,),
 
@@ -216,7 +217,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                                         SizedBox(
                                           width: MediaQuery.of(context).size.width-60,
                                           child: Text(
-                                            _total<=widget.targetSavingModel.targetAmount?'₦${_total}':'exceeded target',
+                                            _total<=widget.targetSavingModel.targetAmount?'₦$_total':'exceeded target',
                                     
                                         
                                             style: TextStyle(
@@ -264,7 +265,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
 
                                       }else{
                                         ScaffoldMessenger.of(context).showSnackBar(
-                                          SnackBar(
+                                          const SnackBar(
                                             backgroundColor: Colors.white,
                                             content: Text(
                                               'Amount to add should not be empty',
@@ -280,7 +281,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                                             backgroundColor: Colors.white,
                                             content: Text(
                                               'Exceeded target by ${_total-widget.targetSavingModel.targetAmount}',
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                 color: Colors.black
                                               ),
                                               ))

@@ -1,17 +1,30 @@
-import 'package:expense/screen/auth/signin.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'firebase/auth/auth.dart';
 import 'providers/expense_provider.dart';
 import 'utils/constants/themes.dart';
+import 'wrapper.dart';
 
 void main() async{
 
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
+  //var catDb = await CategoryDb().openDb();
+
   runApp(
-    ChangeNotifierProvider(
-        create: (_)=>ExpenseProvider(),
-        child: const MyApp()
-      )
+    MultiProvider(
+      providers: [
+        Provider(create: (_)=>ExpenseProvider()),
+        //Provider(create: (_)=>CategoryDb().onCategories(catDb!)),
+        StreamProvider<User?>.value(value: FireAuth().authStateChange, initialData: null)
+        //Provider(create: (_)=>FireAuth().authStateChange)
+      ],
+      child: const MyApp(),
+    )
     );
 }
 
@@ -25,7 +38,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Light Expense',
       theme: defaultTheme(context),
-      home: SignInScreen(),
+      home: const Wrapper(),
     );
   }
 }

@@ -1,4 +1,4 @@
-package com.example.expense
+package com.light.cashflowpad
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_typing_uninitialized_variables, use_build_context_synchronously
+
 import 'package:expense/dbs/expense.dart';
 import 'package:expense/screen/app/expense/add_expense.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:sembast/sembast.dart';
 import '../../../models/expense_model.dart';
 import '../../../providers/expense_provider.dart';
+import '../../../utils/capitalize.dart';
 import '../../../utils/constants/colors.dart';
 import '../../../utils/month.dart';
 import 'expense_detail.dart';
@@ -120,7 +123,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
             Expanded(
               child: ClipRRect(
                 borderRadius: const BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
-                child: Container(
+                child: _db != null ?  Container(
                   color: Colors.white,
 
                   child: Column(
@@ -147,7 +150,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                       Expanded(
                         child: StreamBuilder(
                           stream: expenseDb.onExpenses(_db!),
-                          initialData: <ExpenseModel>[],
+                          initialData: const <ExpenseModel>[],
                           builder: (context, snapshot){
 
                             if (snapshot.hasData) {
@@ -173,33 +176,52 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                                   padding: const EdgeInsets.symmetric(horizontal: 30),
                                   child: ExpenseTile(
                                     slidableKey: index,
+
                                     onDelete:  ()async{
-                                      Provider.of<ExpenseProvider>(context, listen: false).subtract(expenses[index].amount);
-                                      deletedRecord = await expenseDb.deleteData(expenses[index].id);
+                                      showDialog<void>(
+                                        context: context,
+                                        barrierDismissible: false, // user must tap button!
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            //backgroundColor: appOrange,
+                                            title: Text('Delete ${capitalize(expenses[index].title)}'),
+                                            content:  SingleChildScrollView(
+                                              child: ListBody(
+                                                children: <Widget>[
+                                                  Text('Deleting this will remove it from the expenses list'),
 
-                                      ScaffoldMessenger.of(context).showSnackBar(
-
-                                        SnackBar(
-                                          backgroundColor: appOrange,
-                                          content: const Text('Undo item delete'),
-
-                                          action: SnackBarAction(
-                                            label: 'Undo',
-                                            onPressed: ()async{
-                                              await expenseDb.addData(deletedRecord);
-                                              Provider.of<ExpenseProvider>(context, listen: false).add(deletedRecord['amount']);
-                                            }),
-                                        )
-                                      );
-
+                                                  
+                                                ],
+                                              ),
+                                            ),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                child: const Text(
+                                                  'Cancel'),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                              TextButton(
+                                                child: const Text('Confirm'),
+                                                onPressed: () async {
+                                                  Provider.of<ExpenseProvider>(context, listen: false).subtract(expenses[index].amount);
+                                                  await expenseDb.deleteData(expenses[index]);
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                            ],
+                                          );}
+                                        );
                                     },
+                                    
                                     expenseModel: expenses[index],
                                     percent: double.parse(((expenses[index].amount/Provider.of<ExpenseProvider>(context).totalExpenseAmnt)*100).toString()).toStringAsFixed(1),//percentages[expenseList[index].id].toString(),
                                     index: '${index+1}',
                                   ),
                                 );
                               });
-                            }else if(snapshot.connectionState == ConnectionState.waiting ){
+                            }else if(snapshot.connectionState == ConnectionState.waiting || snapshot.hasError ){
                               return const Center(
                                 child: CircularProgressIndicator(),
                               );
@@ -212,12 +234,24 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                       ),
                     ],
                   ),
+                )
+                :
+                Container(
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Center(child: CircularProgressIndicator()),
+                    ],
+                  ),
                 ),
               )
             )
 
         ],
       ),
+      
+      
 
       floatingActionButton: FloatingActionButton(
         onPressed: (){
@@ -285,23 +319,13 @@ class ExpenseTile extends StatelessWidget {
     motion: const ScrollMotion(),
 
     // A pane can dismiss the Slidable.
-    dismissible: DismissiblePane(onDismissed: () {
+    dismissible: DismissiblePane(
+      onDismissed: () {
       onDelete!();
     }),
 
     // All actions are defined in the children parameter.
-    children: [
-     
-      SlidableAction(
-        onPressed: (ctx){
-          
-        },
-        backgroundColor: Color.fromARGB(255, 28, 125, 252),
-        foregroundColor: Colors.white,
-        icon: Icons.edit_note,
-        label: 'Edit',
-      ),
-
+    children: const [
     ],
   ),
 
@@ -336,7 +360,7 @@ class ExpenseTile extends StatelessWidget {
             ),
           ),
         ),
-        title: Text(expenseModel.title),
+        title: Text(capitalize(expenseModel.title)),
         subtitle: Text(DateFormat.yMMMEd().format(expenseModel.date)),
                         
                         

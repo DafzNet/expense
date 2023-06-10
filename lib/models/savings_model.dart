@@ -15,7 +15,7 @@ class TargetSavingModel {
   DateTime targetDate;
 
   String? motivation;
-  String? Platform;
+  String? platform;
   
   TargetSavingModel({
     required this.id,
@@ -27,12 +27,12 @@ class TargetSavingModel {
     required this.dateCreated,
     required this.targetDate,
     this.motivation,
-    this.Platform,
+    this.platform,
   });
 
 
   TargetSavingModel copyWith({
-    dynamic? id,
+    dynamic id,
     String? targetPurpose,
     double? targetAmount,
     double? currentAmount,
@@ -41,7 +41,7 @@ class TargetSavingModel {
     DateTime? dateCreated,
     DateTime? targetDate,
     String? motivation,
-    String? Platform,
+    String? platform,
   }) {
     return TargetSavingModel(
       id: id ?? this.id,
@@ -53,7 +53,7 @@ class TargetSavingModel {
       dateCreated: dateCreated ?? this.dateCreated,
       targetDate: targetDate ?? this.targetDate,
       motivation: motivation ?? this.motivation,
-      Platform: Platform ?? this.Platform,
+      platform: platform ?? this.platform,
     );
   }
 
@@ -68,7 +68,7 @@ class TargetSavingModel {
       'dateCreated': dateCreated.millisecondsSinceEpoch,
       'targetDate': targetDate.millisecondsSinceEpoch,
       'motivation': motivation,
-      'Platform': Platform,
+      'platform': platform,
     };
   }
 
@@ -83,7 +83,7 @@ class TargetSavingModel {
       dateCreated: DateTime.fromMillisecondsSinceEpoch(map['dateCreated'] as int),
       targetDate: DateTime.fromMillisecondsSinceEpoch(map['targetDate'] as int),
       motivation: map['motivation'] != null ? map['motivation'] as String : null,
-      Platform: map['Platform'] != null ? map['Platform'] as String : null,
+      platform: map['platform'] != null ? map['platform'] as String : null,
     );
   }
 
@@ -93,7 +93,7 @@ class TargetSavingModel {
 
   @override
   String toString() {
-    return 'TargetSavingModel(id: $id, targetPurpose: $targetPurpose, targetAmount: $targetAmount, currentAmount: $currentAmount, lastAddedAmount: $lastAddedAmount, noOfMonth: $noOfMonth, dateCreated: $dateCreated, targetDate: $targetDate, motivation: $motivation, Platform: $Platform)';
+    return 'TargetSavingModel(id: $id, targetPurpose: $targetPurpose, targetAmount: $targetAmount, currentAmount: $currentAmount, lastAddedAmount: $lastAddedAmount, noOfMonth: $noOfMonth, dateCreated: $dateCreated, targetDate: $targetDate, motivation: $motivation, platform: $platform)';
   }
 
   @override
@@ -110,7 +110,7 @@ class TargetSavingModel {
       other.dateCreated == dateCreated &&
       other.targetDate == targetDate &&
       other.motivation == motivation &&
-      other.Platform == Platform;
+      other.platform == platform;
   }
 
   @override
@@ -124,6 +124,6 @@ class TargetSavingModel {
       dateCreated.hashCode ^
       targetDate.hashCode ^
       motivation.hashCode ^
-      Platform.hashCode;
+      platform.hashCode;
   }
 }

@@ -12,7 +12,6 @@ class ExpenseProvider with ChangeNotifier{
 
   final ExpenseDb expenseDb = ExpenseDb();
 
-
   double totalExpenseAmnt = 0;
 
   void getDBTotal()async{

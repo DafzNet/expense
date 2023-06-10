@@ -1,12 +1,16 @@
 
 import 'package:expense/dbs/expense.dart';
 import 'package:expense/models/expense_model.dart';
+import 'package:expense/providers/expense_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:provider/provider.dart';
 
+import '../../../utils/capitalize.dart';
+import '../../../utils/constants/colors.dart';
 import 'add_expense.dart';
 
 class ExpenseDetail extends StatefulWidget {
@@ -23,7 +27,7 @@ class _ExpenseDetailState extends State<ExpenseDetail> {
 
   final ExpenseDb expenseDb = ExpenseDb();
 
-
+  bool _del = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,18 +56,60 @@ class _ExpenseDetailState extends State<ExpenseDetail> {
 
           IconButton(
             onPressed: (){
-              Navigator.pushReplacement(context, 
-                PageTransition(
-                  child: AddExpenseScreen(
-                    expenseModel: widget.expenseModel,
-                    edit: true,
-                  ),
 
-                  type: PageTransitionType.fade
-                )
-              );
+             showDialog(
+                context: context,
+                barrierDismissible: false, // user must tap button!
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    //backgroundColor: appOrange,
+                    title: Text('Delete ${capitalize(widget.expenseModel.title)}'),
+                    content:  SingleChildScrollView(
+                      child: ListBody(
+                        children: <Widget>[
+                          Text('Deleting this will remove it from the expenses list'),
+
+                          // SizedBox(height: 15,),
+
+                          // Row(
+                          //   children: [
+                          //     Checkbox(
+                          //       value: _del, onChanged: (v){
+                          //       _del = !v!;
+                          //       setState(() {
+                                  
+                          //       });
+                          //     }),
+
+                          //     Text('Don\'t ask again '),
+                          //   ],
+                          // ),
+                        ],
+                      ),
+                    ),
+                    actions: <Widget>[
+                      TextButton(
+                        child: const Text(
+                          'Cancel'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      TextButton(
+                        child: const Text('Confirm'),
+                        onPressed: () async {
+                          Provider.of<ExpenseProvider>(context, listen: false).subtract(widget.expenseModel.amount);
+                          await expenseDb.deleteData(widget.expenseModel);
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  );}
+                );
             }, 
-            icon: const Icon(MdiIcons.noteEditOutline, color: Colors.white,))
+
+            icon: const Icon(MdiIcons.delete, color: Colors.white,))
         ],
 
         backgroundColor: Colors.black,
@@ -110,8 +156,8 @@ class _ExpenseDetailState extends State<ExpenseDetail> {
                                     const SizedBox(height: 10,),
 
                                     Text(
-                                      widget.expenseModel.title,
-
+                                      capitalize(widget.expenseModel.title),
+                                      
                                       style: const TextStyle(
                                         fontSize: 28,
                                         letterSpacing: 1.1,
@@ -126,7 +172,7 @@ class _ExpenseDetailState extends State<ExpenseDetail> {
                                 Stack(
                                   alignment: AlignmentDirectional.center,
                                   children: [
-                                    Divider(),
+                                    const Divider(),
 
                                     Center(
                                       child: Container(
@@ -196,7 +242,7 @@ class _ExpenseDetailState extends State<ExpenseDetail> {
                                     Row(
                                       children: const [
                                         Text(
-                                          'Withdrawn From:',
+                                          'Income Spent:',
 
                                           style: TextStyle(
                                             fontSize: 16,
@@ -213,7 +259,7 @@ class _ExpenseDetailState extends State<ExpenseDetail> {
                                         SizedBox(
                                           width: MediaQuery.of(context).size.width-60,
                                           child: Text(
-                                            '${widget.expenseModel.fundSource}',
+                                            widget.expenseModel.income != null ? '${widget.expenseModel.income!.name}':'Unspecified',
                                         
                                             style: const TextStyle(
                                               fontSize: 28,
@@ -226,6 +272,48 @@ class _ExpenseDetailState extends State<ExpenseDetail> {
                                     )
                                   ],
                                 ),
+
+
+                                                                
+                                const SizedBox(height: 35,),
+
+
+                                Column(
+                                  children: [
+                                    Row(
+                                      children: const [
+                                        Text(
+                                          'Category:',
+
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            letterSpacing: 1.1
+                                          ),
+                                          )
+                                      ],
+                                    ),
+
+                                    const SizedBox(height: 10,),
+
+                                    Row(
+                                      children: [
+                                        SizedBox(
+                                          width: MediaQuery.of(context).size.width-60,
+                                          child: Text(
+                                            widget.expenseModel.category != null ? widget.expenseModel.category!.name:'Unspecified',
+                                        
+                                            style: const TextStyle(
+                                              fontSize: 28,
+                                              letterSpacing: 1.3,
+                                              fontWeight: FontWeight.w500
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ),
+
 
 
                                 const SizedBox(height: 35,),

@@ -367,7 +367,7 @@ class _SavingDetailState extends State<SavingDetail> {
                                         SizedBox(
                                           width: MediaQuery.of(context).size.width-60,
                                           child: Text(
-                                            widget.savingModel.Platform??'Nil',
+                                            widget.savingModel.platform??'Nil',
                                         
                                             style: const TextStyle(
                                               fontSize: 30,

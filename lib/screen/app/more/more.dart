@@ -1,14 +1,20 @@
+import 'package:expense/firebase/auth/auth.dart';
+import 'package:expense/screen/app/more/screen/budget/budget.dart';
+import 'package:expense/screen/app/more/screen/income/income.dart';
+import 'package:expense/screen/app/more/screen/reports/reports.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:page_transition/page_transition.dart';
 
 import '../../../models/user_model.dart';
+import '../../../utils/capitalize.dart';
 import '../../../utils/constants/colors.dart';
 
 class MoreScreen extends StatefulWidget {
 
-  final User user;
-  
+  final LightUser user;
+
   const MoreScreen({
     required this.user,
     super.key});
@@ -31,13 +37,12 @@ class _MoreScreenState extends State<MoreScreen> {
           ),
       ),
 
-
       body: Column(
         children: [
 
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+              padding: const EdgeInsets.symmetric(horizontal: 12),
               child: SingleChildScrollView(
                 child: Column(
                   children: [
@@ -52,7 +57,7 @@ class _MoreScreenState extends State<MoreScreen> {
 
                           child: Center(
                             child: Text(
-                              '${widget.user.firstName.substring(0,1).toUpperCase()}${widget.user.lastName.substring(0,1).toUpperCase()}',
+                              '${widget.user.firstName!.substring(0,1).toUpperCase()}${widget.user.lastName!.substring(0,1).toUpperCase()}',
                                               
                               style: const TextStyle(
                                 fontSize: 50,
@@ -76,7 +81,7 @@ class _MoreScreenState extends State<MoreScreen> {
                     ),
               
                     Text(
-                      '${widget.user.firstName} ${widget.user.lastName}',
+                      '${capitalize(widget.user.firstName!)} ${capitalize(widget.user.lastName!)}',
               
                       style: const TextStyle(
                         fontSize: 24,
@@ -87,8 +92,7 @@ class _MoreScreenState extends State<MoreScreen> {
                     const SizedBox(
                       height: 20,
                     ),
-            
-            
+                        
                     Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
@@ -98,7 +102,15 @@ class _MoreScreenState extends State<MoreScreen> {
                       child: Column(
                         children: [
                           TextButton(
-                            onPressed: (){},
+                            onPressed: (){
+                              Navigator.push(
+                                context,
+                                PageTransition(
+                                  child: const IncomeScreen(),
+                                  type: PageTransitionType.fade
+                                )
+                              );
+                            },
                             style: TextButton.styleFrom(
                               shape: const RoundedRectangleBorder(),
                               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5)
@@ -114,7 +126,15 @@ class _MoreScreenState extends State<MoreScreen> {
                           const Divider(),
                     
                           TextButton(
-                            onPressed: (){},
+                            onPressed: (){
+                              Navigator.push(
+                                context,
+                                PageTransition(
+                                  child: const BudgetScreen(),
+                                  type: PageTransitionType.fade
+                                )
+                              );
+                            },
                             style: TextButton.styleFrom(
                               shape: const RoundedRectangleBorder(),
                               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5)
@@ -126,12 +146,19 @@ class _MoreScreenState extends State<MoreScreen> {
                                 Icon(MdiIcons.chevronRight)
                               ],)
                           ),
-                    
-                          
+
                           const Divider(),
                     
                           TextButton(
-                            onPressed: (){},
+                            onPressed: (){
+                               Navigator.push(
+                                context,
+                                PageTransition(
+                                  child: const ReportScreen(),
+                                  type: PageTransitionType.fade
+                                )
+                              );
+                            },
                             style: TextButton.styleFrom(
                               shape: const RoundedRectangleBorder(),
                               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5)
@@ -139,11 +166,10 @@ class _MoreScreenState extends State<MoreScreen> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: const [
-                                Text('Visualization', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
+                                Text('Financial Reports', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
                                 Icon(MdiIcons.chevronRight)
                               ],)
                           ),
-
 
                           const Divider(),
                     
@@ -161,6 +187,38 @@ class _MoreScreenState extends State<MoreScreen> {
                               ],)
                           ),
 
+                          const Divider(),
+                    
+                          TextButton(
+                            onPressed: (){},
+                            style: TextButton.styleFrom(
+                              shape: const RoundedRectangleBorder(),
+                              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5)
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: const [
+                                Text('Accountability', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
+                                Icon(MdiIcons.chevronRight)
+                              ],)
+                          ),
+
+
+                          const Divider(),
+                    
+                          TextButton(
+                            onPressed: (){},
+                            style: TextButton.styleFrom(
+                              shape: const RoundedRectangleBorder(),
+                              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5)
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: const [
+                                Text('Income Vaults', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
+                                Icon(MdiIcons.chevronRight)
+                              ],)
+                          ),
 
                           const Divider(),
                     
@@ -229,25 +287,28 @@ class _MoreScreenState extends State<MoreScreen> {
                       ),
                     ),
 
+
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 20),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Container(
-                            padding: EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+                            //padding: EdgeInsets.symmetric(horizontal: 7, vertical: 3),
                             decoration: BoxDecoration(
                               color: appOrange,
                               borderRadius: BorderRadius.circular(10)
                             ),
                             child: TextButton.icon(
-                              onPressed: (){}, 
+                              onPressed: ()async{
+                                await FireAuth().signout();
+                              }, 
                               icon: const Icon(
                                 MdiIcons.logout,
                                 color: Colors.white,
                               ),
                                               
-                              label: Text('Log Out', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w500),)
+                              label: const Text('Log Out', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w500),)
                             ),
                           ),
                         ],

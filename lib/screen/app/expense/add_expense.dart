@@ -1,4 +1,6 @@
 
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:expense/dbs/expense.dart';
 import 'package:expense/models/expense_model.dart';
 import 'package:flutter/material.dart';
@@ -6,9 +8,15 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
+import '../../../dbs/income_db.dart';
+import '../../../models/category_model.dart';
+import '../../../models/income_model.dart';
 import '../../../providers/expense_provider.dart';
+import '../../../utils/demos/categorydemo.dart';
 import '../../../widgets/default_button.dart';
 import '../../../widgets/loading.dart';
+import '../../../widgets/selection_sheet.dart';
+import '../../../widgets/snack_bar.dart';
 import '../../../widgets/text_field.dart';
 
 class AddExpenseScreen extends StatefulWidget {
@@ -34,8 +42,14 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
   final titleController = TextEditingController();
   final amountController = TextEditingController();
   final dateeController = TextEditingController();
-  final sourceController = TextEditingController();
+  final categoryController = TextEditingController();
+  final incomeController = TextEditingController();
   final noteController = TextEditingController();
+
+
+  CategoryModel? category;
+  IncomeModel? income;
+  
 
 
   DateTime? _date = DateTime.now();
@@ -46,7 +60,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
        titleController.text = widget.expenseModel != null? widget.expenseModel!.title:'';
         amountController.text = widget.expenseModel != null? widget.expenseModel!.amount.toString():'';
         dateeController.text = widget.expenseModel != null? DateFormat.yMMMEd().format(widget.expenseModel!.date):DateFormat.yMMMEd().format(DateTime.now());
-        sourceController.text = widget.expenseModel != null? widget.expenseModel!.fundSource!:'';
+        //sourceController.text = widget.expenseModel != null? widget.expenseModel!.fundSource!:'';
         noteController.text = widget.expenseModel != null? widget.expenseModel!.note!:'';
 
         _date = widget.expenseModel!.date;
@@ -57,6 +71,28 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
     });
   }
 
+
+
+  void getCat(cat){
+    
+    categoryController.text = cat.name;
+    category = cat;
+
+    setState(() {
+      
+    });
+  }
+
+
+  void getIncome(inc){
+    
+    incomeController.text = inc.name;
+    income = inc;
+
+    setState(() {
+      
+    });
+  }
 
 
 
@@ -166,14 +202,46 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                                       setState((){});
                                     },
                                   ),
+
+
+                                  const SizedBox(height: 30,),
+                                  
+                                  MyTextField(
+                                    'Select category',
+                                    headerText: 'Category',
+                                    makeButton: true,
+                                    controller: categoryController,
+
+                                    onTap: ()async{
+                                      await optionWidget(
+                                        context,
+                                        options: categories,
+
+
+                                        onTap: getCat,
+                                      );
+                                    },
+                                  ),
                                                       
                                                       
                                   const SizedBox(height: 30,),
                                   
                                   MyTextField(
-                                    '',
-                                    headerText: 'Source of Fund',
-                                    controller: sourceController,
+                                    'choose income spent for this expense',
+                                    makeButton: true,
+                                    headerText: 'Income Spent',
+                                    controller: incomeController,
+
+                                    onTap: ()async{
+                                      await optionWidget(
+                                        context,
+                                        options: [
+                                          IncomeModel(id: 1, name: 'Monthly Salary', source: 'Salary', balance: 50000,  amount: 500, date: DateTime(2023, 6, 4))
+                                        ],
+
+                                        onTap: getIncome,
+                                      );
+                                    },
                                   ),
                                                       
                                                       
@@ -197,43 +265,87 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
 
                                     onTap: ()async{
                                       if(
-                                        titleController.text.isNotEmpty&&
-                                        amountController.text.isNotEmpty&&
-                                        sourceController.text.isNotEmpty
+                                        titleController.text.isEmpty
                                       ){
+                                        ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                            financeSnackBar('please enter title')
+                                          );
+                                      }
+                                      else if(
+                                        amountController.text.isEmpty
+                                      ){
+                                        ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                            financeSnackBar('please enter the amount')
+                                          );
+                                      }
+                                      else if(
+                                        categoryController.text.isEmpty
+                                      ){
+                                        ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                            financeSnackBar('select a category')
+                                          );
+                                      }
+                                      else if(
+                                        incomeController.text.isEmpty
+                                      ){
+                                        ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                            financeSnackBar('select the income spent')
+                                          );
+                                      }
+                                      else{
                                         setState(() {
                                           loading = true;
                                         });
 
+                                        if(income!.balance < double.parse(amountController.text)){
+                                          ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                              financeSnackBar('Insufficient funds in \'${income!.name}\' for this expense')
+                                            );
 
-                                        ExpenseModel expense = ExpenseModel(
+                                            setState(() {
+                                          loading = false;
+                                        });
+                                        }
+                                        else{
+
+                                          IncomeDb incomeDb = IncomeDb();
+                                          double bal = income!.balance - double.parse(amountController.text);
+                                          income = income!.copyWith(
+                                            balance: bal
+                                          );
+
+                                          ExpenseModel expense = ExpenseModel(
                                           id: DateTime.now().millisecondsSinceEpoch, 
                                           title: titleController.text, 
                                           date: _date!,
                                           amount: double.parse(amountController.text),
                                           note: noteController.text,
-                                          fundSource: sourceController.text
+                                          month: _date!.month,
+                                          income: income,
+                                          category: category
                                         );
 
-                                        if (!widget.edit) {
-                                          await expenseDb.addData(
-                                            expense.toMap()
-                                          );
-
-                                          Provider.of<ExpenseProvider>(context, listen: false).add(double.parse(amountController.text));
-                                        }else{
-                                          await expenseDb.updateData(expense.toMap(), widget.expenseModel!.id);
-                                          Provider.of<ExpenseProvider>(context, listen: false).subtract(widget.expenseModel!.amount);
-                                          Provider.of<ExpenseProvider>(context, listen: false).add(double.parse(amountController.text));
-                                        }
+                                        Provider.of<ExpenseProvider>(context, listen: false).add(double.parse(amountController.text));
 
                                         
+                                        await expenseDb.addData(
+                                          expense
+                                        );
+
+                                        await incomeDb.updateData(income!);
 
                                         setState(() {
                                           loading = false;
                                         });
 
                                         Navigator.pop(context);
+
+                                      }
 
                                       }
                                     }

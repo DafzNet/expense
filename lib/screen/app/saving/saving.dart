@@ -1,4 +1,6 @@
 
+// ignore_for_file: prefer_interpolation_to_compose_strings
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -113,7 +115,7 @@ class _SavingsScreenState extends State<SavingsScreen> {
             Expanded(
               child: ClipRRect(
                 borderRadius: const BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
-                child: Container(
+                child:  _db != null ? Container(
                   color: Colors.white,
 
                   child: Column(
@@ -151,11 +153,11 @@ class _SavingsScreenState extends State<SavingsScreen> {
                               hint: Text(_hint),
                               elevation: 1,
                               items: const[
-                                DropdownMenuItem(child: Text('Target date'), value: 'td',),
-                                DropdownMenuItem(child: Text('Date created'), value: 'cd'),
-                                DropdownMenuItem(child: Text('Target amount'), value: 'ta'),
-                                DropdownMenuItem(child: Text('Percentage'), value: 'ps'),
-                                DropdownMenuItem(child: Text('Currently saved'), value: 'ca')
+                                DropdownMenuItem(value: 'td',child: Text('Target date'),),
+                                DropdownMenuItem(value: 'cd', child: Text('Date created')),
+                                DropdownMenuItem(value: 'ta', child: Text('Target amount')),
+                                DropdownMenuItem(value: 'ps', child: Text('Percentage')),
+                                DropdownMenuItem(value: 'ca', child: Text('Currently saved'))
                               ], 
                               onChanged: (v){
                                 sortBy = v!;
@@ -195,7 +197,7 @@ class _SavingsScreenState extends State<SavingsScreen> {
                       Expanded(
                         child: StreamBuilder(
                           stream: savingsDb.onSavings(_db!),
-                          initialData: <TargetSavingModel>[],
+                          initialData: const <TargetSavingModel>[],
                           builder: (context, snapshot){
 
                             if (snapshot.hasData) {
@@ -270,6 +272,16 @@ class _SavingsScreenState extends State<SavingsScreen> {
                           }
                         )
                       ),
+                    ],
+                  ),
+                )
+                :
+                Container(
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Center(child: CircularProgressIndicator()),
                     ],
                   ),
                 ),
@@ -347,7 +359,7 @@ class SavingsTile extends StatelessWidget {
             padding: const EdgeInsets.all(10),
             child: Center(
               child: Text(
-                '${index}',
+                '$index',
     
                 style: const TextStyle(
                   fontWeight: FontWeight.w600,
@@ -375,7 +387,7 @@ class SavingsTile extends StatelessWidget {
             double.parse(((model.currentAmount/model.targetAmount)*100).toString()).toStringAsFixed(1)+'%'
           ),
 
-          Text('Saved')
+          const Text('Saved')
         ],
       ),
     );

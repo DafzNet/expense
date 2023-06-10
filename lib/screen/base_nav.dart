@@ -1,20 +1,22 @@
 
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, no_leading_underscores_for_local_identifiers
 
 import 'package:expense/screen/app/expense/expense.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import '../../utils/constants/colors.dart';
+import '../firebase/db/user.dart';
 import '../models/user_model.dart';
 import 'app/home/home.dart';
 import 'app/more/more.dart';
 import 'app/saving/saving.dart';
 
 class AppBaseNavigation extends StatefulWidget {
-  //final User user;
+  final User user;
   const AppBaseNavigation({
-    //required this.user,
+    required this.user,
     super.key});
 
   @override
@@ -23,25 +25,35 @@ class AppBaseNavigation extends StatefulWidget {
 
 class _AppBaseNavigationState extends State<AppBaseNavigation> {
 
-     final List<Widget> _pages = [
-      HomeScreen(),
-      ExpenseScreen(),
-      SavingsScreen(),
-      MoreScreen(
-        user: User(
-          id: 1,
-          firstName: 'Daniel',
-          lastName: 'Ebiondo',
-          email: 'dafz.daniel@gmail.com'
-        ),
-      ),
-    ];
+    LightUser? _currentUser;
 
-    Widget _currentPage = HomeScreen();
+    void myUser(uid)async{
+      FirebaseUserDb firebaseUserDb = FirebaseUserDb(uid:uid);
+      _currentUser = await firebaseUserDb.getUserData();
+
+      setState(() {
+        
+      });
+    }
+
+    Widget? _currentPage;
     int _currentIndex = 0;
 
 
     void getCurrentPage(index){
+
+      final List<Widget> _pages = [
+      HomeScreen(
+        user: widget.user,
+        user2: _currentUser,
+      ),
+      ExpenseScreen(),
+      SavingsScreen(),
+      MoreScreen(
+        user: _currentUser!,
+      ),
+    ];
+
       _currentIndex = index;
       _currentPage = _pages[index];
 
@@ -50,6 +62,14 @@ class _AppBaseNavigationState extends State<AppBaseNavigation> {
       });
 
     }
+
+
+    @override
+  void initState() {
+    myUser(widget.user.uid);
+    _currentPage = HomeScreen(user: widget.user);
+    super.initState();
+  }
 
 
 
@@ -131,7 +151,7 @@ class _AppBaseNavigationState extends State<AppBaseNavigation> {
 
 
               child: Text(
-                'DE',//'${widget.user.firstName.substring(0,1).toUpperCase()}${widget.user.lastName.substring(0,1).toUpperCase()}',
+                _currentUser!.firstName!.substring(0,1).toUpperCase()+_currentUser!.lastName!.substring(0,1).toUpperCase(),//'${widget.user.firstName.substring(0,1).toUpperCase()}${widget.user.lastName.substring(0,1).toUpperCase()}',
 
                 style: TextStyle(
                   color: Colors.white

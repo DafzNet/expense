@@ -2,27 +2,26 @@ import 'dart:convert';
 
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
-class User {
-
+class LightUser {
   dynamic id;
-  String firstName;
-  String lastName;
-  String email;
+  String? firstName;
+  String? lastName;
+  String? email;
 
-  User({
+  LightUser({
     required this.id,
     required this.firstName,
     required this.lastName,
     required this.email,
   });
 
-  User copyWith({
-    dynamic? id,
+  LightUser copyWith({
+    dynamic id,
     String? firstName,
     String? lastName,
     String? email,
   }) {
-    return User(
+    return LightUser(
       id: id ?? this.id,
       firstName: firstName ?? this.firstName,
       lastName: lastName ?? this.lastName,
@@ -39,26 +38,26 @@ class User {
     };
   }
 
-  factory User.fromMap(Map<String, dynamic> map) {
-    return User(
+  factory LightUser.fromMap(Map<String, dynamic> map) {
+    return LightUser(
       id: map['id'] as dynamic,
-      firstName: map['firstName'] as String,
-      lastName: map['lastName'] as String,
-      email: map['email'] as String,
+      firstName: map['firstName'] != null ? map['firstName'] as String : null,
+      lastName: map['lastName'] != null ? map['lastName'] as String : null,
+      email: map['email'] != null ? map['email'] as String : null,
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory User.fromJson(String source) => User.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory LightUser.fromJson(String source) => LightUser.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
-    return 'User(id: $id, firstName: $firstName, lastName: $lastName, email: $email)';
+    return 'LightUser(id: $id, firstName: $firstName, lastName: $lastName, email: $email)';
   }
 
   @override
-  bool operator ==(covariant User other) {
+  bool operator ==(covariant LightUser other) {
     if (identical(this, other)) return true;
   
     return 

@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "625841228801",
+    "project_id": "cashflow-tracker-bd47e",
+    "storage_bucket": "cashflow-tracker-bd47e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:625841228801:android:4121a7d6fcd3c572c50400",
+        "android_client_info": {
+          "package_name": "com.light.cashflowpad"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "625841228801-35nodq83br5fn7uuqvintrvc8krrhpf9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.light.cashflowpad",
+            "certificate_hash": "4878efc948ea91302d58e0330b72a40033f787a4"
+          }
+        },
+        {
+          "client_id": "625841228801-lle2m9rdcgs1j9qnl8ofkmvl5i31s5j7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDYTVFjNxhYasN937LS9AEsO9dYPTIbKY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "625841228801-lle2m9rdcgs1j9qnl8ofkmvl5i31s5j7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
