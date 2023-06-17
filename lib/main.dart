@@ -12,8 +12,8 @@ void main() async{
 
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-
-  //var catDb = await CategoryDb().openDb();
+  
+  Provider.debugCheckInvalidValueType = null;
 
   runApp(
     MultiProvider(
@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Light Expense',
+      title: 'LiFi',
       theme: defaultTheme(context),
       home: const Wrapper(),
     );

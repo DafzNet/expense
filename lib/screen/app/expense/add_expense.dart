@@ -1,23 +1,27 @@
 
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:expense/dbs/category_db.dart';
 import 'package:expense/dbs/expense.dart';
 import 'package:expense/models/expense_model.dart';
+import 'package:expense/utils/month.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
+import 'package:sembast/sembast.dart';
 import '../../../dbs/income_db.dart';
 import '../../../models/category_model.dart';
 import '../../../models/income_model.dart';
 import '../../../providers/expense_provider.dart';
-import '../../../utils/demos/categorydemo.dart';
 import '../../../widgets/default_button.dart';
 import '../../../widgets/loading.dart';
 import '../../../widgets/selection_sheet.dart';
 import '../../../widgets/snack_bar.dart';
 import '../../../widgets/text_field.dart';
+import '../more/screen/income/add_income.dart';
 
 class AddExpenseScreen extends StatefulWidget {
 
@@ -38,6 +42,28 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
 
 
   final expenseDb = ExpenseDb();
+  final incomeDb = IncomeDb();
+  final categoryDb = CategoryDb();
+
+  List<IncomeModel> monthlyIncomes =[];
+  List<CategoryModel> categories =[];
+
+  void getmonthlyIncomes()async{
+    final Filter filter = Filter.and([Filter.equals('month', Month().currentMonthNumber), Filter.equals('year', DateTime.now().year)]);
+    monthlyIncomes = await incomeDb.retrieveBasedOn(filter);
+
+    setState(() {
+      
+    });
+  }
+
+  void getCategories()async{
+    categories = await categoryDb.retrieveData();
+
+    setState(() {
+      
+    });
+  }
 
   final titleController = TextEditingController();
   final amountController = TextEditingController();
@@ -53,23 +79,6 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
 
 
   DateTime? _date = DateTime.now();
-
-
-  void _edit(){
-    if (widget.expenseModel != null) {
-       titleController.text = widget.expenseModel != null? widget.expenseModel!.title:'';
-        amountController.text = widget.expenseModel != null? widget.expenseModel!.amount.toString():'';
-        dateeController.text = widget.expenseModel != null? DateFormat.yMMMEd().format(widget.expenseModel!.date):DateFormat.yMMMEd().format(DateTime.now());
-        //sourceController.text = widget.expenseModel != null? widget.expenseModel!.fundSource!:'';
-        noteController.text = widget.expenseModel != null? widget.expenseModel!.note!:'';
-
-        _date = widget.expenseModel!.date;
-    }
-
-    setState(() {
-      
-    });
-  }
 
 
 
@@ -101,7 +110,8 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
 
   @override
   void initState() {
-    _edit();
+    getCategories();
+    getmonthlyIncomes();
     super.initState();
   }
 
@@ -214,11 +224,12 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
 
                                     onTap: ()async{
                                       await optionWidget(
+                                        
                                         context,
-                                        options: categories,
+                                        heading: 'Select category',
+                                        options: categories.isNotEmpty? categories : [CategoryModel(id: 1, name: 'No category added yet', description: '')],
 
-
-                                        onTap: getCat,
+                                        onTap: getCat//categories.isNotEmpty? getCat : null,
                                       );
                                     },
                                   ),
@@ -235,11 +246,13 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                                     onTap: ()async{
                                       await optionWidget(
                                         context,
-                                        options: [
-                                          IncomeModel(id: 1, name: 'Monthly Salary', source: 'Salary', balance: 50000,  amount: 500, date: DateTime(2023, 6, 4))
-                                        ],
+                                        heading: 'Select Income',
+                                        options: monthlyIncomes.isNotEmpty? monthlyIncomes:[IncomeModel(id: 1, name: 'No Income yet. add an income to continue', amount: 000, balance: 00, date: DateTime.now())],
 
-                                        onTap: getIncome,
+                                        onTap: monthlyIncomes.isNotEmpty? getIncome:(a){
+                                          Navigator.pop(context);
+                                          
+                                        },
                                       );
                                     },
                                   ),
@@ -326,6 +339,8 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                                           amount: double.parse(amountController.text),
                                           note: noteController.text,
                                           month: _date!.month,
+                                          day: _date!.day,
+                                          year: _date!.year,
                                           income: income,
                                           category: category
                                         );

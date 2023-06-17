@@ -12,14 +12,28 @@ class ExpenseDb{
 
   ExpenseDb();
 
-
-
   Future<Database?> openDb() async {
     final appDocumentDir = await getApplicationDocumentsDirectory();
     var factory = databaseFactoryIo;
     dbs = await factory.openDatabase(join(appDocumentDir.path, 'expense.db'));
     return dbs;
   }
+
+
+  Future addExpenses(List<ExpenseModel> expenses)async{
+    final appDocumentDir = await getApplicationDocumentsDirectory();
+    var store = intMapStoreFactory.store();
+    var factory = databaseFactoryIo;
+
+    var db = await factory.openDatabase(join(appDocumentDir.path, 'expense.db'));
+
+    List<Map<String, dynamic>>? exps = expenses.map((e) => e.toMap()).toList();
+
+    await store.addAll(db, exps);
+
+    await db.close();
+  }
+
 
   Future addData(ExpenseModel expense)async{
     final appDocumentDir = await getApplicationDocumentsDirectory();
@@ -29,8 +43,8 @@ class ExpenseDb{
     var db = await factory.openDatabase(join(appDocumentDir.path, 'expense.db'));
 
     await store.add(db, expense.toMap());
-
     await db.close();
+
   }
 
 
@@ -42,16 +56,16 @@ class ExpenseDb{
 
     var db = await factory.openDatabase(join(appDocumentDir.path, 'expense.db'));
 
-     var keys = await store.findKeys(db, finder: Finder(filter: Filter.equals('month', month??Month().currentMonthNumber)));
+    var keys = month != null ? await store.findKeys(db, finder: Finder(filter: Filter.equals('month', month))):await store.findKeys(db);
 
-     var data = await store.records(keys).get(db);
-     await db.close();
+    var data = await store.records(keys).get(db);
+    await db.close();
 
-     return data;
+    return data;
   }
 
 
-  Future retrieveBasedOn({List<Filter>? filters})async{
+  Future retrieveBasedOn(Filter filter)async{
 
     final appDocumentDir = await getApplicationDocumentsDirectory();
     var store = intMapStoreFactory.store();
@@ -59,12 +73,12 @@ class ExpenseDb{
 
     var db = await factory.openDatabase(join(appDocumentDir.path, 'expense.db'));
 
-     var keys = await store.findKeys(db, finder: Finder(filter: Filter.and(filters!)));//equals('month', month??Month().currentMonthNumber)));
+    var keys = await store.findKeys(db, finder: Finder(filter: filter));//equals('month', month??Month().currentMonthNumber)));
 
-     var data = await store.records(keys).get(db);
-     await db.close();
+    var data = await store.records(keys).get(db);
+    await db.close();
 
-     return data;
+    return data;
   }
 
 
@@ -95,6 +109,15 @@ class ExpenseDb{
     return r.first.value;
     
   }
+
+  Future wipe()async{
+    final appDocumentDir = await getApplicationDocumentsDirectory();
+    var store = intMapStoreFactory.store();
+    var factory = databaseFactoryIo;
+
+    var db = await factory.openDatabase(join(appDocumentDir.path, 'expense.db'));
+    await store.drop(db);
+  }
   
 
   var expensesTransformer = StreamTransformer<
@@ -104,24 +127,13 @@ class ExpenseDb{
     sink.add(expenses);
   });
 
-  // var noteTransformer = StreamTransformer<
-  //     RecordSnapshot<int, Map<String, Object?>>?,
-  //     DbNote?>.fromHandlers(handleData: (snapshot, sink) {
-  //   sink.add(snapshot == null ? null : snapshotToNote(snapshot));
-  // });
-
-  /// Listen for changes on any note
-  // Stream<List<ExpenseModel>> onExpenses() {
-  //   return notesStore
-  //       .query(finder: Finder(sortOrders: [SortOrder('date', false)]))
-  //       .onSnapshots(db!)
-  //       .transform(notesTransformer);
-  // }
-
 
   Stream<List<ExpenseModel>> onExpenses(Database db, {int? month}){
     var store = intMapStoreFactory.store();
-    var storeQuery = store.query(finder: Finder(filter: Filter.equals('month', month??Month().currentMonthNumber)));
+    var storeQuery = store.query(finder: Finder(filter: Filter.and([
+      Filter.equals('month', month??Month().currentMonthNumber),
+      Filter.equals('year', DateTime.now().year)
+    ])));
     var subscription = storeQuery.onSnapshots(db).map((snapshot) => snapshot.map((e) => ExpenseModel.fromMap(e.value)).toList(growable: false)
       );
     //.transform(expensesTransformer);

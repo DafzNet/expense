@@ -1,43 +1,47 @@
+
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:expense/models/vault.dart';
+import 'package:expense/dbs/expense.dart';
+import 'package:expense/dbs/income_db.dart';
+import 'package:expense/models/income_model.dart';
+import 'package:expense/widgets/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import '../../../dbs/saving_db.dart';
-import '../../../dbs/vault_db.dart';
-import '../../../models/savings_model.dart';
-import '../../../widgets/default_button.dart';
-import '../../../widgets/loading.dart';
-import '../../../widgets/selection_sheet.dart';
-import '../../../widgets/text_field.dart';
+import '../../../../../dbs/vault_db.dart';
+import '../../../../../models/vault.dart';
+import '../../../../../widgets/default_button.dart';
+import '../../../../../widgets/loading.dart';
+import '../../../../../widgets/selection_sheet.dart';
+import '../../../../../widgets/text_field.dart';
 
-class AddFinancialGoalScreen extends StatefulWidget {
-  final TargetSavingModel? targetSavingModel;
-  const AddFinancialGoalScreen({
-    this.targetSavingModel,
+
+class AddIncomeScreen extends StatefulWidget {
+
+  const AddIncomeScreen({
     super.key
     });
 
   @override
-  State<AddFinancialGoalScreen> createState() => _AddFinancialGoalScreenState();
+  State<AddIncomeScreen> createState() => _AddIncomeScreenState();
 }
 
-class _AddFinancialGoalScreenState extends State<AddFinancialGoalScreen> {
+class _AddIncomeScreenState extends State<AddIncomeScreen> {
 
-
-  final saingsDb = SavingsDb();
   final VaultDb vaultDb = VaultDb();
+  final IncomeDb incomeDb = IncomeDb();
 
-  final saingsForController = TextEditingController();
-  final targetAmountController = TextEditingController();
-  final initialAmountController = TextEditingController();
-  final startDateController = TextEditingController();
-  final durationController = TextEditingController();
+  final titleController = TextEditingController();
+  final amountController = TextEditingController();
+  final dateController = TextEditingController();
+  final sourceController = TextEditingController();
+  final noteController = TextEditingController();
   final vaultController = TextEditingController();
-  final motivationController = TextEditingController();
-  VaultModel? selctedVault;
+  
+  DateTime? _date = DateTime.now();
+
+    VaultModel? selctedVault;
 
   bool loading = false;
 
@@ -60,14 +64,9 @@ class _AddFinancialGoalScreenState extends State<AddFinancialGoalScreen> {
     });
   }
 
-  DateTime _date = DateTime.now();
-
   @override
   void initState() {
-    initialAmountController.text = '0';
     getVaults();
-    startDateController.text = DateFormat.yMMMEd().format(_date);
-
     super.initState();
   }
 
@@ -93,7 +92,7 @@ class _AddFinancialGoalScreenState extends State<AddFinancialGoalScreen> {
           )),
 
         title: const Text(
-          'Create Plan',
+          'Add Income',
           style: TextStyle(
             color: Colors.white
           ),
@@ -110,8 +109,6 @@ class _AddFinancialGoalScreenState extends State<AddFinancialGoalScreen> {
 
       body: Column(
         children: [
-           
-
 
             Expanded(
               child: ClipRRect(
@@ -133,27 +130,25 @@ class _AddFinancialGoalScreenState extends State<AddFinancialGoalScreen> {
                                                       
                                   MyTextField(
                                     '',
-                                    headerText: 'Savings for',
-                                    controller: saingsForController,
+                                    headerText: 'Income title',
+                                    controller: titleController,
+                                  ),
+                                                      
+                                  const SizedBox(height: 30,),
+
+                                  MyTextField(
+                                    '',
+                                    headerText: 'Income Source',
+                                    controller: sourceController,
                                   ),
                                                       
                                   const SizedBox(height: 30,),
                                   
                                   MyTextField(
                                     '',
-                                    headerText: 'Target Amount',
+                                    headerText: 'Amount',
                                     keyboardType: TextInputType.number,
-                                    controller: targetAmountController,
-                                  ),
-
-
-                                  const SizedBox(height: 30,),
-
-                                  MyTextField(
-                                    '',
-                                    headerText: 'Initial Amount',
-                                    keyboardType: TextInputType.number,
-                                    controller: initialAmountController,
+                                    controller: amountController,
                                   ),
                                                       
                                                       
@@ -161,9 +156,9 @@ class _AddFinancialGoalScreenState extends State<AddFinancialGoalScreen> {
                                   
                                   MyTextField(
                                     DateFormat.yMMMEd().format(DateTime.now()),
-                                    headerText: 'Starting from',
+                                    headerText: 'Date Received',
                                     makeButton: true,
-                                    controller: startDateController,
+                                    controller: dateController,
 
                                     onTap: ()async{
                                       var d = await showDatePicker(
@@ -174,26 +169,16 @@ class _AddFinancialGoalScreenState extends State<AddFinancialGoalScreen> {
 
                                       _date = DateTime(d.year, d.month, d.day, DateTime.now().hour, DateTime.now().minute, DateTime.now().second);
 
-                                      startDateController.text = DateFormat.yMMMEd().format(d);
+                                      dateController.text = DateFormat.yMMMEd().format(d);
                                       setState((){});
                                     },
-                                  ),                      
-                                                      
-                                  const SizedBox(height: 30,),
-
-
-                                  MyTextField(
-                                    '',
-                                    headerText: 'Duration (in Months)',
-                                    keyboardType: TextInputType.number,
-                                    controller: durationController,
                                   ),
-                                                      
-                                                      
+
+
                                   const SizedBox(height: 30,),
-                                  
+
                                   MyTextField(
-                                    'where is this savings kept',
+                                    'where is this income kept',
                                     makeButton: true,
                                     headerText: 'Vault',
                                     controller: vaultController,
@@ -201,10 +186,9 @@ class _AddFinancialGoalScreenState extends State<AddFinancialGoalScreen> {
                                     onTap: ()async{
                                       await optionWidget(
                                         context,
+                                        options: vaults.isNotEmpty ? vaults : [VaultModel(id: 1, name: 'No vault currently added', amountInVault: 000, dateCreated: DateTime.now())],
                                         heading: 'Select Vault',
-                                        options: vaults.isNotEmpty?vaults : [VaultModel(id: 1, name: 'No vault currently added', amountInVault: 000, dateCreated: DateTime.now())],
-
-                                        onTap: vaults.isNotEmpty? getSelectedVault : null,
+                                        onTap: getSelectedVault//vaults.isNotEmpty ? getSelectedVault : null,
                                       );
                                     },
                                   ),
@@ -214,9 +198,9 @@ class _AddFinancialGoalScreenState extends State<AddFinancialGoalScreen> {
                                   
                                   MyTextField(
                                     'optional',
-                                    headerText: 'Motivation',
+                                    headerText: 'Note',
                                     maxLines: 3,
-                                    controller: motivationController,
+                                    controller: noteController,
                                   ),
                                                       
                                                       
@@ -225,60 +209,66 @@ class _AddFinancialGoalScreenState extends State<AddFinancialGoalScreen> {
                                                       
                                                       
                                    DefaultButton(
-                                    text: 'Submit',
+                                    onTap: () async{
 
+                                      if (titleController.text.isEmpty) {
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          financeSnackBar('Title is missing')
+                                        );
+                                      }else if (sourceController.text.isEmpty) {
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          financeSnackBar('please proide income source')
+                                        );
+                                      }else if (amountController.text.isEmpty) {
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          financeSnackBar('Income amount is required')
+                                        );
+                                      }else if (vaultController.text.isEmpty) {
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          financeSnackBar('Provide a vault for this income')
+                                        );
+                                      }else{
+                                        loading = true;
 
-                                    onTap: ()async{
-                                      if(
-                                        saingsForController.text.isNotEmpty&&
-                                        targetAmountController.text.isNotEmpty&&
-                                        durationController.text.isNotEmpty&&
-                                        selctedVault != null &&
-                                        double.parse(targetAmountController.text) >= double.parse(initialAmountController.text)
-                                        
-                                      ){
                                         setState(() {
-                                          loading = true;
+                                          
                                         });
 
-                                      DateTime targetDate = _date.add(Duration(days: int.parse(durationController.text)*30));
+                                        IncomeModel income = IncomeModel(
+                                          id: DateTime.now().millisecondsSinceEpoch, 
+                                          amount: double.parse(amountController.text), 
+                                          balance: double.parse(amountController.text), 
+                                          date: _date!,
+                                          name: titleController.text,
+                                          source: sourceController.text,
+                                          incomeVault: selctedVault,
+                                          day: _date!.day,
+                                          month: _date!.month,
+                                          year: _date!.year,
+                                          note: noteController.text
+                                        );
+
+                                        final updatedVaultBal = selctedVault!.copyWith(
+                                          amountInVault: selctedVault!.amountInVault + double.parse(amountController.text)
+                                        );
 
 
-                                      TargetSavingModel target = TargetSavingModel(
-                                        id: DateTime.now().millisecondsSinceEpoch,
-                                        vault: selctedVault,
-                                        noOfMonth: int.parse(durationController.text),
-                                        targetPurpose: saingsForController.text,
-                                        motivation: motivationController.text,
-                                        targetAmount: double.parse(targetAmountController.text), 
-                                        currentAmount: double.parse(initialAmountController.text),
-                                        lastAddedAmount: double.parse(initialAmountController.text),
-                                        dateCreated: _date, 
-                                        targetDate: targetDate,
-                                        targetDay: targetDate.day,
-                                        targetMonth: targetDate.month,
-                                        targetYear: targetDate.year
-                                      );
+                                        await incomeDb.addData(income);
+                                        await vaultDb.updateData(updatedVaultBal);
 
-
-                                      if (widget.targetSavingModel != null) {
-                                        TargetSavingModel updatedSavings = target.copyWith(id: widget.targetSavingModel!.id);
-                                        await saingsDb.updateData(updatedSavings);
-                                      } else {
-                                        await saingsDb.addData(target);
-                                      }
+                                        loading = false;
+                                        
+                                        setState(() {
+                                          
+                                        });
 
                                         Navigator.pop(context);
 
-                                        setState(() {
-                                          loading = false;
-                                        });
-
                                       }
-                                    }
-                                   ),
 
-                                   const SizedBox(height: 20,)
+                                      
+                                    },
+                                   )
                                 ],
                               ),
                             ),

@@ -22,29 +22,29 @@ class _BudgetScreenState extends State<BudgetScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
-      appBar: AppBar(
-
-        toolbarHeight: 50,
-
-        // leading: IconButton(
-        //   onPressed: (){
-        //     Navigator.pop(context);
-        //   }, 
-        //   icon: const Icon(Icons.arrow_back, color: Colors.white)
-        // ),
-
-        systemOverlayStyle: const SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.dark
-        ),
-      ),
-
-      body: Column(
-        children: [
+      body: NestedScrollView(
+        headerSliverBuilder: (context, bool innerBoxIsScrolled)=>[
+          SliverAppBar.medium(
+            systemOverlayStyle: const SystemUiOverlayStyle(
+              statusBarColor: Colors.transparent,
+              statusBarIconBrightness: Brightness.dark
+            ),
+            
+            title: const Text('Budgets'),
+        
+          ),
         ],
-      ),
 
+/////////////////////////////
+////////////////////////////
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          child: ListView(
+            children: const []
+          ),
+        )
+        
+        ),
 
       floatingActionButton: FloatingActionButton(
         onPressed: (){

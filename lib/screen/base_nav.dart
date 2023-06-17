@@ -28,9 +28,8 @@ class _AppBaseNavigationState extends State<AppBaseNavigation> {
     LightUser? _currentUser;
 
     void myUser(uid)async{
-      FirebaseUserDb firebaseUserDb = FirebaseUserDb(uid:uid);
+      FirebaseUserDb firebaseUserDb = FirebaseUserDb(uid: uid);
       _currentUser = await firebaseUserDb.getUserData();
-
       setState(() {
         
       });

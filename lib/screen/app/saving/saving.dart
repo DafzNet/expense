@@ -39,7 +39,7 @@ class _SavingsScreenState extends State<SavingsScreen> {
   String _hint = 'Sort by';
 
 
-  List<TargetSavingModel> savings = [];
+  var savings = [];
 
 
   @override
@@ -195,9 +195,9 @@ class _SavingsScreenState extends State<SavingsScreen> {
                       const SizedBox(height: 10,),
                       
                       Expanded(
-                        child: StreamBuilder(
+                        child: StreamBuilder<List<TargetSavingModel>>(
                           stream: savingsDb.onSavings(_db!),
-                          initialData: const <TargetSavingModel>[],
+                          initialData: const [],
                           builder: (context, snapshot){
 
                             if (snapshot.hasData) {

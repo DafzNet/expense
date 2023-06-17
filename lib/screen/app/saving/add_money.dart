@@ -255,7 +255,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                                           
 
 
-                                        await saingsDb.updateData(target.toMap(), target.id);
+                                        await saingsDb.updateData(target);
 
                                         setState(() {
                                           loading = false;

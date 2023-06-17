@@ -1,5 +1,6 @@
 import 'package:expense/dbs/expense.dart';
 import 'package:expense/models/expense_model.dart';
+import 'package:expense/utils/month.dart';
 import 'package:flutter/foundation.dart';
 
 
@@ -16,7 +17,9 @@ class ExpenseProvider with ChangeNotifier{
 
   void getDBTotal()async{
     double bal = 0;
-    List exps = await expenseDb.retrieveData();
+    List exps = await expenseDb.retrieveData(
+      month: Month().currentMonthNumber
+    );
 
     List<ExpenseModel> allExps = exps.map(
         (e) => ExpenseModel.fromMap(e)
@@ -27,6 +30,17 @@ class ExpenseProvider with ChangeNotifier{
     }
 
     totalExpenseAmnt = bal;
+  }
+
+
+  Future<List<ExpenseModel>> get getAllExps async{
+    List exps = await expenseDb.retrieveData();
+
+    List<ExpenseModel> allExps = exps.map(
+        (e) => ExpenseModel.fromMap(e)
+      ).toList();
+      
+    return allExps;
   }
 
 

@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:expense/models/vault.dart';
+
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 class TargetSavingModel {
 
@@ -14,8 +16,16 @@ class TargetSavingModel {
   DateTime dateCreated;
   DateTime targetDate;
 
+  int? startDay;
+  int? startMonth;
+  int? startYear;
+
+  int targetDay;
+  int targetMonth;
+  int targetYear;
+
   String? motivation;
-  String? platform;
+  VaultModel? vault;
   
   TargetSavingModel({
     required this.id,
@@ -26,13 +36,19 @@ class TargetSavingModel {
     required this.noOfMonth,
     required this.dateCreated,
     required this.targetDate,
+    this.startDay,
+    this.startMonth,
+    this.startYear,
+    required this.targetDay,
+    required this.targetMonth,
+    required this.targetYear,
     this.motivation,
-    this.platform,
+    this.vault,
   });
 
 
   TargetSavingModel copyWith({
-    dynamic id,
+    dynamic? id,
     String? targetPurpose,
     double? targetAmount,
     double? currentAmount,
@@ -40,8 +56,14 @@ class TargetSavingModel {
     int? noOfMonth,
     DateTime? dateCreated,
     DateTime? targetDate,
+    int? startDay,
+    int? startMonth,
+    int? startYear,
+    int? targetDay,
+    int? targetMonth,
+    int? targetYear,
     String? motivation,
-    String? platform,
+    VaultModel? vault,
   }) {
     return TargetSavingModel(
       id: id ?? this.id,
@@ -52,8 +74,14 @@ class TargetSavingModel {
       noOfMonth: noOfMonth ?? this.noOfMonth,
       dateCreated: dateCreated ?? this.dateCreated,
       targetDate: targetDate ?? this.targetDate,
+      startDay: startDay ?? this.startDay,
+      startMonth: startMonth ?? this.startMonth,
+      startYear: startYear ?? this.startYear,
+      targetDay: targetDay ?? this.targetDay,
+      targetMonth: targetMonth ?? this.targetMonth,
+      targetYear: targetYear ?? this.targetYear,
       motivation: motivation ?? this.motivation,
-      platform: platform ?? this.platform,
+      vault: vault ?? this.vault,
     );
   }
 
@@ -67,8 +95,14 @@ class TargetSavingModel {
       'noOfMonth': noOfMonth,
       'dateCreated': dateCreated.millisecondsSinceEpoch,
       'targetDate': targetDate.millisecondsSinceEpoch,
+      'startDay': startDay,
+      'startMonth': startMonth,
+      'startYear': startYear,
+      'targetDay': targetDay,
+      'targetMonth': targetMonth,
+      'targetYear': targetYear,
       'motivation': motivation,
-      'platform': platform,
+      'vault': vault?.toMap(),
     };
   }
 
@@ -82,8 +116,14 @@ class TargetSavingModel {
       noOfMonth: map['noOfMonth'] as int,
       dateCreated: DateTime.fromMillisecondsSinceEpoch(map['dateCreated'] as int),
       targetDate: DateTime.fromMillisecondsSinceEpoch(map['targetDate'] as int),
+      startDay: map['startDay'] != null ? map['startDay'] as int : null,
+      startMonth: map['startMonth'] != null ? map['startMonth'] as int : null,
+      startYear: map['startYear'] != null ? map['startYear'] as int : null,
+      targetDay: map['targetDay'] as int,
+      targetMonth: map['targetMonth'] as int,
+      targetYear: map['targetYear'] as int,
       motivation: map['motivation'] != null ? map['motivation'] as String : null,
-      platform: map['platform'] != null ? map['platform'] as String : null,
+      vault: map['vault'] != null ? VaultModel.fromMap(map['vault'] as Map<String,dynamic>) : null,
     );
   }
 
@@ -93,7 +133,7 @@ class TargetSavingModel {
 
   @override
   String toString() {
-    return 'TargetSavingModel(id: $id, targetPurpose: $targetPurpose, targetAmount: $targetAmount, currentAmount: $currentAmount, lastAddedAmount: $lastAddedAmount, noOfMonth: $noOfMonth, dateCreated: $dateCreated, targetDate: $targetDate, motivation: $motivation, platform: $platform)';
+    return 'TargetSavingModel(id: $id, targetPurpose: $targetPurpose, targetAmount: $targetAmount, currentAmount: $currentAmount, lastAddedAmount: $lastAddedAmount, noOfMonth: $noOfMonth, dateCreated: $dateCreated, targetDate: $targetDate, startDay: $startDay, startMonth: $startMonth, startYear: $startYear, targetDay: $targetDay, targetMonth: $targetMonth, targetYear: $targetYear, motivation: $motivation, vault: $vault)';
   }
 
   @override
@@ -109,8 +149,14 @@ class TargetSavingModel {
       other.noOfMonth == noOfMonth &&
       other.dateCreated == dateCreated &&
       other.targetDate == targetDate &&
+      other.startDay == startDay &&
+      other.startMonth == startMonth &&
+      other.startYear == startYear &&
+      other.targetDay == targetDay &&
+      other.targetMonth == targetMonth &&
+      other.targetYear == targetYear &&
       other.motivation == motivation &&
-      other.platform == platform;
+      other.vault == vault;
   }
 
   @override
@@ -123,7 +169,13 @@ class TargetSavingModel {
       noOfMonth.hashCode ^
       dateCreated.hashCode ^
       targetDate.hashCode ^
+      startDay.hashCode ^
+      startMonth.hashCode ^
+      startYear.hashCode ^
+      targetDay.hashCode ^
+      targetMonth.hashCode ^
+      targetYear.hashCode ^
       motivation.hashCode ^
-      platform.hashCode;
+      vault.hashCode;
   }
 }

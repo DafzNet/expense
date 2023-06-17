@@ -1,5 +1,9 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:expense/screen/auth/signin.dart';
+import 'package:expense/screen/base_nav.dart';
 import 'package:expense/widgets/loading.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import '../../firebase/auth/auth.dart';
@@ -158,30 +162,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     
                                   });
                 
-                                try{await fireAuth.createUserWithEmail(
-                                  email: emailController.text, 
-                                  password: passwordController.text, 
-                                  name: userNameController.text);
-                                  
-                
-                                  _loading = false;
-                
-                                  setState(() {
+                                  User user =await fireAuth.createUserWithEmail(
+                                    email: emailController.text, 
+                                    password: passwordController.text, 
+                                    name: userNameController.text
+                                  );
+
+                                  Navigator.pushReplacement(
+                                    context,
+                                    PageTransition(
+                                      child: AppBaseNavigation(user: user), 
+                                      type: PageTransitionType.fade)
+                                  );
                                     
-                                  });
-                                  }catch(e){
+                  
                                     _loading = false;
-                
-                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(content: Text('Something went wrong'))
-                                    );
-                
+                  
                                     setState(() {
                                       
-                                    });
-                                  }
-                
-                                  
+                                    });  
                               }
                             },
                             child: Container(

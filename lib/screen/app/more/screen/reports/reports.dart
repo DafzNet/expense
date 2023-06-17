@@ -6,7 +6,8 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import '../../../../../../utils/constants/colors.dart';
 import 'package:fl_chart/fl_chart.dart';
 
-import '../../../../../dbs/budget_db.dart';
+import '../../../../../dbs/expense.dart';
+
 
 class ReportScreen extends StatefulWidget {
   const ReportScreen({super.key});
@@ -19,7 +20,23 @@ class _ReportScreenState extends State<ReportScreen> {
 
   final ExpenseDb expenseDb = ExpenseDb();
 
-  List<ExpenseModel> expenses = []; 
+  List<ExpenseModel> expenses = [];
+
+  List<PieChartSectionData> getExpenseSections() {
+    return expenses.map((expense) {
+      final double value = expense.amount;
+      final double percentage = value;
+
+      return PieChartSectionData(
+        value: percentage,
+        title: '${(percentage * 100).toStringAsFixed(1)}%',
+        radius: 100,
+        titlePositionPercentageOffset: 0.5,
+        titleStyle: const TextStyle(fontSize: 16),
+      );
+    }).toList();
+  }
+
 
   void getExps()async{
     List exps = await expenseDb.retrieveData();
@@ -47,7 +64,7 @@ class _ReportScreenState extends State<ReportScreen> {
 
         toolbarHeight: 50,
 
-        title: Text(
+        title: const Text(
           'Reports'
         ),
 
@@ -69,21 +86,13 @@ class _ReportScreenState extends State<ReportScreen> {
 
           Expanded(
             child: PieChart(
-              
               PieChartData(
-                sections: List.generate(
-                  expenses.length, 
-                  (index) =>  PieChartSectionData(
-                      value: expenses[index].amount,
-                    ),
-                  ),
-
-                centerSpaceRadius: 100,
-                centerSpaceColor: appOrange
-                // read about it in the PieChartData section
+                sections: getExpenseSections(),
+                centerSpaceRadius: 0,
+                sectionsSpace: 0,
+                startDegreeOffset: -90,
+                borderData: FlBorderData(show: false),
               ),
-              swapAnimationDuration: Duration(milliseconds: 150), // Optional
-              swapAnimationCurve: Curves.linear, // Optional
             ),
           )
         ],

@@ -3,41 +3,53 @@ import 'dart:convert';
 
 class VaultModel {
   dynamic id;
-  String title;
-  String? location; //where is this vault located: cash, box, bank
-  
+  String name;
+  double amountInVault;
+  String? type; //where is this vault located: cash, box, bank
+  DateTime dateCreated;
+
   VaultModel({
     required this.id,
-    required this.title,
-    this.location,
+    required this.name,
+    required this.amountInVault,
+    this.type,
+    required this.dateCreated
   });
 
 
   VaultModel copyWith({
     dynamic id,
-    String? title,
-    String? location,
+    String? name,
+    double? amountInVault,
+    String? type,
+    DateTime? dateCreated,
   }) {
     return VaultModel(
       id: id ?? this.id,
-      title: title ?? this.title,
-      location: location ?? this.location,
+      name: name ?? this.name,
+      amountInVault: amountInVault ?? this.amountInVault,
+      type: type ?? this.type,
+      dateCreated: dateCreated ?? this.dateCreated,
     );
   }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': id,
-      'title': title,
-      'location': location,
+      'name': name,
+      'amountInVault': amountInVault,
+      'type': type,
+      'dateCreated': dateCreated.millisecondsSinceEpoch,
     };
   }
 
   factory VaultModel.fromMap(Map<String, dynamic> map) {
     return VaultModel(
       id: map['id'] as dynamic,
-      title: map['title'] as String,
-      location: map['location'] != null ? map['location'] as String : null,
+      name: map['name'] as String,
+      amountInVault: map['amountInVault'] as double,
+      type: map['type'] != null ? map['type'] as String : null,
+      dateCreated: DateTime.fromMillisecondsSinceEpoch(map['dateCreated'] as int),
     );
   }
 
@@ -46,7 +58,9 @@ class VaultModel {
   factory VaultModel.fromJson(String source) => VaultModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
-  String toString() => 'VaultModel(id: $id, title: $title, location: $location)';
+  String toString() {
+    return 'VaultModel(id: $id, name: $name, amountInVault: $amountInVault, type: $type, dateCreated: $dateCreated)';
+  }
 
   @override
   bool operator ==(covariant VaultModel other) {
@@ -54,10 +68,18 @@ class VaultModel {
   
     return 
       other.id == id &&
-      other.title == title &&
-      other.location == location;
+      other.name == name &&
+      other.amountInVault == amountInVault &&
+      other.type == type &&
+      other.dateCreated == dateCreated;
   }
 
   @override
-  int get hashCode => id.hashCode ^ title.hashCode ^ location.hashCode;
+  int get hashCode {
+    return id.hashCode ^
+      name.hashCode ^
+      amountInVault.hashCode ^
+      type.hashCode ^
+      dateCreated.hashCode;
+  }
 }

@@ -148,13 +148,13 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                       const SizedBox(height: 10,),
 
                       Expanded(
-                        child: StreamBuilder(
+                        child: StreamBuilder<List<ExpenseModel>>(
                           stream: expenseDb.onExpenses(_db!),
-                          initialData: const <ExpenseModel>[],
+                          initialData: [],
                           builder: (context, snapshot){
 
                             if (snapshot.hasData) {
-                              List<ExpenseModel> expenses = snapshot.data!;
+                              final expenses = snapshot.data!;
 
                               expenses.sort((a,b){
                                 return b.date.compareTo(a.date);
@@ -187,7 +187,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                                             title: Text('Delete ${capitalize(expenses[index].title)}'),
                                             content:  SingleChildScrollView(
                                               child: ListBody(
-                                                children: <Widget>[
+                                                children: const <Widget>[
                                                   Text('Deleting this will remove it from the expenses list'),
 
                                                   

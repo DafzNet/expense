@@ -350,7 +350,7 @@ class _SavingDetailState extends State<SavingDetail> {
                                     Row(
                                       children: const [
                                         Text(
-                                          'Savings Platform/Medium:',
+                                          'Savings Vault',
 
                                           style: TextStyle(
                                             fontSize: 16,
@@ -367,7 +367,7 @@ class _SavingDetailState extends State<SavingDetail> {
                                         SizedBox(
                                           width: MediaQuery.of(context).size.width-60,
                                           child: Text(
-                                            widget.savingModel.platform??'Nil',
+                                            widget.savingModel.vault!.name,
                                         
                                             style: const TextStyle(
                                               fontSize: 30,

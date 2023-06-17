@@ -10,6 +10,9 @@ class IncomeModel {
   double amount;
   double balance;
   DateTime date;
+  int? day;
+  int? month;
+  int? year;
   String? deductions;
   VaultModel? incomeVault;
   String? note;
@@ -21,6 +24,9 @@ class IncomeModel {
     required this.amount,
     required this.balance,
     required this.date,
+    this.day,
+    this.month,
+    this.year,
     this.deductions,
     this.incomeVault,
     this.note,
@@ -34,6 +40,9 @@ class IncomeModel {
     double? amount,
     double? balance,
     DateTime? date,
+    int? day,
+    int? month,
+    int? year,
     String? deductions,
     VaultModel? incomeVault,
     String? note,
@@ -45,6 +54,9 @@ class IncomeModel {
       amount: amount ?? this.amount,
       balance: balance ?? this.balance,
       date: date ?? this.date,
+      day: day ?? this.day,
+      month: month ?? this.month,
+      year: year ?? this.year,
       deductions: deductions ?? this.deductions,
       incomeVault: incomeVault ?? this.incomeVault,
       note: note ?? this.note,
@@ -59,6 +71,9 @@ class IncomeModel {
       'amount': amount,
       'balance': balance,
       'date': date.millisecondsSinceEpoch,
+      'day': day,
+      'month': month,
+      'year': year,
       'deductions': deductions,
       'incomeVault': incomeVault?.toMap(),
       'note': note,
@@ -73,6 +88,9 @@ class IncomeModel {
       amount: map['amount'] as double,
       balance: map['balance'] as double,
       date: DateTime.fromMillisecondsSinceEpoch(map['date'] as int),
+      day: map['day'] != null ? map['day'] as int : null,
+      month: map['month'] != null ? map['month'] as int : null,
+      year: map['year'] != null ? map['year'] as int : null,
       deductions: map['deductions'] != null ? map['deductions'] as String : null,
       incomeVault: map['incomeVault'] != null ? VaultModel.fromMap(map['incomeVault'] as Map<String,dynamic>) : null,
       note: map['note'] != null ? map['note'] as String : null,
@@ -85,7 +103,7 @@ class IncomeModel {
 
   @override
   String toString() {
-    return 'IncomeModel(id: $id, name: $name, source: $source, amount: $amount, balance: $balance, date: $date, deductions: $deductions, incomeVault: $incomeVault, note: $note)';
+    return 'IncomeModel(id: $id, name: $name, source: $source, amount: $amount, balance: $balance, date: $date, day: $day, month: $month, year: $year, deductions: $deductions, incomeVault: $incomeVault, note: $note)';
   }
 
   @override
@@ -99,6 +117,9 @@ class IncomeModel {
       other.amount == amount &&
       other.balance == balance &&
       other.date == date &&
+      other.day == day &&
+      other.month == month &&
+      other.year == year &&
       other.deductions == deductions &&
       other.incomeVault == incomeVault &&
       other.note == note;
@@ -112,6 +133,9 @@ class IncomeModel {
       amount.hashCode ^
       balance.hashCode ^
       date.hashCode ^
+      day.hashCode ^
+      month.hashCode ^
+      year.hashCode ^
       deductions.hashCode ^
       incomeVault.hashCode ^
       note.hashCode;

@@ -12,9 +12,11 @@ class FireAuth{
   Stream<User?> get authStateChange => auth.authStateChanges();
       
 
-  Future<LightUser?> createUserWithEmail({required String email, required String password, required String name})async{
+  Future createUserWithEmail({required String email, required String password, required String name})async{
     ///Create a user using email and password
-    var _user = await auth.createUserWithEmailAndPassword(email: email, password: password);
+    UserCredential _user = await auth.createUserWithEmailAndPassword(email: email, password: password);
+    
+    
     User newUser = _user.user!;
 
     ///Create user on firestore
@@ -28,18 +30,16 @@ class FireAuth{
 
     await userDb.createNewUser(lightUser);
 
-    return lightUser;
+    return newUser;
   }
 
 
-  Future<LightUser?> signinUserWithEmail({required String email, required String password})async{
-    var _user = await auth.signInWithEmailAndPassword(email: email, password: password);
+  Future signinUserWithEmail({required String email, required String password})async{
+    UserCredential _user = await auth.signInWithEmailAndPassword(email: email, password: password);
 
     User newUser = _user.user!;
 
-    FirebaseUserDb userDb = FirebaseUserDb(uid: newUser.uid);
-
-    return userDb.getUserData();
+    return newUser;
   }
 
 

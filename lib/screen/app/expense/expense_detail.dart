@@ -1,17 +1,17 @@
 
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:expense/dbs/expense.dart';
 import 'package:expense/models/expense_model.dart';
 import 'package:expense/providers/expense_provider.dart';
+import 'package:expense/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
 import '../../../utils/capitalize.dart';
-import '../../../utils/constants/colors.dart';
-import 'add_expense.dart';
 
 class ExpenseDetail extends StatefulWidget {
   final ExpenseModel expenseModel;
@@ -27,7 +27,6 @@ class _ExpenseDetailState extends State<ExpenseDetail> {
 
   final ExpenseDb expenseDb = ExpenseDb();
 
-  bool _del = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,7 +65,7 @@ class _ExpenseDetailState extends State<ExpenseDetail> {
                     title: Text('Delete ${capitalize(widget.expenseModel.title)}'),
                     content:  SingleChildScrollView(
                       child: ListBody(
-                        children: <Widget>[
+                        children: const <Widget>[
                           Text('Deleting this will remove it from the expenses list'),
 
                           // SizedBox(height: 15,),
@@ -172,7 +171,9 @@ class _ExpenseDetailState extends State<ExpenseDetail> {
                                 Stack(
                                   alignment: AlignmentDirectional.center,
                                   children: [
-                                    const Divider(),
+                                    Divider(
+                                      color: appOrange,
+                                    ),
 
                                     Center(
                                       child: Container(
@@ -183,7 +184,8 @@ class _ExpenseDetailState extends State<ExpenseDetail> {
                                         decoration: BoxDecoration(
                                           color: Colors.white,
                                           border: Border.all(
-                                            width: 0.3
+                                            width: 0.5,
+                                            color: appOrange
                                           )
                                         ),
 

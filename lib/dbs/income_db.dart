@@ -1,3 +1,5 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
 import 'dart:async';
 
 import 'package:path/path.dart';
@@ -11,8 +13,6 @@ class IncomeDb{
   Database? dbs;
 
   IncomeDb();
-
-
 
   Future<Database?> openDb() async {
     final appDocumentDir = await getApplicationDocumentsDirectory();
@@ -33,7 +33,7 @@ class IncomeDb{
     await db.close();
   }
 
-  Future retrieveData()async{
+  Future<List<IncomeModel>> retrieveData()async{
 
     final appDocumentDir = await getApplicationDocumentsDirectory();
     var store = intMapStoreFactory.store();
@@ -46,7 +46,7 @@ class IncomeDb{
      var data = await store.records(keys).get(db);
      await db.close();
 
-     return data;
+     return data.map((e) => IncomeModel.fromMap(e as Map<String, dynamic>)).toList();
   }
 
 
@@ -62,19 +62,59 @@ class IncomeDb{
     await db.close();
   }
 
-  Future<Map> deleteData(IncomeModel income)async{
+  Future deleteData(IncomeModel income)async{
     final appDocumentDir = await getApplicationDocumentsDirectory();
     var store = intMapStoreFactory.store();
     var factory = databaseFactoryIo;
 
     var db = await factory.openDatabase(join(appDocumentDir.path, 'income.db'));
 
-    var r =await store.find(db, finder: Finder(filter: Filter.equals('id', income.id)));
-
     await store.delete(db, finder: Finder(filter: Filter.equals('id', income.id)));
     await db.close();
-    
-    return r.first.value;
+  }
+
+
+  Future addIncomes(List<IncomeModel> incomes)async{
+    final appDocumentDir = await getApplicationDocumentsDirectory();
+    var store = intMapStoreFactory.store();
+    var factory = databaseFactoryIo;
+
+    var db = await factory.openDatabase(join(appDocumentDir.path, 'income.db'));
+
+    List<Map<String, dynamic>>? _incomes = incomes.map((e) => e.toMap()).toList();
+
+    await store.addAll(db, _incomes);
+
+    await db.close();
+  }
+
+
+
+  Future<List<IncomeModel>> retrieveBasedOn(Filter filter)async{
+    final appDocumentDir = await getApplicationDocumentsDirectory();
+    var store = intMapStoreFactory.store();
+    var factory = databaseFactoryIo;
+
+    var db = await factory.openDatabase(join(appDocumentDir.path, 'income.db'));
+
+    var keys = await store.findKeys(db, finder: Finder(filter: filter));
+
+    var data = await store.records(keys).get(db);
+    await db.close();
+
+    return data.map((e) => IncomeModel.fromMap(e as Map<String, dynamic>)).toList();
+  }
+
+
+
+
+  Future<dynamic> wipe()async{
+    final appDocumentDir = await getApplicationDocumentsDirectory();
+    var store = intMapStoreFactory.store();
+    var factory = databaseFactoryIo;
+
+    var db = await factory.openDatabase(join(appDocumentDir.path, 'income.db'));
+    await store.drop(db);
   }
   
 

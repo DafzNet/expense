@@ -1,3 +1,5 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
 import 'dart:async';
 
 import 'package:path/path.dart';
@@ -21,20 +23,19 @@ class CategoryDb{
     return dbs;
   }
 
-  Future addData(Map<String, dynamic>data)async{
+  Future addData(CategoryModel category)async{
     final appDocumentDir = await getApplicationDocumentsDirectory();
     var store = intMapStoreFactory.store();
     var factory = databaseFactoryIo;
 
     var db = await factory.openDatabase(join(appDocumentDir.path, 'category.db'));
 
-    await store.add(db, data);
+    await store.add(db, category.toMap());
 
     await db.close();
   }
 
-  Future retrieveData()async{
-
+  Future<List<CategoryModel>> retrieveData()async{
     final appDocumentDir = await getApplicationDocumentsDirectory();
     var store = intMapStoreFactory.store();
     var factory = databaseFactoryIo;
@@ -46,11 +47,43 @@ class CategoryDb{
      var data = await store.records(keys).get(db);
      await db.close();
 
-     return data;
+     return data.map((e) => CategoryModel.fromMap(e as Map<String, dynamic>)).toList();
   }
 
 
-  Future updateData(Map<String, dynamic>newData, id)async{
+    Future addCategories(List<CategoryModel> categories)async{
+    final appDocumentDir = await getApplicationDocumentsDirectory();
+    var store = intMapStoreFactory.store();
+    var factory = databaseFactoryIo;
+
+    var db = await factory.openDatabase(join(appDocumentDir.path, 'category.db'));
+
+    List<Map<String, dynamic>>? _cats = categories.map((e) => e.toMap()).toList();
+
+    await store.addAll(db, _cats);
+
+    await db.close();
+  }
+
+
+
+  Future<List<CategoryModel>> retrieveBasedOn({List<Filter>? filters})async{
+    final appDocumentDir = await getApplicationDocumentsDirectory();
+    var store = intMapStoreFactory.store();
+    var factory = databaseFactoryIo;
+
+    var db = await factory.openDatabase(join(appDocumentDir.path, 'category.db'));
+
+    var keys = await store.findKeys(db, finder: Finder(filter: Filter.and(filters!)));
+
+    var data = await store.records(keys).get(db);
+    await db.close();
+
+    return data.map((e) => CategoryModel.fromMap(e as Map<String, dynamic>)).toList();
+  }
+
+
+  Future updateData(CategoryModel category)async{
 
     final appDocumentDir = await getApplicationDocumentsDirectory();
     var store = intMapStoreFactory.store();
@@ -58,23 +91,29 @@ class CategoryDb{
 
     var db = await factory.openDatabase(join(appDocumentDir.path, 'category.db'));
 
-    await store.update(db, newData, finder: Finder(filter: Filter.equals('id', id)));
+    await store.update(db, category.toMap(), finder: Finder(filter: Filter.equals('id', category.id)));
     await db.close();
   }
 
-  Future<Map> deleteData(id)async{
+  Future deleteData(CategoryModel category)async{
     final appDocumentDir = await getApplicationDocumentsDirectory();
     var store = intMapStoreFactory.store();
     var factory = databaseFactoryIo;
 
     var db = await factory.openDatabase(join(appDocumentDir.path, 'category.db'));
 
-    var r =await store.find(db, finder: Finder(filter: Filter.equals('id', id)));
-
-    await store.delete(db, finder: Finder(filter: Filter.equals('id', id)));
+    await store.delete(db, finder: Finder(filter: Filter.equals('id', category.id)));
     await db.close();
-    
-    return r.first.value;
+  }
+
+
+  Future<dynamic> wipe()async{
+    final appDocumentDir = await getApplicationDocumentsDirectory();
+    var store = intMapStoreFactory.store();
+    var factory = databaseFactoryIo;
+
+    var db = await factory.openDatabase(join(appDocumentDir.path, 'category.db'));
+    await store.drop(db);
   }
   
 

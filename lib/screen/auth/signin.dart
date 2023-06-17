@@ -1,8 +1,15 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:expense/models/expense_model.dart';
 import 'package:expense/screen/auth/signup.dart';
+import 'package:expense/screen/base_nav.dart';
 import 'package:expense/widgets/loading.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import '../../dbs/expense.dart';
 import '../../firebase/auth/auth.dart';
+import '../../firebase/db/expense/fs_expense.dart';
 import '../../widgets/text_field.dart';
 
 
@@ -15,11 +22,12 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
-
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
   bool _loading = false;
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -118,12 +126,28 @@ class _SignInScreenState extends State<SignInScreen> {
                                     
                                   });
                 
-                                  await fireAuth.signinUserWithEmail(
+                                  User user = await fireAuth.signinUserWithEmail(
                                     email: emailController.text, 
                                     password: passwordController.text, 
                                    );
-                
-                
+
+
+                                  final FirebaseExpenseDb fsExp = FirebaseExpenseDb(uid: user.uid);
+                                  final ExpenseDb expenseDb = ExpenseDb();
+
+
+                                  List<ExpenseModel> exps = await fsExp.getExpenses();
+
+                                  await expenseDb.addExpenses(exps);
+
+                                  Navigator.pushReplacement(
+                                    context,
+                                    PageTransition(
+                                      child: AppBaseNavigation(user: user), 
+                                      type: PageTransitionType.fade
+                                    )
+                                  );
+
                                    _loading = false;
                 
                                    setState(() {
