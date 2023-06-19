@@ -1,11 +1,14 @@
 
 import 'package:expense/models/income_model.dart';
+import 'package:expense/screen/app/expense/add_expense.dart';
 import 'package:expense/widgets/default_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:page_transition/page_transition.dart';
+import '../../../../../procedures/income/income_procedure.dart';
+import '../../../../../utils/capitalize.dart';
 import '../../../../../utils/constants/colors.dart';
 import 'income_exps.dart';
 
@@ -44,7 +47,42 @@ class _IncomeDetailScreenState extends State<IncomeDetailScreen> {
             actions: [
 
                 IconButton(
-                  onPressed: (){}, 
+                  onPressed: (){
+                    showDialog(
+                context: context,
+                barrierDismissible: false, // user must tap button!
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    //backgroundColor: appOrange,
+                    title: Text('Delete ${capitalize(widget.income.name!)}'),
+                    content:  SingleChildScrollView(
+                      child: ListBody(
+                        children: const <Widget>[
+                          Text('Deleting this income will delete all associated expenses'),
+                        ],
+                      ),
+                    ),
+                    actions: <Widget>[
+                      TextButton(
+                        child: const Text(
+                          'Cancel'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      TextButton(
+                        child: const Text('Confirm'),
+                        onPressed: () async {
+                          
+                          await deleteIncomeProcedure(widget.income, context);
+                          Navigator.of(context).pop();
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ],
+                  );}
+                );
+                  }, 
                 icon: Icon(
                   MdiIcons.delete,
                   color: appDanger,
@@ -179,7 +217,7 @@ class _IncomeDetailScreenState extends State<IncomeDetailScreen> {
               const Text('Note:'),
 
               Text(
-                widget.income.note??'Dolor proident pariatur dolor eiusmod mollit nostrud nostrud ut occaecat voluptate occaecat. Dolor proident pariatur dolor eiusmod mollit nostrud nostrud ut occaecat voluptate occaecat.',
+                widget.income.note??'',
 
                 style: const TextStyle(
                   fontSize: 20
@@ -192,7 +230,16 @@ class _IncomeDetailScreenState extends State<IncomeDetailScreen> {
 
               DefaultButton(
                 onTap: (){
+                  Navigator.push(
+                    context,
+                    PageTransition(
+                      child: AddExpenseScreen(
+                        income: widget.income,
+                      ),
 
+                      type: PageTransitionType.rightToLeft
+                    )
+                  );
                 },
                 text: 'Add New Spending',
               ),

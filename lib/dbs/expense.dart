@@ -65,7 +65,7 @@ class ExpenseDb{
   }
 
 
-  Future retrieveBasedOn(Filter filter)async{
+  Future<List<ExpenseModel>> retrieveBasedOn(Filter filter)async{
 
     final appDocumentDir = await getApplicationDocumentsDirectory();
     var store = intMapStoreFactory.store();
@@ -78,7 +78,7 @@ class ExpenseDb{
     var data = await store.records(keys).get(db);
     await db.close();
 
-    return data;
+    return data.map((e) => ExpenseModel.fromMap(e as Map<String, dynamic>)).toList();
   }
 
 
@@ -94,19 +94,15 @@ class ExpenseDb{
     await db.close();
   }
 
-  Future<Map> deleteData(ExpenseModel expense)async{
+  Future deleteData(ExpenseModel expense)async{
     final appDocumentDir = await getApplicationDocumentsDirectory();
     var store = intMapStoreFactory.store();
     var factory = databaseFactoryIo;
 
     var db = await factory.openDatabase(join(appDocumentDir.path, 'expense.db'));
 
-    var r =await store.find(db, finder: Finder(filter: Filter.equals('id', expense.id)));
-
     await store.delete(db, finder: Finder(filter: Filter.equals('id', expense.id)));
     await db.close();
-    
-    return r.first.value;
     
   }
 

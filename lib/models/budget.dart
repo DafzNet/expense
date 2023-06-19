@@ -5,24 +5,26 @@ import 'category_model.dart';
 
 class BudgetModel {
   dynamic id;
+  String name;
   double amount;
   double balance;
   CategoryModel? category;
-  String? frequency;
   String? note;
-  DateTime? date;
+  DateTime? startDate;
+  DateTime? endDate;
   int day;
   int month;
   int year;
 
   BudgetModel({
     required this.id,
+    required this.name,
     required this.amount,
     required this.balance,
     this.category,
-    this.frequency,
     this.note,
-    this.date,
+    this.startDate,
+    this.endDate,
     required this.day,
     required this.month,
     required this.year,
@@ -31,24 +33,26 @@ class BudgetModel {
 
   BudgetModel copyWith({
     dynamic? id,
+    String? name,
     double? amount,
     double? balance,
     CategoryModel? category,
-    String? frequency,
     String? note,
-    DateTime? date,
+    DateTime? startDate,
+    DateTime? endDate,
     int? day,
     int? month,
     int? year,
   }) {
     return BudgetModel(
       id: id ?? this.id,
+      name: name ?? this.name,
       amount: amount ?? this.amount,
       balance: balance ?? this.balance,
       category: category ?? this.category,
-      frequency: frequency ?? this.frequency,
       note: note ?? this.note,
-      date: date ?? this.date,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
       day: day ?? this.day,
       month: month ?? this.month,
       year: year ?? this.year,
@@ -58,12 +62,13 @@ class BudgetModel {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': id,
+      'name': name,
       'amount': amount,
       'balance': balance,
       'category': category?.toMap(),
-      'frequency': frequency,
       'note': note,
-      'date': date?.millisecondsSinceEpoch,
+      'startDate': startDate?.millisecondsSinceEpoch,
+      'endDate': endDate?.millisecondsSinceEpoch,
       'day': day,
       'month': month,
       'year': year,
@@ -73,12 +78,13 @@ class BudgetModel {
   factory BudgetModel.fromMap(Map<String, dynamic> map) {
     return BudgetModel(
       id: map['id'] as dynamic,
+      name: map['name'] as String,
       amount: map['amount'] as double,
       balance: map['balance'] as double,
       category: map['category'] != null ? CategoryModel.fromMap(map['category'] as Map<String,dynamic>) : null,
-      frequency: map['frequency'] != null ? map['frequency'] as String : null,
       note: map['note'] != null ? map['note'] as String : null,
-      date: map['date'] != null ? DateTime.fromMillisecondsSinceEpoch(map['date'] as int) : null,
+      startDate: map['startDate'] != null ? DateTime.fromMillisecondsSinceEpoch(map['startDate'] as int) : null,
+      endDate: map['endDate'] != null ? DateTime.fromMillisecondsSinceEpoch(map['endDate'] as int) : null,
       day: map['day'] as int,
       month: map['month'] as int,
       year: map['year'] as int,
@@ -91,7 +97,7 @@ class BudgetModel {
 
   @override
   String toString() {
-    return 'BudgetModel(id: $id, amount: $amount, balance: $balance, category: $category, frequency: $frequency, note: $note, date: $date, day: $day, month: $month, year: $year)';
+    return 'BudgetModel(id: $id, name: $name, amount: $amount, balance: $balance, category: $category, note: $note, startDate: $startDate, endDate: $endDate, day: $day, month: $month, year: $year)';
   }
 
   @override
@@ -99,27 +105,19 @@ class BudgetModel {
     if (identical(this, other)) return true;
   
     return 
-      other.id == id &&
-      other.amount == amount &&
-      other.balance == balance &&
-      other.category == category &&
-      other.frequency == frequency &&
-      other.note == note &&
-      other.date == date &&
-      other.day == day &&
-      other.month == month &&
-      other.year == year;
+      other.id == id;
   }
 
   @override
   int get hashCode {
     return id.hashCode ^
+      name.hashCode ^
       amount.hashCode ^
       balance.hashCode ^
       category.hashCode ^
-      frequency.hashCode ^
       note.hashCode ^
-      date.hashCode ^
+      startDate.hashCode ^
+      endDate.hashCode ^
       day.hashCode ^
       month.hashCode ^
       year.hashCode;

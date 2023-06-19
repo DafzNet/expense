@@ -3,7 +3,10 @@
 
 import 'package:expense/dbs/category_db.dart';
 import 'package:expense/dbs/expense.dart';
+import 'package:expense/dbs/vault_db.dart';
 import 'package:expense/models/expense_model.dart';
+import 'package:expense/models/vault.dart';
+import 'package:expense/procedures/expenses/expense_procedure.dart';
 import 'package:expense/utils/month.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -21,16 +24,11 @@ import '../../../widgets/loading.dart';
 import '../../../widgets/selection_sheet.dart';
 import '../../../widgets/snack_bar.dart';
 import '../../../widgets/text_field.dart';
-import '../more/screen/income/add_income.dart';
 
 class AddExpenseScreen extends StatefulWidget {
-
-  final ExpenseModel? expenseModel;
-  final bool edit;
-
+  final IncomeModel? income;
   const AddExpenseScreen({
-    this.expenseModel,
-    this.edit = false,
+    this.income,
     super.key
     });
 
@@ -44,6 +42,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
   final expenseDb = ExpenseDb();
   final incomeDb = IncomeDb();
   final categoryDb = CategoryDb();
+  final VaultDb vaultDb = VaultDb();
 
   List<IncomeModel> monthlyIncomes =[];
   List<CategoryModel> categories =[];
@@ -75,9 +74,6 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
 
   CategoryModel? category;
   IncomeModel? income;
-  
-
-
   DateTime? _date = DateTime.now();
 
 
@@ -112,6 +108,12 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
   void initState() {
     getCategories();
     getmonthlyIncomes();
+
+    if (widget.income != null) {
+      income = widget.income;
+      incomeController.text = widget.income!.name!;
+    }
+
     super.initState();
   }
 
@@ -325,35 +327,23 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                                         });
                                         }
                                         else{
-
-                                          IncomeDb incomeDb = IncomeDb();
-                                          double bal = income!.balance - double.parse(amountController.text);
-                                          income = income!.copyWith(
-                                            balance: bal
-                                          );
-
                                           ExpenseModel expense = ExpenseModel(
-                                          id: DateTime.now().millisecondsSinceEpoch, 
-                                          title: titleController.text, 
-                                          date: _date!,
-                                          amount: double.parse(amountController.text),
-                                          note: noteController.text,
-                                          month: _date!.month,
-                                          day: _date!.day,
-                                          year: _date!.year,
-                                          income: income,
-                                          category: category
-                                        );
+                                            id: DateTime.now().millisecondsSinceEpoch, 
+                                            title: titleController.text, 
+                                            date: _date!,
+                                            amount: double.parse(amountController.text),
+                                            note: noteController.text,
+                                            month: _date!.month,
+                                            day: _date!.day,
+                                            year: _date!.year,
+                                            income: income,
+                                            category: category
+                                          );
 
                                         Provider.of<ExpenseProvider>(context, listen: false).add(double.parse(amountController.text));
 
+                                        await addExpenseProcedure(expense);
                                         
-                                        await expenseDb.addData(
-                                          expense
-                                        );
-
-                                        await incomeDb.updateData(income!);
-
                                         setState(() {
                                           loading = false;
                                         });

@@ -124,7 +124,18 @@ class BudgetDb{
 
   Stream<List<BudgetModel>> onBudgets(Database db, {int? month}){
     var store = intMapStoreFactory.store();
-    var storeQuery = store.query(finder: Finder(filter: Filter.and([Filter.equals('month', month??Month().currentMonthNumber), Filter.equals('year', DateTime.now().year)])));
+    var storeQuery = store.query(
+      finder: Finder(
+        filter: Filter.or(
+          [
+            Filter.and([Filter.equals('month', month??Month().currentMonthNumber), Filter.equals('year', DateTime.now().year)]),
+            Filter.custom((record){
+              final budg = record.value as Map<String, dynamic>;
+              final myBudg = BudgetModel.fromMap(budg);
+              return DateTime.now().isAfter(myBudg.startDate!) && DateTime.now().isBefore(myBudg.startDate!);
+            })
+            
+          ])));
     var subscription = storeQuery.onSnapshots(db).map((snapshot) => snapshot.map((e) => BudgetModel.fromMap(e.value)).toList(growable: false)
       );
     //.transform(expensesTransformer);

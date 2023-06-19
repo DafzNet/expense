@@ -6,9 +6,13 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:page_transition/page_transition.dart';
 
 class IncomeCard extends StatefulWidget {
-  final IncomeModel income; 
+  final IncomeModel income;
+  final VoidCallback? onDelete; 
+
   const IncomeCard({
     required this.income,
+    this.onDelete,
+
     super.key});
 
   @override
@@ -71,7 +75,7 @@ class _IncomeCardState extends State<IncomeCard> {
                                 overflow: TextOverflow.ellipsis,
         
                                 style: const TextStyle(
-                                  fontSize: 22,
+                                  fontSize: 18,
                                   fontWeight: FontWeight.bold
                                 ),
                               ),
@@ -79,13 +83,16 @@ class _IncomeCardState extends State<IncomeCard> {
                           ),
         
                           ClipOval(
-                            child: Container(
-                              padding: const EdgeInsets.all(4),
-                              color: appDanger,
-                              child: const Icon(
-                                MdiIcons.deleteOutline,
-                                size: 18,
-                                color: Colors.white,
+                            child: GestureDetector(
+                              onTap: widget.onDelete,
+                              child: Container(
+                                padding: const EdgeInsets.all(4),
+                                color: appDanger,
+                                child: const Icon(
+                                  MdiIcons.deleteOutline,
+                                  size: 18,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
                           )

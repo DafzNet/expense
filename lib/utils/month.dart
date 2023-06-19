@@ -8,6 +8,10 @@ class Month{
     return months[DateTime.now().month-1];
   }
 
+  String getMonth(int month) {
+    return months[DateTime.now().month-1];
+  }
+
   int get currentMonthNumber {
     return DateTime.now().month;
   }

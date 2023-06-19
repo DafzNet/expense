@@ -111,18 +111,7 @@ class IncomeModel {
     if (identical(this, other)) return true;
   
     return 
-      other.id == id &&
-      other.name == name &&
-      other.source == source &&
-      other.amount == amount &&
-      other.balance == balance &&
-      other.date == date &&
-      other.day == day &&
-      other.month == month &&
-      other.year == year &&
-      other.deductions == deductions &&
-      other.incomeVault == incomeVault &&
-      other.note == note;
+      other.id == id;
   }
 
   @override

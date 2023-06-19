@@ -7,6 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:sembast/sembast.dart';
+import '../../../../../procedures/income/income_procedure.dart';
+import '../../../../../utils/capitalize.dart';
 import '../../../../../utils/constants/colors.dart';
 import '../../../../../widgets/income_card.dart';
 
@@ -72,7 +74,46 @@ class _IncomeScreenState extends State<IncomeScreen> {
                 itemCount: incomesForMonth.length,
 
                 itemBuilder: (context, index){
-                  return IncomeCard(income: incomesForMonth[index]);
+                  return IncomeCard(
+                    onDelete: (){
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false, // user must tap button!
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            //backgroundColor: appOrange,
+                            title: Text('Delete ${capitalize(incomesForMonth[index].name!)}'),
+                            content:  SingleChildScrollView(
+                              child: ListBody(
+                                children: const <Widget>[
+                                  Text('Deleting this income will delete all associated expenses'),
+                                ],
+                              ),
+                            ),
+                            actions: <Widget>[
+                              TextButton(
+                                child: const Text(
+                                  'Cancel'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                              TextButton(
+                                child: const Text('Confirm'),
+                                onPressed: () async {
+                                  
+                                  await deleteIncomeProcedure(incomesForMonth[index], context);//expenseDb.deleteData(widget.expenseModel);
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          );}
+                        );
+                    },
+
+
+                    income: incomesForMonth[index]
+                  );
                 }
               )
               :

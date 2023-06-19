@@ -106,17 +106,7 @@ class ExpenseModel {
     if (identical(this, other)) return true;
   
     return 
-      other.id == id &&
-      other.title == title &&
-      other.date == date &&
-      other.amount == amount &&
-      other.note == note &&
-      other.day == day &&
-      other.month == month &&
-      other.year == year &&
-      other.category == category &&
-      other.income == income &&
-      other.budget == budget;
+      other.id == id;
   }
 
   @override

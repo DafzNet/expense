@@ -67,11 +67,7 @@ class VaultModel {
     if (identical(this, other)) return true;
   
     return 
-      other.id == id &&
-      other.name == name &&
-      other.amountInVault == amountInVault &&
-      other.type == type &&
-      other.dateCreated == dateCreated;
+      other.id == id;
   }
 
   @override

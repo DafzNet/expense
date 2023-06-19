@@ -11,6 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 
+import '../../../procedures/expenses/expense_procedure.dart';
 import '../../../utils/capitalize.dart';
 
 class ExpenseDetail extends StatefulWidget {
@@ -98,13 +99,14 @@ class _ExpenseDetailState extends State<ExpenseDetail> {
                         child: const Text('Confirm'),
                         onPressed: () async {
                           Provider.of<ExpenseProvider>(context, listen: false).subtract(widget.expenseModel.amount);
-                          await expenseDb.deleteData(widget.expenseModel);
+                          await deleteExpenseProcedure(widget.expenseModel);//expenseDb.deleteData(widget.expenseModel);
                           Navigator.of(context).pop();
                           Navigator.of(context).pop();
                         },
                       ),
                     ],
-                  );}
+                  );
+                  }
                 );
             }, 
 

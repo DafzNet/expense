@@ -141,22 +141,7 @@ class TargetSavingModel {
     if (identical(this, other)) return true;
   
     return 
-      other.id == id &&
-      other.targetPurpose == targetPurpose &&
-      other.targetAmount == targetAmount &&
-      other.currentAmount == currentAmount &&
-      other.lastAddedAmount == lastAddedAmount &&
-      other.noOfMonth == noOfMonth &&
-      other.dateCreated == dateCreated &&
-      other.targetDate == targetDate &&
-      other.startDay == startDay &&
-      other.startMonth == startMonth &&
-      other.startYear == startYear &&
-      other.targetDay == targetDay &&
-      other.targetMonth == targetMonth &&
-      other.targetYear == targetYear &&
-      other.motivation == motivation &&
-      other.vault == vault;
+      other.id == id;
   }
 
   @override
