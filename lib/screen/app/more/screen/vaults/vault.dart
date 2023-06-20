@@ -8,16 +8,16 @@ import 'package:sembast/sembast.dart';
 import '../../../../../dbs/category_db.dart';
 import '../../../../../utils/constants/colors.dart';
 import '../../../../../widgets/category_card.dart';
-import 'add_cat.dart';
+import 'add_vault.dart';
 
-class CategoryScreen extends StatefulWidget {
-  const CategoryScreen({super.key});
+class VaultScreen extends StatefulWidget {
+  const VaultScreen({super.key});
 
   @override
-  State<CategoryScreen> createState() => _CategoryScreenState();
+  State<VaultScreen> createState() => _VaultScreenState();
 }
 
-class _CategoryScreenState extends State<CategoryScreen> {
+class _VaultScreenState extends State<VaultScreen> {
 
   final CategoryDb categoryDb = CategoryDb();
   Database? db;
@@ -107,7 +107,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
           Navigator.push(
             context, 
             PageTransition(
-              child: AddCategoryScreen(),
+              child: AddVaultScreen(),
               type: PageTransitionType.bottomToTop
             )
           );

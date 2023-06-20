@@ -7,11 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:sembast/sembast.dart';
 
 import '../../../../../dbs/budget_db.dart';
+import '../../../../../dbs/expense.dart';
 import '../../../../../models/budget.dart';
 import '../../../../../models/category_model.dart';
 import '../../../../../utils/constants/colors.dart';
+import '../../../../../utils/currency/currency.dart';
 import '../../../../../utils/month.dart';
 import '../../../../../widgets/default_button.dart';
 import '../../../../../widgets/loading.dart';
@@ -75,7 +78,7 @@ class _AddBudgetScreenState extends State<AddBudgetScreen> {
 
 
   bool loading = false;
-  bool useCurrentMonth = false;
+  bool useCurrentMonth = true;
 
   @override
   void initState() {
@@ -158,6 +161,7 @@ class _AddBudgetScreenState extends State<AddBudgetScreen> {
                                     headerText: 'Category',
                                     makeButton: true,
                                     controller: categoryController,
+                                    bottomHint: 'category links a budget with the respective expenses',
 
                                     onTap: ()async{
                                       await optionWidget(
@@ -166,7 +170,7 @@ class _AddBudgetScreenState extends State<AddBudgetScreen> {
                                         heading: 'Select category',
                                         options: categories.isNotEmpty? categories : [CategoryModel(id: 1, name: 'No category added yet', description: '')],
 
-                                        onTap: getCat,//categories.isNotEmpty? getCat : null,
+                                        onTap: categories.isNotEmpty? getCat : null,
                                       );
                                     },
                                   ),
@@ -175,7 +179,7 @@ class _AddBudgetScreenState extends State<AddBudgetScreen> {
                                   const SizedBox(height: 30,),
                                   
                                   MyTextField(
-                                    '',
+                                    Currency().currencySymbol,
                                     headerText: 'Budgeted Amount',
                                     keyboardType: TextInputType.number,
                                     controller: amountController,
@@ -300,11 +304,36 @@ class _AddBudgetScreenState extends State<AddBudgetScreen> {
                                           _endDate = _starDate; 
                                         }
 
+
+                                        //Before adding budget check to see if expenses with same category
+                                        //already exists and subtract respectively
+
+                                        //filter by category
+                                        Filter filter = Filter.custom((record){
+                                          final data = record.value as Map<String, dynamic>;
+                                          CategoryModel myCat = CategoryModel.fromMap(data['category']);
+
+                                          return myCat == category;
+                                        });
+
+                                        final expenseDb = ExpenseDb();
+
+                                        List<ExpenseModel> expenses = await expenseDb.retrieveBasedOn(filter);
+
+                                        double _catBal = double.parse(amountController.text);
+
+                                        ///subtract each expense amount from this categoey
+                                        for (var exp in expenses) {
+                                          _catBal = _catBal - exp.amount;
+                                        }
+
+
                                         BudgetModel _budget = BudgetModel(
                                           id: DateTime.now().millisecondsSinceEpoch, 
                                           name: titleController.text, 
                                           amount: double.parse(amountController.text), 
-                                          balance: double.parse(amountController.text),
+                                          balance: _catBal,
+                                          category: category,
                                           startDate: _starDate,
                                           endDate: _endDate,
                                           day: _endDate!.day,

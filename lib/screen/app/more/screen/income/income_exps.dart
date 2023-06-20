@@ -39,6 +39,10 @@ class _IncomeExpensesScreenState extends State<IncomeExpensesScreen> {
 
     expenses = await expenseDb.retrieveBasedOn(filter);
 
+    expenses.sort((a,b){
+      return b.date.compareTo(a.date);
+    });
+
     setState(() {
       
     });

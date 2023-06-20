@@ -1,7 +1,11 @@
 
 
+import 'package:expense/dbs/budget_db.dart';
+import 'package:expense/dbs/category_db.dart';
 import 'package:expense/dbs/expense.dart';
 import 'package:expense/dbs/vault_db.dart';
+import 'package:expense/models/budget.dart';
+import 'package:expense/models/category_model.dart';
 import 'package:expense/models/expense_model.dart';
 import 'package:sembast/sembast.dart';
 import '../../dbs/income_db.dart';
@@ -11,6 +15,8 @@ import '../../dbs/income_db.dart';
 IncomeDb incomeDb = IncomeDb();
 ExpenseDb expenseDb = ExpenseDb();
 VaultDb vaultDb = VaultDb();
+CategoryDb categoryDb = CategoryDb();
+final budgetDb = BudgetDb();
 
 
 Future<void> deleteExpenseProcedure(ExpenseModel expense)async{
@@ -25,6 +31,24 @@ Future<void> deleteExpenseProcedure(ExpenseModel expense)async{
 
   var income = expense.income; //income as of when expense was added
   var vault = income!.incomeVault; //vault as of when expense was added
+  var category = expense.category!;
+
+  var budget = await budgetDb.retrieveBasedOn(
+    Filter.custom((record){
+      var bud = record.value as Map<String, dynamic>;
+      var _bud = BudgetModel.fromMap(bud);
+
+      return _bud.category == category;
+
+    })
+  );
+
+  BudgetModel? expBudget;
+
+  if (budget.isNotEmpty) {
+    expBudget = budget.first;
+  }
+
 
   var newIncome = await incomeDb.retrieveBasedOn(
     Filter.equals('id', income.id)
@@ -46,6 +70,15 @@ Future<void> deleteExpenseProcedure(ExpenseModel expense)async{
     balance: incomeBal+expAmnt
   );
 
+  if (expBudget != null) {
+    double currentBudgetAmnt = expBudget.balance;
+    expBudget = expBudget.copyWith(
+      balance: currentBudgetAmnt + expAmnt
+    );
+
+    await budgetDb.updateData(expBudget);
+  }  
+
   vault = vault.copyWith(
     amountInVault: vaultBal+expAmnt
   );
@@ -62,6 +95,24 @@ Future<void> addExpenseProcedure(ExpenseModel expense)async{
   //its corresponding income before deleting
   var income = expense.income;
   var vault = income!.incomeVault;
+  var category = expense.category!;
+
+  final filter = Filter.custom((record){
+      var bud = record.value as Map<String, dynamic>;
+      var _bud = BudgetModel.fromMap(bud);
+
+      return _bud.category == category;
+    });
+
+  var budgets = await budgetDb.retrieveBasedOn(
+    filter
+  );
+
+  BudgetModel? expBudget;
+
+  if (budgets.isNotEmpty) {
+    expBudget = budgets.first;
+  }
 
   double incomeBal = income.balance;
   double vaultBal = vault!.amountInVault;
@@ -74,6 +125,16 @@ Future<void> addExpenseProcedure(ExpenseModel expense)async{
   vault = vault.copyWith(
     amountInVault: vaultBal-expAmnt
   );
+
+    if (expBudget != null) {
+    double currentBudgetAmnt = expBudget.balance;
+    expBudget = expBudget.copyWith(
+        balance: currentBudgetAmnt - expAmnt
+      );
+
+    await budgetDb.updateData(expBudget);
+  }
+
 
   await expenseDb.addData(expense);
   await incomeDb.updateData(income);

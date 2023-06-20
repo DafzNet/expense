@@ -17,6 +17,7 @@ class MyTextField extends StatefulWidget {
 
   final bool hintAsHead;
   final String? headerText;
+  final String? bottomHint;
 
 
   final bool makeButton;
@@ -52,6 +53,7 @@ class MyTextField extends StatefulWidget {
     this.keyboardType,
     this.maxLines=1,
     this.minLines=1,
+    this.bottomHint,
     }) : super(key: key);
 
   @override
@@ -237,13 +239,27 @@ class _MyTextFieldState extends State<MyTextField> {
                 ],
               ),
           
-          
             ),
           ),
     
           const SizedBox(
             height: 5,
           ),
+
+          if(widget.bottomHint != null)...
+            [
+              Row(
+                children: [
+                  Text(
+                    widget.bottomHint!,
+
+                    style: const TextStyle(
+                      fontSize: 10,
+                    ),
+                  ),
+                ],
+              )
+            ],
     
           Row(
             children: [

@@ -2,6 +2,7 @@ import 'package:expense/firebase/auth/auth.dart';
 import 'package:expense/firebase/db/expense/fs_expense.dart';
 import 'package:expense/models/expense_model.dart';
 import 'package:expense/screen/app/more/screen/budget/budget.dart';
+import 'package:expense/screen/app/more/screen/category/category.dart';
 import 'package:expense/screen/app/more/screen/income/income.dart';
 import 'package:expense/screen/app/more/screen/reports/reports.dart';
 import 'package:expense/widgets/loading.dart';
@@ -175,6 +176,66 @@ class _MoreScreenState extends State<MoreScreen> {
                                 ],)
                             ),
       
+                            
+      
+                            const Divider(),
+                      
+                            TextButton(
+                              onPressed: (){
+                                Navigator.push(
+                                  context,
+                                  PageTransition(
+                                    child: const CategoryScreen(),
+                                    type: PageTransitionType.fade
+                                  )
+                                );
+                              },
+                              style: TextButton.styleFrom(
+                                shape: const RoundedRectangleBorder(),
+                                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5)
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: const [
+                                  Text('Categories', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
+                                  Icon(MdiIcons.chevronRight)
+                                ],)
+                            ),
+
+                            const Divider(),
+                      
+                            TextButton(
+                              onPressed: (){
+                                
+                              },
+                              style: TextButton.styleFrom(
+                                shape: const RoundedRectangleBorder(),
+                                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5)
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: const [
+                                  Text('Income/Savings Vaults', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
+                                  Icon(MdiIcons.chevronRight)
+                                ],)
+                            ),
+      
+                            const Divider(),
+                      
+                            TextButton(
+                              onPressed: (){},
+                              style: TextButton.styleFrom(
+                                shape: const RoundedRectangleBorder(),
+                                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5)
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: const [
+                                  Text('Accountability', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
+                                  Icon(MdiIcons.chevronRight)
+                                ],)
+                            ),
+
                             const Divider(),
                       
                             TextButton(
@@ -195,55 +256,6 @@ class _MoreScreenState extends State<MoreScreen> {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: const [
                                   Text('Financial Reports', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
-                                  Icon(MdiIcons.chevronRight)
-                                ],)
-                            ),
-      
-                            const Divider(),
-                      
-                            TextButton(
-                              onPressed: (){},
-                              style: TextButton.styleFrom(
-                                shape: const RoundedRectangleBorder(),
-                                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5)
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: const [
-                                  Text('Categories', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
-                                  Icon(MdiIcons.chevronRight)
-                                ],)
-                            ),
-      
-                            const Divider(),
-                      
-                            TextButton(
-                              onPressed: (){},
-                              style: TextButton.styleFrom(
-                                shape: const RoundedRectangleBorder(),
-                                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5)
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: const [
-                                  Text('Accountability', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
-                                  Icon(MdiIcons.chevronRight)
-                                ],)
-                            ),
-      
-      
-                            const Divider(),
-                      
-                            TextButton(
-                              onPressed: (){},
-                              style: TextButton.styleFrom(
-                                shape: const RoundedRectangleBorder(),
-                                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5)
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: const [
-                                  Text('Income/Savings Vaults', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
                                   Icon(MdiIcons.chevronRight)
                                 ],)
                             ),

@@ -19,6 +19,7 @@ import '../../../dbs/income_db.dart';
 import '../../../models/category_model.dart';
 import '../../../models/income_model.dart';
 import '../../../providers/expense_provider.dart';
+import '../../../utils/currency/currency.dart';
 import '../../../widgets/default_button.dart';
 import '../../../widgets/loading.dart';
 import '../../../widgets/selection_sheet.dart';
@@ -186,7 +187,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                                   const SizedBox(height: 30,),
                                   
                                   MyTextField(
-                                    '',
+                                    Currency().currencySymbol,
                                     headerText: 'Amount',
                                     keyboardType: TextInputType.number,
                                     controller: amountController,
@@ -215,12 +216,12 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                                     },
                                   ),
 
-
                                   const SizedBox(height: 30,),
                                   
                                   MyTextField(
                                     'Select category',
                                     headerText: 'Category',
+                                    bottomHint: 'category links an expense with the respective budget',
                                     makeButton: true,
                                     controller: categoryController,
 
@@ -231,7 +232,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                                         heading: 'Select category',
                                         options: categories.isNotEmpty? categories : [CategoryModel(id: 1, name: 'No category added yet', description: '')],
 
-                                        onTap: getCat//categories.isNotEmpty? getCat : null,
+                                        onTap: categories.isNotEmpty? getCat : null,
                                       );
                                     },
                                   ),

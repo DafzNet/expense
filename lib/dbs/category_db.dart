@@ -117,31 +117,12 @@ class CategoryDb{
   }
   
 
-  // var CategoryTransformer = StreamTransformer<
-  //     List<RecordSnapshot<int, Map<String, Object?>>>,
-  //     List<CategoryModel>>.fromHandlers(handleData: (snapshotList, sink) {
-  //       List<CategoryModel> cats = snapshotList.map((e) => CategoryModel.fromMap(e.value as Map<String, dynamic>)).toList();
-  //   sink.add(cats);
-  // });
-
-  // var noteTransformer = StreamTransformer<
-  //     RecordSnapshot<int, Map<String, Object?>>?,
-  //     DbNote?>.fromHandlers(handleData: (snapshot, sink) {
-  //   sink.add(snapshot == null ? null : snapshotToNote(snapshot));
-  // });
-
-  /// Listen for changes on any note
-  // Stream<List<ExpenseModel>> onExpenses() {
-  //   return notesStore
-  //       .query(finder: Finder(sortOrders: [SortOrder('date', false)]))
-  //       .onSnapshots(db!)
-  //       .transform(notesTransformer);
-  // }
-
-
   Stream<List<CategoryModel>> onCategories(Database db){
     var store = intMapStoreFactory.store();
-    var storeQuery = store.query();
+    var storeQuery = store.query(finder: Finder(
+      filter: Filter.equals('hidden', false)
+      
+    ));
     var subscription = storeQuery.onSnapshots(db).map((snapshot) => snapshot.map((e) => CategoryModel.fromMap(e.value)).toList(growable: false)
       );
     //.transform(expensesTransformer);

@@ -13,6 +13,7 @@ import '../../../procedures/expenses/expense_procedure.dart';
 import '../../../providers/expense_provider.dart';
 import '../../../utils/capitalize.dart';
 import '../../../utils/constants/colors.dart';
+import '../../../utils/currency/currency.dart';
 import '../../../utils/month.dart';
 import '../../../widgets/expense_tile.dart';
 
@@ -103,7 +104,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                  ),
            
                 Text(
-                  '₦${Provider.of<ExpenseProvider>(context).totalExpenseAmnt}',
+                  Currency().wrapCurrencySymbol('${Provider.of<ExpenseProvider>(context).totalExpenseAmnt}'),
                   style: const TextStyle(
                     fontSize: 45,
                     height: 1.4,

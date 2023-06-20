@@ -11,6 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import '../../../../../dbs/vault_db.dart';
 import '../../../../../models/vault.dart';
+import '../../../../../utils/currency/currency.dart';
 import '../../../../../widgets/default_button.dart';
 import '../../../../../widgets/loading.dart';
 import '../../../../../widgets/selection_sheet.dart';
@@ -145,7 +146,7 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                                   const SizedBox(height: 30,),
                                   
                                   MyTextField(
-                                    '',
+                                    Currency().currencySymbol,
                                     headerText: 'Amount',
                                     keyboardType: TextInputType.number,
                                     controller: amountController,

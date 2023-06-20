@@ -13,6 +13,7 @@ import 'package:provider/provider.dart';
 
 import '../../../procedures/expenses/expense_procedure.dart';
 import '../../../utils/capitalize.dart';
+import '../../../utils/currency/currency.dart';
 
 class ExpenseDetail extends StatefulWidget {
   final ExpenseModel expenseModel;
@@ -56,7 +57,7 @@ class _ExpenseDetailState extends State<ExpenseDetail> {
 
           IconButton(
             onPressed: (){
-
+          
              showDialog(
                 context: context,
                 barrierDismissible: false, // user must tap button!
@@ -68,9 +69,9 @@ class _ExpenseDetailState extends State<ExpenseDetail> {
                       child: ListBody(
                         children: const <Widget>[
                           Text('Deleting this will remove it from the expenses list'),
-
+          
                           // SizedBox(height: 15,),
-
+          
                           // Row(
                           //   children: [
                           //     Checkbox(
@@ -80,7 +81,7 @@ class _ExpenseDetailState extends State<ExpenseDetail> {
                                   
                           //       });
                           //     }),
-
+          
                           //     Text('Don\'t ask again '),
                           //   ],
                           // ),
@@ -109,7 +110,7 @@ class _ExpenseDetailState extends State<ExpenseDetail> {
                   }
                 );
             }, 
-
+          
             icon: const Icon(MdiIcons.delete, color: Colors.white,))
         ],
 
@@ -225,7 +226,7 @@ class _ExpenseDetailState extends State<ExpenseDetail> {
                                     Row(
                                       children: [
                                         Text(
-                                          '₦${widget.expenseModel.amount}',
+                                          Currency().wrapCurrencySymbol('${widget.expenseModel.amount}'),
 
                                           style: const TextStyle(
                                             fontSize: 32,

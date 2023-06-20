@@ -69,14 +69,14 @@ class BudgetDb{
 
 
 
-  Future<List<BudgetModel>> retrieveBasedOn({List<Filter>? filters})async{
+  Future<List<BudgetModel>> retrieveBasedOn(Filter filter)async{
     final appDocumentDir = await getApplicationDocumentsDirectory();
     var store = intMapStoreFactory.store();
     var factory = databaseFactoryIo;
 
     var db = await factory.openDatabase(join(appDocumentDir.path, 'budget.db'));
 
-    var keys = await store.findKeys(db, finder: Finder(filter: Filter.and(filters!)));
+    var keys = await store.findKeys(db, finder: Finder(filter: filter));
 
     var data = await store.records(keys).get(db);
     await db.close();
@@ -128,11 +128,17 @@ class BudgetDb{
       finder: Finder(
         filter: Filter.or(
           [
-            Filter.and([Filter.equals('month', month??Month().currentMonthNumber), Filter.equals('year', DateTime.now().year)]),
+            //Filter.and([Filter.equals('month', month??Month().currentMonthNumber), Filter.equals('year', DateTime.now().year)]),
             Filter.custom((record){
               final budg = record.value as Map<String, dynamic>;
               final myBudg = BudgetModel.fromMap(budg);
-              return DateTime.now().isAfter(myBudg.startDate!) && DateTime.now().isBefore(myBudg.startDate!);
+
+              if (myBudg.startDate == myBudg.endDate) {
+                return myBudg.month == Month().currentMonthNumber && myBudg.year == DateTime.now().year;
+              }else{
+                return DateTime.now().isAfter(myBudg.startDate!) && DateTime.now().isBefore(myBudg.endDate!);
+              }
+              
             })
             
           ])));

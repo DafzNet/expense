@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
+import '../utils/currency/currency.dart';
 import '../utils/month.dart';
 
 class BudgetCard extends StatefulWidget {
@@ -119,7 +120,7 @@ class _BudgetCardState extends State<BudgetCard> {
 
                       children: [
                         TextSpan(
-                          text: widget.budget.amount.toString(),
+                          text: Currency().wrapCurrencySymbol(widget.budget.amount.toString()),
 
                           style: const TextStyle(
                             fontSize: 18,

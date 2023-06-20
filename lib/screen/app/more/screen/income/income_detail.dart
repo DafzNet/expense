@@ -10,6 +10,7 @@ import 'package:page_transition/page_transition.dart';
 import '../../../../../procedures/income/income_procedure.dart';
 import '../../../../../utils/capitalize.dart';
 import '../../../../../utils/constants/colors.dart';
+import '../../../../../utils/currency/currency.dart';
 import 'income_exps.dart';
 
 class IncomeDetailScreen extends StatefulWidget {
@@ -110,7 +111,6 @@ class _IncomeDetailScreenState extends State<IncomeDetailScreen> {
                       child: Container(
                         width: 120,
                         height: 40,
-                        
 
                         decoration: BoxDecoration(
                           color: Colors.white,
@@ -186,7 +186,7 @@ class _IncomeDetailScreenState extends State<IncomeDetailScreen> {
                     fit: FlexFit.tight,
                     child: Center(
                       child: Text(
-                        widget.income.amount.toString(),
+                        Currency().wrapCurrencySymbol(widget.income.amount.toString()),
                     
                         style: const TextStyle(
                           fontSize: 20
@@ -200,7 +200,7 @@ class _IncomeDetailScreenState extends State<IncomeDetailScreen> {
                     fit: FlexFit.tight,
                     child: Center(
                       child: Text(
-                        widget.income.balance.toString(),
+                        Currency().wrapCurrencySymbol(widget.income.balance.toString()),
                     
                         style: const TextStyle(
                           fontSize: 20

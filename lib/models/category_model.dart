@@ -4,29 +4,29 @@ import 'dart:convert';
 class CategoryModel {
   dynamic id;
   String name;
+  bool hidden;
   String description;
-  dynamic catIcon;
   
   CategoryModel({
     required this.id,
     required this.name,
+    this.hidden = false,
     required this.description,
-    this.catIcon,
   });
 
   
 
   CategoryModel copyWith({
-    dynamic id,
+    dynamic? id,
     String? name,
+    bool? hidden,
     String? description,
-    dynamic catIcon,
   }) {
     return CategoryModel(
       id: id ?? this.id,
       name: name ?? this.name,
+      hidden: hidden ?? this.hidden,
       description: description ?? this.description,
-      catIcon: catIcon ?? this.catIcon,
     );
   }
 
@@ -34,8 +34,8 @@ class CategoryModel {
     return <String, dynamic>{
       'id': id,
       'name': name,
+      'hidden': hidden,
       'description': description,
-      'catIcon': catIcon,
     };
   }
 
@@ -43,8 +43,8 @@ class CategoryModel {
     return CategoryModel(
       id: map['id'] as dynamic,
       name: map['name'] as String,
+      hidden: map['hidden'] as bool,
       description: map['description'] as String,
-      catIcon: map['catIcon'] as dynamic,
     );
   }
 
@@ -54,7 +54,7 @@ class CategoryModel {
 
   @override
   String toString() {
-    return 'CategoryModel(id: $id, name: $name, description: $description, catIcon: $catIcon)';
+    return 'CategoryModel(id: $id, name: $name, hidden: $hidden, description: $description)';
   }
 
   @override
@@ -64,15 +64,15 @@ class CategoryModel {
     return 
       other.id == id &&
       other.name == name &&
-      other.description == description &&
-      other.catIcon == catIcon;
+      other.hidden == hidden &&
+      other.description == description;
   }
 
   @override
   int get hashCode {
     return id.hashCode ^
       name.hashCode ^
-      description.hashCode ^
-      catIcon.hashCode;
+      hidden.hashCode ^
+      description.hashCode;
   }
 }
