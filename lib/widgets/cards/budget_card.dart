@@ -5,8 +5,8 @@ import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
-import '../utils/currency/currency.dart';
-import '../utils/month.dart';
+import '../../utils/currency/currency.dart';
+import '../../utils/month.dart';
 
 class BudgetCard extends StatefulWidget {
 
@@ -77,7 +77,7 @@ class _BudgetCardState extends State<BudgetCard> {
 
                               Text(
                                 widget.budget.category!=null ?
-                                  widget.budget.category!.name.length <=20 ? ' - '+widget.budget.category!.name : ' - ' + widget.budget.category!.name.substring(0, 10) + '...'
+                                  widget.budget.category!.name.length <=20 ? ' - ${widget.budget.category!.name}' : ' - ${widget.budget.category!.name.substring(0, 10)}...'
                                 :'',
         
                                 maxLines: 1,
@@ -200,7 +200,7 @@ class _BudgetCardState extends State<BudgetCard> {
                               progressColor: const Color.fromARGB(255, 2, 142, 6),
                               //width: MediaQuery.of(context).size.width-60,
                               lineHeight: 6.0,
-                              percent: ((widget.budget.balance/widget.budget.amount)*100)/100,
+                              percent: ((widget.budget.balance/widget.budget.amount)*100)/100<0?0:((widget.budget.balance/widget.budget.amount)*100)/100,
                               barRadius: const Radius.circular(5),
                               backgroundColor: const Color.fromARGB(255, 250, 13, 13),
                             ),

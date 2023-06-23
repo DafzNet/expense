@@ -15,7 +15,7 @@ import '../../../utils/capitalize.dart';
 import '../../../utils/constants/colors.dart';
 import '../../../utils/currency/currency.dart';
 import '../../../utils/month.dart';
-import '../../../widgets/expense_tile.dart';
+import '../../../widgets/cards/expense_tile.dart';
 
 class ExpenseScreen extends StatefulWidget {
   const ExpenseScreen({super.key});
@@ -150,7 +150,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                       Expanded(
                         child: StreamBuilder<List<ExpenseModel>>(
                           stream: expenseDb.onExpenses(_db!),
-                          initialData: [],
+                          initialData: const [],
                           builder: (context, snapshot){
 
                             if (snapshot.hasData) {

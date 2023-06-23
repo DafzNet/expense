@@ -8,8 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:sembast/sembast.dart';
 
-import '../dbs/category_db.dart';
-import '../utils/constants/colors.dart';
+import '../../dbs/category_db.dart';
+import '../../utils/constants/colors.dart';
+
 
 class CategoryCard extends StatefulWidget {
 
@@ -40,7 +41,7 @@ class _CategoryCardState extends State<CategoryCard> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: Container(
-        padding: EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
@@ -119,7 +120,7 @@ class _CategoryCardState extends State<CategoryCard> {
                       } else {
                         ScaffoldMessenger.of(widget.ctx!).showSnackBar(
                           financeSnackBar(
-                            widget.category.name + ' has data associated with it'
+                            '${widget.category.name} has data associated with it'
                           )
                         );
                       }

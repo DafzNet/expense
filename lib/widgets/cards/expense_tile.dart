@@ -3,10 +3,11 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
 
-import '../models/expense_model.dart';
-import '../screen/app/expense/expense_detail.dart';
-import '../utils/capitalize.dart';
-import '../utils/constants/colors.dart';
+import '../../models/expense_model.dart';
+import '../../screen/app/expense/expense_detail.dart';
+import '../../utils/capitalize.dart';
+import '../../utils/constants/colors.dart';
+
 
 class ExpenseTile extends StatelessWidget {
   final ExpenseModel expenseModel;

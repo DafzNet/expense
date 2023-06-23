@@ -2,7 +2,7 @@
 import 'package:expense/dbs/expense.dart';
 import 'package:expense/dbs/vault_db.dart';
 import 'package:expense/models/expense_model.dart';
-import 'package:expense/procedures/expenses/expense_procedure.dart';
+import 'package:expense/models/vault.dart';
 import 'package:provider/provider.dart';
 import 'package:sembast/sembast.dart';
 import '../../dbs/income_db.dart';
@@ -17,8 +17,7 @@ VaultDb vaultDb = VaultDb();
 
 
 Future<void> deleteIncomeProcedure(IncomeModel income, context)async{
-  //add expense amount back to the
-  //its corresponding income before deleting
+
   List<ExpenseModel> expenses = [];
 
   Filter filter = Filter.custom((record){
@@ -26,6 +25,13 @@ Future<void> deleteIncomeProcedure(IncomeModel income, context)async{
     IncomeModel myIncome = IncomeModel.fromMap(data['income']);
 
     return myIncome == income;
+  });
+
+  Filter filterVault = Filter.custom((record){
+    final data = record.value as Map<String, dynamic>;
+    VaultModel myVault = VaultModel.fromMap(data);
+
+    return myVault == income.incomeVault;
   });
 
 
@@ -37,9 +43,13 @@ Future<void> deleteIncomeProcedure(IncomeModel income, context)async{
     Provider.of<ExpenseProvider>(context, listen: false).subtract(exp.amount);
     await expenseDb.deleteData(exp);
   }
+  //to do
+  final v = await vaultDb.retrieveBasedOn(filterVault);
+  VaultModel vault = v.first;
 
-  double vaultBal = income.incomeVault!.amountInVault;
-  var vault = income.incomeVault!.copyWith(
+  double vaultBal = vault.amountInVault;
+
+  vault = vault.copyWith(
     amountInVault: vaultBal - incomeBal
   );
 

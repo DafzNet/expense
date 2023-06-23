@@ -15,6 +15,7 @@ import '../../../dbs/expense.dart';
 import '../../../models/user_model.dart';
 import '../../../utils/capitalize.dart';
 import '../../../utils/constants/colors.dart';
+import 'screen/vaults/vault.dart';
 
 class MoreScreen extends StatefulWidget {
 
@@ -206,7 +207,13 @@ class _MoreScreenState extends State<MoreScreen> {
                       
                             TextButton(
                               onPressed: (){
-                                
+                                Navigator.push(
+                                  context,
+                                  PageTransition(
+                                    child: const VaultScreen(),
+                                    type: PageTransitionType.fade
+                                  )
+                                );
                               },
                               style: TextButton.styleFrom(
                                 shape: const RoundedRectangleBorder(),
@@ -243,7 +250,7 @@ class _MoreScreenState extends State<MoreScreen> {
                                  Navigator.push(
                                   context,
                                   PageTransition(
-                                    child: const ReportScreen(),
+                                    child: const ReportScreen(), //PieChartSample2(), //
                                     type: PageTransitionType.fade
                                   )
                                 );

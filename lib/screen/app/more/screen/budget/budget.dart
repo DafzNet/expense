@@ -1,13 +1,13 @@
 
 import 'package:expense/dbs/budget_db.dart';
 import 'package:expense/models/budget.dart';
-import 'package:expense/widgets/budget_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:sembast/sembast.dart';
 import '../../../../../utils/constants/colors.dart';
+import '../../../../../widgets/cards/budget_card.dart';
 import 'add_budget.dart';
 
 class BudgetScreen extends StatefulWidget {
@@ -104,7 +104,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
           Navigator.push(
             context, 
             PageTransition(
-              child: AddBudgetScreen(),
+              child: const AddBudgetScreen(),
               type: PageTransitionType.bottomToTop
             )
           );

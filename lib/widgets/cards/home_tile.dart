@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
-import '../utils/month.dart';
+import '../../utils/month.dart';
 
 class HomeTile extends StatelessWidget {
   final String title;

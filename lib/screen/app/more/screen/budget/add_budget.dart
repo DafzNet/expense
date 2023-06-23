@@ -1,5 +1,5 @@
 
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, no_leading_underscores_for_local_identifiers
 
 import 'package:expense/dbs/category_db.dart';
 import 'package:expense/models/expense_model.dart';
@@ -62,7 +62,7 @@ class _AddBudgetScreenState extends State<AddBudgetScreen> {
 
 
   DateTime? _starDate = DateTime.now();
-  DateTime? _endDate = DateTime.now().add(Duration(days: 30));
+  DateTime? _endDate = DateTime.now().add(const Duration(days: 30));
 
 
 
@@ -248,8 +248,8 @@ class _AddBudgetScreenState extends State<AddBudgetScreen> {
                                   CheckboxListTile(
                                     value: useCurrentMonth,
                                     activeColor: appOrange,
-                                    title: Text('Use current month as duration'),
-                                    contentPadding: EdgeInsets.all(0),
+                                    title: const Text('Use current month as duration'),
+                                    contentPadding: const EdgeInsets.all(0),
                                     onChanged: (month){
                                       useCurrentMonth = month!;
 
@@ -354,7 +354,7 @@ class _AddBudgetScreenState extends State<AddBudgetScreen> {
                                     }
                                    ),
 
-                                   SizedBox(height: 20,)
+                                   const SizedBox(height: 20,)
                                 ],
                               ),
                             ),

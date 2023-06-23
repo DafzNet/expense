@@ -1,14 +1,16 @@
 
 
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
 import 'package:expense/dbs/budget_db.dart';
 import 'package:expense/dbs/category_db.dart';
 import 'package:expense/dbs/expense.dart';
 import 'package:expense/dbs/vault_db.dart';
 import 'package:expense/models/budget.dart';
-import 'package:expense/models/category_model.dart';
 import 'package:expense/models/expense_model.dart';
 import 'package:sembast/sembast.dart';
 import '../../dbs/income_db.dart';
+import '../../models/vault.dart';
 
 
 
@@ -91,11 +93,21 @@ Future<void> deleteExpenseProcedure(ExpenseModel expense)async{
 
 
 Future<void> addExpenseProcedure(ExpenseModel expense)async{
-  //add expense amount back to the
-  //its corresponding income before deleting
+
   var income = expense.income;
-  var vault = income!.incomeVault;
   var category = expense.category!;
+
+  Filter filterVault = Filter.custom((record){
+    final data = record.value as Map<String, dynamic>;
+    VaultModel myVault = VaultModel.fromMap(data);
+
+    return myVault == income!.incomeVault;
+  });
+
+
+  ////////
+  final v = await vaultDb.retrieveBasedOn(filterVault);
+  VaultModel vault = v.first;
 
   final filter = Filter.custom((record){
       var bud = record.value as Map<String, dynamic>;
@@ -108,25 +120,26 @@ Future<void> addExpenseProcedure(ExpenseModel expense)async{
     filter
   );
 
+
   BudgetModel? expBudget;
 
   if (budgets.isNotEmpty) {
     expBudget = budgets.first;
   }
 
-  double incomeBal = income.balance;
-  double vaultBal = vault!.amountInVault;
+  double incomeBal = income!.balance;
   double expAmnt = expense.amount;
+  double vaultBal = vault.amountInVault;
+
+  vault = vault.copyWith(
+    amountInVault: vaultBal - expAmnt
+  );
 
   income = income.copyWith(
     balance: incomeBal-expAmnt
   );
 
-  vault = vault.copyWith(
-    amountInVault: vaultBal-expAmnt
-  );
-
-    if (expBudget != null) {
+  if (expBudget != null) {
     double currentBudgetAmnt = expBudget.balance;
     expBudget = expBudget.copyWith(
         balance: currentBudgetAmnt - expAmnt

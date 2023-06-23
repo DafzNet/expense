@@ -47,7 +47,10 @@ class CategoryDb{
      var data = await store.records(keys).get(db);
      await db.close();
 
-     return data.map((e) => CategoryModel.fromMap(e as Map<String, dynamic>)).toList();
+     return data.map((e){
+        var el =  e as Map<String, dynamic>;
+        return CategoryModel.fromMap(el);}
+    ).toList();
   }
 
 

@@ -1,13 +1,9 @@
 
-import 'package:expense/models/expense_model.dart';
+import 'package:expense/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import '../../../../../../utils/constants/colors.dart';
-import 'package:fl_chart/fl_chart.dart';
 
-import '../../../../../dbs/expense.dart';
-
+import 'expense/exp_rep.dart';
+import 'income/income_rep.dart';
 
 class ReportScreen extends StatefulWidget {
   const ReportScreen({super.key});
@@ -17,103 +13,38 @@ class ReportScreen extends StatefulWidget {
 }
 
 class _ReportScreenState extends State<ReportScreen> {
-
-  final ExpenseDb expenseDb = ExpenseDb();
-
-  List<ExpenseModel> expenses = [];
-
-  List<PieChartSectionData> getExpenseSections() {
-    return expenses.map((expense) {
-      final double value = expense.amount;
-      final double percentage = value;
-
-      return PieChartSectionData(
-        value: percentage,
-        title: '${(percentage * 100).toStringAsFixed(1)}%',
-        radius: 100,
-        titlePositionPercentageOffset: 0.5,
-        titleStyle: const TextStyle(fontSize: 16),
-      );
-    }).toList();
-  }
-
-
-  void getExps()async{
-    List exps = await expenseDb.retrieveData();
-    expenses = exps.map((e){
-      return ExpenseModel.fromMap(e);
-    }).toList();
-
-    setState(() {
-      
-    });
-  }
-
-
-  @override
-  void initState() {
-    getExps();
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-
-      appBar: AppBar(
-
-        toolbarHeight: 50,
-
-        title: const Text(
-          'Reports'
-        ),
-
-        // leading: IconButton(
-        //   onPressed: (){
-        //     Navigator.pop(context);
-        //   }, 
-        //   icon: const Icon(Icons.arrow_back, color: Colors.white)
-        // ),
-
-        systemOverlayStyle: const SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.dark
-        ),
-      ),
-
-      body: Column(
-        children: [
-
-          Expanded(
-            child: PieChart(
-              PieChartData(
-                sections: getExpenseSections(),
-                centerSpaceRadius: 0,
-                sectionsSpace: 0,
-                startDegreeOffset: -90,
-                borderData: FlBorderData(show: false),
-              ),
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: const Color.fromARGB(255, 245, 245, 245),
+          bottom: TabBar(
+            padding: const EdgeInsets.symmetric(horizontal: 5),
+            indicatorSize: TabBarIndicatorSize.tab,
+            labelColor: Colors.white,
+            labelStyle: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16
             ),
-          )
-        ],
-      ),
-
-
-      floatingActionButton: FloatingActionButton(
-        onPressed: (){
-          
-        },
-
-        backgroundColor: appOrange,
-        elevation: 3,
-
-        shape: const CircleBorder(
-
+            indicator: BoxDecoration(
+              color: appOrange.shade900,
+              borderRadius: BorderRadius.circular(25)
+            ),
+            tabs: const [
+               Tab(text: 'Expense',),
+               Tab(text: 'Income',),
+               Tab(text: 'Budget',)
+            ]),
         ),
 
-         child: const Icon(
-          MdiIcons.plus,
-          color: Colors.white,
+        body: TabBarView(
+          children: [
+            const ExpReportScreen(),
+            const IncomeReportScreen(),
+            Container()
+          ],
         ),
       ),
     );

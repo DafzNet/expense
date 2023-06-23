@@ -1,12 +1,12 @@
 
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:expense/dbs/category_db.dart';
-import 'package:expense/models/category_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
+import '../../../../../dbs/vault_db.dart';
+import '../../../../../models/vault.dart';
 import '../../../../../widgets/default_button.dart';
 import '../../../../../widgets/loading.dart';
 import '../../../../../widgets/text_field.dart';
@@ -24,11 +24,10 @@ class AddVaultScreen extends StatefulWidget {
 
 class _AddVaultScreenState extends State<AddVaultScreen> {
 
-  final categoryDb = CategoryDb();
+  final vaultDb = VaultDb();
 
-  final iconController = TextEditingController();
-  final noteController = TextEditingController();
   final titleController = TextEditingController();
+  final typeController = TextEditingController();
 
 
   bool loading = false;
@@ -55,7 +54,7 @@ class _AddVaultScreenState extends State<AddVaultScreen> {
           )),
 
         title: const Text(
-          'Add Category',
+          'Add Vault',
           style: TextStyle(
             color: Colors.white
           ),
@@ -95,28 +94,28 @@ class _AddVaultScreenState extends State<AddVaultScreen> {
                                   
                                   
                                   MyTextField(
-                                    'provide category name',
-                                    headerText: 'Title',
+                                    '',
+                                    headerText: 'Name',
                                     maxLines: 3,
                                     controller: titleController,
                                   ),
-                                  
-                                  const SizedBox(height: 30,),
 
+                                  const SizedBox(height: 30,),
+                                  
+                                  
                                   MyTextField(
-                                    'optional',
-                                    headerText: 'Description',
-                                    maxLines: 3,
-                                    controller: noteController,
+                                    'e.g Bank(Account Number)',
+                                    headerText: 'Type',
+                                    controller: typeController,
+                                    bottomHint: 'Indicate vault type (Bank, cash)',
                                   ),
-                            
+                                  
                                                       
                                   const SizedBox(height: 50,),
                                                       
                                                       
                                    DefaultButton(
-                                    text: 'Add Category',
-
+                                    text: 'Add Vault',
 
                                     onTap: ()async{
                                       if (titleController.text.isEmpty) {
@@ -127,16 +126,16 @@ class _AddVaultScreenState extends State<AddVaultScreen> {
                                           
                                         });
 
-                                        CategoryModel category = CategoryModel(
+                                        VaultModel vault = VaultModel(
                                           id: DateTime.now().millisecondsSinceEpoch, 
                                           name: titleController.text,
-                                          hidden: false,
-                                          description: noteController.text,
-
+                                          type: typeController.text,
+                                          amountInVault: 0,
+                                          dateCreated: DateTime.now()
                                         );
 
 
-                                        await categoryDb.addData(category);
+                                        await vaultDb.addData(vault);
 
                                         loading = false;
 
@@ -150,7 +149,7 @@ class _AddVaultScreenState extends State<AddVaultScreen> {
                                     }
                                    ),
 
-                                   SizedBox(height: 20,)
+                                   const SizedBox(height: 20,)
                                 ],
                               ),
                             ),

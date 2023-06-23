@@ -1,4 +1,6 @@
 
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:expense/models/income_model.dart';
 import 'package:expense/screen/app/expense/add_expense.dart';
 import 'package:expense/widgets/default_button.dart';
@@ -211,7 +213,7 @@ class _IncomeDetailScreenState extends State<IncomeDetailScreen> {
                 ],
               ),
 
-              SizedBox(height: 20,),
+              const SizedBox(height: 20,),
 
 
               const Text('Note:'),

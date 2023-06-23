@@ -1,5 +1,8 @@
 
-import 'package:expense/dbs/expense.dart';
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:expense/dbs/saving_db.dart';
+import 'package:expense/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -7,8 +10,8 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:page_transition/page_transition.dart';
 
 import '../../../models/savings_model.dart';
+import '../../../utils/currency/currency.dart';
 import 'add_money.dart';
-import 'add_saving.dart';
 
 class SavingDetail extends StatefulWidget {
   final TargetSavingModel savingModel;
@@ -22,7 +25,7 @@ class SavingDetail extends StatefulWidget {
 
 class _SavingDetailState extends State<SavingDetail> {
 
-  final ExpenseDb expenseDb = ExpenseDb();
+  SavingsDb savingsDb = SavingsDb();
 
 
   @override
@@ -66,18 +69,60 @@ class _SavingDetailState extends State<SavingDetail> {
             icon: const Icon(MdiIcons.plusCircleOutline, color: Colors.white,)),
 
           IconButton(
-            onPressed: (){
-              Navigator.pushReplacement(context, 
-                PageTransition(
-                  child: AddFinancialGoalScreen(
-                    targetSavingModel: widget.savingModel,
-                  ),
-
-                  type: PageTransitionType.fade
-                )
-              );
+            onPressed: ()async{
+              showDialog(
+                context: context,
+                barrierDismissible: false, // user must tap button!
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    //backgroundColor: appOrange,
+                    title: const Text('Delete this Saving?'),
+                    content:  SingleChildScrollView(
+                      child: ListBody(
+                        children: const <Widget>[
+                          Text('You will not be able to recover it after it\'s been deleted'),
+          
+                          // SizedBox(height: 15,),
+          
+                          // Row(
+                          //   children: [
+                          //     Checkbox(
+                          //       value: _del, onChanged: (v){
+                          //       _del = !v!;
+                          //       setState(() {
+                                  
+                          //       });
+                          //     }),
+          
+                          //     Text('Don\'t ask again '),
+                          //   ],
+                          // ),
+                        ],
+                      ),
+                    ),
+                    actions: <Widget>[
+                      TextButton(
+                        child: const Text(
+                          'Cancel'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      TextButton(
+                        child: const Text('Confirm'),
+                        onPressed: () async {
+                          
+                          await savingsDb.deleteData(widget.savingModel);
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  );
+                  }
+                );
             }, 
-            icon: const Icon(MdiIcons.noteEditOutline, color: Colors.white,))
+            icon: const Icon(MdiIcons.delete, color: Colors.white,))
         ],
 
         backgroundColor: Colors.black,
@@ -108,18 +153,18 @@ class _SavingDetailState extends State<SavingDetail> {
                               children: [
                                 Column(
                                   children: [
-                                    Row(
-                                      children: const [
-                                        Text(
-                                          'Purpose:',
+                                    // Row(
+                                    //   children: const [
+                                    //     Text(
+                                    //       'Purpose:',
 
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            letterSpacing: 1.1
-                                          ),
-                                          )
-                                      ],
-                                    ),
+                                    //       style: TextStyle(
+                                    //         fontSize: 16,
+                                    //         letterSpacing: 1.1
+                                    //       ),
+                                    //       )
+                                    //   ],
+                                    // ),
 
                                     const SizedBox(height: 10,),
 
@@ -135,9 +180,13 @@ class _SavingDetailState extends State<SavingDetail> {
                                   ],
                                 ),
 
+                                Divider(
+                                  color: appOrange.shade200
+                                ),
+
                                 
 
-                                const SizedBox(height: 45,),
+                                const SizedBox(height: 30,),
                                 //Amount
 
                                 Column(
@@ -182,13 +231,77 @@ class _SavingDetailState extends State<SavingDetail> {
                                     Flexible(
                                       flex: 5,
                                       fit: FlexFit.tight,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(right: 5),
+                                        child: Container(
+                                          padding: const EdgeInsets.all(8),
+                                          decoration: BoxDecoration(
+                                            color: appOrange.shade100,
+                                            borderRadius: BorderRadius.circular(12),
+                                            border: Border.all(
+                                              color: appOrange.shade300
+                                            )
+                                          ),
+                                          child: Column(
+                                            children: [
+                                              Row(
+                                                children: const [
+                                                  Text(
+                                                    'Starting From:',
+                                                                            
+                                                    style: TextStyle(
+                                                      fontSize: 16,
+                                                      letterSpacing: 1.1
+                                                    ),
+                                                    )
+                                                ],
+                                              ),
+                                                                            
+                                              const SizedBox(height: 10,),
+                                                                            
+                                              Row(
+                                                children: [
+                                                  SizedBox(
+                                                    width: MediaQuery.of(context).size.width/3,
+                                                    child: Text(
+                                                      DateFormat.yMMMd().format(widget.savingModel.dateCreated),
+                                                  
+                                                      style: const TextStyle(
+                                                        fontSize: 16,
+                                                        letterSpacing: 1.3,
+                                                        fontWeight: FontWeight.w500
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+
+                                Flexible(
+                                  flex: 5,
+                                  fit: FlexFit.tight,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 5),
+                                    child: Container(
+                                      padding: const EdgeInsets.all(8),
+                                      decoration: BoxDecoration(
+                                        color: appOrange.shade100,
+                                        borderRadius: BorderRadius.circular(12),
+                                        border: Border.all(
+                                          color: appOrange.shade300
+                                        )
+                                      ),
                                       child: Column(
                                         children: [
                                           Row(
                                             children: const [
                                               Text(
-                                                'Starting From:',
-                                    
+                                                'To:',
+                                                                    
                                                 style: TextStyle(
                                                   fontSize: 16,
                                                   letterSpacing: 1.1
@@ -196,15 +309,15 @@ class _SavingDetailState extends State<SavingDetail> {
                                                 )
                                             ],
                                           ),
-                                    
+                                                                    
                                           const SizedBox(height: 10,),
-                                    
+                                                                    
                                           Row(
                                             children: [
                                               SizedBox(
                                                 width: MediaQuery.of(context).size.width/3,
                                                 child: Text(
-                                                  DateFormat.yMMMd().format(widget.savingModel.dateCreated),
+                                                  DateFormat.yMMMd().format(widget.savingModel.targetDate),
                                               
                                                   style: const TextStyle(
                                                     fontSize: 16,
@@ -218,44 +331,6 @@ class _SavingDetailState extends State<SavingDetail> {
                                         ],
                                       ),
                                     ),
-
-                                Flexible(
-                                  flex: 5,
-                                  fit: FlexFit.tight,
-                                  child: Column(
-                                    children: [
-                                      Row(
-                                        children: const [
-                                          Text(
-                                            'To',
-                                
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              letterSpacing: 1.1
-                                            ),
-                                            )
-                                        ],
-                                      ),
-                                
-                                      const SizedBox(height: 10,),
-                                
-                                      Row(
-                                        children: [
-                                          SizedBox(
-                                            width: MediaQuery.of(context).size.width/3,
-                                            child: Text(
-                                              DateFormat.yMMMd().format(widget.savingModel.targetDate),
-                                          
-                                              style: const TextStyle(
-                                                fontSize: 16,
-                                                letterSpacing: 1.3,
-                                                fontWeight: FontWeight.w500
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                    ],
                                   ),
                                 ),
                                   ],
@@ -287,7 +362,7 @@ class _SavingDetailState extends State<SavingDetail> {
                                         SizedBox(
                                           width: MediaQuery.of(context).size.width-60,
                                           child: Text(
-                                            '₦${widget.savingModel.targetAmount}',
+                                            Currency().wrapCurrencySymbol('${widget.savingModel.targetAmount}'),
                                         
                                             style: const TextStyle(
                                               fontSize: 40,
@@ -307,29 +382,60 @@ class _SavingDetailState extends State<SavingDetail> {
                                 Column(
                                   children: [
                                     Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: const [
-                                        Text(
-                                          'Amount Saved:',
+                                        Flexible(
+                                          flex: 5,
+                                          child: Text(
+                                            'Amount Saved:',
+                                        
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              letterSpacing: 1.1
+                                            ),
+                                            ),
+                                        ),
 
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            letterSpacing: 1.1
-                                          ),
-                                          )
+                                        Flexible(
+                                          flex: 5,
+                                          child: Text(
+                                            'Amount To Go:',
+                                        
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              letterSpacing: 1.1
+                                            ),
+                                            ),
+                                        )
                                       ],
                                     ),
 
                                     const SizedBox(height: 10,),
 
                                     Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
                                         SizedBox(
-                                          width: MediaQuery.of(context).size.width-60,
+                                          width: (MediaQuery.of(context).size.width/2)-25,
                                           child: Text(
-                                            '₦${widget.savingModel.currentAmount}',
+                                            Currency().wrapCurrencySymbol('${widget.savingModel.currentAmount}'),
                                         
                                             style: const TextStyle(
-                                              fontSize: 40,
+                                              fontSize: 25,
+                                              letterSpacing: 1.3,
+                                              fontWeight: FontWeight.w600
+                                            ),
+                                          ),
+                                        ),
+
+
+                                        SizedBox(
+                                          width: (MediaQuery.of(context).size.width/2)-25,
+                                          child: Text(
+                                            Currency().wrapCurrencySymbol('${widget.savingModel.targetAmount - widget.savingModel.currentAmount}'),
+                                            textAlign: TextAlign.right,
+                                            style: const TextStyle(
+                                              fontSize: 25,
                                               letterSpacing: 1.3,
                                               fontWeight: FontWeight.w600
                                             ),

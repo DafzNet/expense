@@ -32,7 +32,7 @@ class BudgetModel {
   
 
   BudgetModel copyWith({
-    dynamic? id,
+    dynamic id,
     String? name,
     double? amount,
     double? balance,

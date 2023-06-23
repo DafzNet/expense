@@ -17,7 +17,7 @@ class CategoryModel {
   
 
   CategoryModel copyWith({
-    dynamic? id,
+    dynamic id,
     String? name,
     bool? hidden,
     String? description,

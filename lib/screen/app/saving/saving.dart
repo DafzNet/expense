@@ -324,9 +324,6 @@ class _SavingsScreenState extends State<SavingsScreen> {
 
 
 
-
-
-
 class SavingsTile extends StatelessWidget {
   final TargetSavingModel model;
   final int index;
@@ -337,58 +334,60 @@ class SavingsTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-
-      onTap: (){
-        Navigator.push(
-          context,
-          PageTransition(
-            child: SavingDetail(
-              savingModel: model,
-            ),
-            
-            type: PageTransitionType.rightToLeft)
-        );
-      },
-
-      leading: ClipOval(
-          child: Container(
-            width: 50,
-            height: 50,
-            color: appOrange.shade200,
-            padding: const EdgeInsets.all(10),
-            child: Center(
-              child: Text(
-                '$index',
+    return Container(
+      color:  model.targetDate.difference(DateTime.now()).inDays < 7 ? appDanger.shade50 :Theme.of(context).scaffoldBackgroundColor,
+      child: ListTile( 
+        onTap: (){
+          Navigator.push(
+            context,
+            PageTransition(
+              child: SavingDetail(
+                savingModel: model,
+              ),
+              
+              type: PageTransitionType.rightToLeft)
+          );
+        },
     
-                style: const TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16
+        leading: ClipOval(
+            child: Container(
+              width: 50,
+              height: 50,
+              color: appOrange.shade200,
+              padding: const EdgeInsets.all(10),
+              child: Center(
+                child: Text(
+                  '$index',
+      
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16
+                  ),
+              
                 ),
-            
               ),
             ),
           ),
+    
+        title: Text(
+          model.targetPurpose!
         ),
-
-      title: Text(
-        model.targetPurpose!
-      ),
-
-      subtitle: Text(
-        'for ${model.noOfMonth} month${model.noOfMonth>1?'s':''}'
-      ),
-
-      trailing: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            double.parse(((model.currentAmount/model.targetAmount)*100).toString()).toStringAsFixed(1)+'%'
-          ),
-
-          const Text('Saved')
-        ],
+    
+        subtitle: Text(
+          'for ${model.noOfMonth} month${model.noOfMonth>1?'s':''}'
+        ),
+    
+        trailing: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              double.parse(((model.currentAmount/model.targetAmount)*100).toString()).toStringAsFixed(1)+'%'
+            ),
+    
+            const Text('Saved')
+          ],
+        ),
       ),
     );
   }

@@ -1,4 +1,6 @@
 
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:expense/models/income_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,7 +11,7 @@ import '../../../../../models/expense_model.dart';
 import '../../../../../procedures/expenses/expense_procedure.dart';
 import '../../../../../providers/expense_provider.dart';
 import '../../../../../utils/capitalize.dart';
-import '../../../../../widgets/expense_tile.dart';
+import '../../../../../widgets/cards/expense_tile.dart';
 
 class IncomeExpensesScreen extends StatefulWidget {
 
@@ -67,7 +69,7 @@ class _IncomeExpensesScreenState extends State<IncomeExpensesScreen> {
               statusBarIconBrightness: Brightness.dark
             ),
             
-            title: Text(widget.income.name!+' Spendings'),
+            title: Text('${widget.income.name!} Spendings'),
         
           ),
         ],

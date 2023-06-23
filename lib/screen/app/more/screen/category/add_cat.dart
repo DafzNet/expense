@@ -150,7 +150,7 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
                                     }
                                    ),
 
-                                   SizedBox(height: 20,)
+                                   const SizedBox(height: 20,)
                                 ],
                               ),
                             ),

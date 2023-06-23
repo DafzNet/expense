@@ -1,7 +1,6 @@
 
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:expense/dbs/expense.dart';
 import 'package:expense/dbs/income_db.dart';
 import 'package:expense/models/income_model.dart';
 import 'package:expense/widgets/snack_bar.dart';

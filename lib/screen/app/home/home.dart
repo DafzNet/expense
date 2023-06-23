@@ -1,10 +1,10 @@
 import 'package:expense/models/user_model.dart';
-import 'package:expense/widgets/home_tile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../../firebase/db/user.dart';
 import '../../../utils/capitalize.dart';
 import '../../../utils/constants/colors.dart';
+import '../../../widgets/cards/home_tile.dart';
 
 
 class HomeScreen extends StatefulWidget {

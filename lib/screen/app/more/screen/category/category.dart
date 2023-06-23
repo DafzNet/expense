@@ -7,7 +7,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:sembast/sembast.dart';
 import '../../../../../dbs/category_db.dart';
 import '../../../../../utils/constants/colors.dart';
-import '../../../../../widgets/category_card.dart';
+import '../../../../../widgets/cards/category_card.dart';
 import 'add_cat.dart';
 
 class CategoryScreen extends StatefulWidget {
@@ -107,7 +107,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
           Navigator.push(
             context, 
             PageTransition(
-              child: AddCategoryScreen(),
+              child: const AddCategoryScreen(),
               type: PageTransitionType.bottomToTop
             )
           );

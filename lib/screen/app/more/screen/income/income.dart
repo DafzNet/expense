@@ -1,4 +1,6 @@
 
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:expense/dbs/income_db.dart';
 import 'package:expense/models/income_model.dart';
 import 'package:expense/screen/app/more/screen/income/add_income.dart';
@@ -10,7 +12,7 @@ import 'package:sembast/sembast.dart';
 import '../../../../../procedures/income/income_procedure.dart';
 import '../../../../../utils/capitalize.dart';
 import '../../../../../utils/constants/colors.dart';
-import '../../../../../widgets/income_card.dart';
+import '../../../../../widgets/cards/income_card.dart';
 
 class IncomeScreen extends StatefulWidget {
   const IncomeScreen({super.key});
@@ -61,7 +63,7 @@ class _IncomeScreenState extends State<IncomeScreen> {
         body: db != null ? Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
           child: StreamBuilder<List<IncomeModel>>(
-            initialData: [],
+            initialData: const [],
             stream: incomeDb.onIncome(db!),
             builder: (context, snapshot){
               if(snapshot.hasError){
@@ -148,7 +150,7 @@ class _IncomeScreenState extends State<IncomeScreen> {
           Navigator.push(
             context,
             PageTransition(
-              child: AddIncomeScreen(),
+              child: const AddIncomeScreen(),
               type: PageTransitionType.bottomToTop
             )
           );

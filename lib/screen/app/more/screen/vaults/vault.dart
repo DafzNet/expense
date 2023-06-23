@@ -1,13 +1,13 @@
 
-import 'package:expense/models/category_model.dart';
+import 'package:expense/models/vault.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:sembast/sembast.dart';
-import '../../../../../dbs/category_db.dart';
+import '../../../../../dbs/vault_db.dart';
 import '../../../../../utils/constants/colors.dart';
-import '../../../../../widgets/category_card.dart';
+import '../../../../../widgets/vault_card.dart';
 import 'add_vault.dart';
 
 class VaultScreen extends StatefulWidget {
@@ -19,11 +19,13 @@ class VaultScreen extends StatefulWidget {
 
 class _VaultScreenState extends State<VaultScreen> {
 
-  final CategoryDb categoryDb = CategoryDb();
+  final VaultDb vaultDb = VaultDb();
   Database? db;
 
-  void getCategoryDB()async{
-    db = await categoryDb.openDb();
+  void getVaultDB()async{
+
+    db = await vaultDb.openDb();
+
     setState(() {
       
     });
@@ -37,7 +39,9 @@ class _VaultScreenState extends State<VaultScreen> {
 
   @override
   Widget build(BuildContext context) {
-    getCategoryDB();
+
+    getVaultDB();
+
     return Scaffold(
       body: NestedScrollView(
         headerSliverBuilder: (context, bool innerBoxIsScrolled)=>[
@@ -47,7 +51,7 @@ class _VaultScreenState extends State<VaultScreen> {
               statusBarIconBrightness: Brightness.dark
             ),
             
-            title: const Text('Categories'),
+            title: const Text('Vaults'),
         
           ),
         ],
@@ -56,24 +60,24 @@ class _VaultScreenState extends State<VaultScreen> {
 ////////////////////////////
         body: db != null ? Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: StreamBuilder<List<CategoryModel>>(
+          child: StreamBuilder<List<VaultModel>>(
             initialData: const[],
-            stream: categoryDb.onCategories(db!),
+            stream: vaultDb.onVaults(db!),
             builder: (context, snapshot){
               if(snapshot.hasError){
                 return Column();
               }
               
-              final categories = snapshot.data;
+              final vaults = snapshot.data;
 
-              return categories!.isNotEmpty ?  ListView.builder(
-                itemCount: categories.length,
+              return vaults!.isNotEmpty ?  ListView.builder(
+                itemCount: vaults.length,
 
                 itemBuilder: (context, index){
-                  return CategoryCard(
+                  return VaultCard(
+                    vault: vaults[index],
                     index: (index+1).toString(),
-                    ctx: context,
-                    category: categories[index]);
+                  );
                 }
               )
               :
@@ -81,7 +85,7 @@ class _VaultScreenState extends State<VaultScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: const [
                   Center(
-                    child: Text('No Categories added yet'),
+                    child: Text('No Vaults currently added yet'),
                   )
                 ],
               );
@@ -107,7 +111,7 @@ class _VaultScreenState extends State<VaultScreen> {
           Navigator.push(
             context, 
             PageTransition(
-              child: AddVaultScreen(),
+              child: const AddVaultScreen(),
               type: PageTransitionType.bottomToTop
             )
           );
