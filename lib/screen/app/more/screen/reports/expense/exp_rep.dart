@@ -2,6 +2,7 @@
 import 'package:expense/models/expense_model.dart';
 import 'package:expense/utils/currency/currency.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:sembast/sembast.dart';
@@ -148,7 +149,7 @@ class _ExpReportScreenState extends State<ExpReportScreen> {
                                     
                             children: [
                               Text(
-                                Month().currentMonth + 'Expense',
+                                '${Month().currentMonth} Expense',
                                     
                                 style: const TextStyle(
                                   fontSize: 16
@@ -368,6 +369,19 @@ class _ExpReportScreenState extends State<ExpReportScreen> {
                                   },
                                   title: Text(
                                     e.title
+                                  ),
+
+                                  subtitle: Text(
+                                    Currency().wrapCurrencySymbol(e.amount.toString())
+                                  ),
+
+                                  trailing: Text(
+                                    DateFormat.yMMMd().format(e.date)
+                                  ),
+
+                                  leading: Icon(
+                                    MdiIcons.trendingDown,
+                                    color: appDanger,
                                   ),
                                 ),
                               ),

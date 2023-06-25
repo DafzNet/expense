@@ -1,6 +1,7 @@
 
 import 'package:expense/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import 'expense/exp_rep.dart';
 import 'income/income_rep.dart';
@@ -20,8 +21,40 @@ class _ReportScreenState extends State<ReportScreen> {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: const Color.fromARGB(255, 245, 245, 245),
+          
+
+          actions: [
+            GestureDetector(
+              onTap: () {
+                
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(right: 15),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                  decoration: BoxDecoration(
+                    border: Border.all(),
+                    borderRadius: BorderRadius.circular(10)
+                  ),
+                  child: Row(
+                    children: const[
+                      Text(
+                        'Current Month'
+                      ),
+                
+                      Icon(
+                        MdiIcons.chevronDown
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            )
+          ],
+
+
           bottom: TabBar(
-            padding: const EdgeInsets.symmetric(horizontal: 5),
+            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
             indicatorSize: TabBarIndicatorSize.tab,
             labelColor: Colors.white,
             labelStyle: const TextStyle(
