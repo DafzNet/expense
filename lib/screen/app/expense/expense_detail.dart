@@ -142,19 +142,7 @@ class _ExpenseDetailState extends State<ExpenseDetail> {
                               children: [
                                 Column(
                                   children: [
-                                    Row(
-                                      children: const [
-                                        Text(
-                                          'Title:',
-
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            letterSpacing: 1.1
-                                          ),
-                                          )
-                                      ],
-                                    ),
-
+                                   
                                     const SizedBox(height: 10,),
 
                                     Text(
@@ -228,9 +216,10 @@ class _ExpenseDetailState extends State<ExpenseDetail> {
                                         Text(
                                           Currency().wrapCurrencySymbol('${widget.expenseModel.amount}'),
 
-                                          style: const TextStyle(
+                                          style: TextStyle(
                                             fontSize: 32,
                                             letterSpacing: 1.3,
+                                            color: appDanger,
                                             fontWeight: FontWeight.w500
                                           ),
                                         ),

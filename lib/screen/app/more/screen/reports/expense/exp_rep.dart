@@ -25,6 +25,13 @@ class _ExpReportScreenState extends State<ExpReportScreen> {
   int touchedIndex = -1;
 
 
+  //Group expenses by their weekdays
+  List<String> daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  Set<String> daysOfExp = {};
+  Map<String, List<ExpenseModel>> expsByWeekDay = {};
+  Map<String, double> dailyTotal = {'Sunday':0, 'Monday':0, 'Tuesday':0, 'Wednesday':0, 'Thursday':0, 'Friday':0, 'Saturday':0};
+
+
   final ExpenseDb expenseDb = ExpenseDb();
   Set<String> expensesCats = <String>{};
   Map<String, List<ExpenseModel>> expensesByCat = {};
@@ -46,6 +53,37 @@ class _ExpReportScreenState extends State<ExpReportScreen> {
       ])
     );
 
+    //Get the weekday each expense ocurred
+    for (var exp in exps) {
+      String weekday = DateFormat.EEEE().format(exp.date);
+      daysOfExp.add(weekday);
+    }
+
+    for (var day in daysOfExp) {
+      expsByWeekDay[day] = [];
+      dailyTotal[day] = 0;
+    }
+
+    //group each exp by the weekday
+    for (var day in daysOfExp) {
+      
+      for (var exp in exps) {
+        String weekday = DateFormat.EEEE().format(exp.date);
+        if (day == weekday) {
+          expsByWeekDay[day]!.add(exp);
+        }
+      }
+    }
+
+  //get daily total
+    for (var day in daysOfExp) {
+      for (var exp in expsByWeekDay[day]!) {
+        dailyTotal[day] = dailyTotal[day]! + exp.amount;
+      }
+    }
+
+
+    
 
     ////Get expenses categories
     for (ExpenseModel exp in exps) {
@@ -348,7 +386,12 @@ class _ExpReportScreenState extends State<ExpReportScreen> {
                     ),
 
 
-                    Card(
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(255, 191, 190, 190),
+                        borderRadius: BorderRadius.circular(12)
+                      ),
                       child: Column(
                           children: expensesByCat[_selectedCategory]!.map((e){
                             return Padding(
@@ -370,15 +413,49 @@ class _ExpReportScreenState extends State<ExpReportScreen> {
                                   title: Text(
                                     e.title
                                   ),
+                    
+                                  subtitle: RichText(
+                                    text: TextSpan(
+                                      text: Currency().wrapCurrencySymbol(e.amount.toString())+'\n',
 
-                                  subtitle: Text(
-                                    Currency().wrapCurrencySymbol(e.amount.toString())
+                                      style: TextStyle(
+                                        color: appDanger
+                                      ),
+
+                                      children: [
+                                        TextSpan(
+                                          text: 'spent '+double.parse("${(e.amount/expTotal)*100}").toStringAsFixed(1)+"% of total expenses",
+
+                                          style: const TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 10
+                                          ),
+                                        ),
+
+                                        TextSpan(
+                                          text: '\nspent '+double.parse("${(e.amount/expenseCatTotal[_selectedCategory]!)*100}").toStringAsFixed(1)+"% of this category total",
+
+                                          style: const TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 10
+                                          ),
+                                        )
+                                      ]
+                                    
+                                    )
+                                    
                                   ),
-
+                    
                                   trailing: Text(
-                                    DateFormat.yMMMd().format(e.date)
-                                  ),
+                                    DateFormat.yMMMd().format(e.date),
 
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 12
+                                    ),
+
+                                  ),
+                    
                                   leading: Icon(
                                     MdiIcons.trendingDown,
                                     color: appDanger,
@@ -389,6 +466,88 @@ class _ExpReportScreenState extends State<ExpReportScreen> {
                           }).toList(),
                         ),
                     ),
+
+                const SizedBox(height: 10,),
+
+  // List<String> daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  // Set<String> daysOfExp = {};
+  // Map<String, List<ExpenseModel>> expsByWeekDay = {};
+  // Map<String, double> dailyTotal = {'Sunday':0, 'Monday':0, 'Tuesday':0, 'Wednesday':0, 'Thursday':0, 'Friday':0, 'Saturday':0};
+
+                Row(
+                  children: const [
+                    Text('Spending based on Weekday'),
+                  ],
+                ),
+
+                const SizedBox(height: 15,),
+
+
+                Container(
+                  padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 255, 255, 255),
+                      borderRadius: BorderRadius.circular(12)
+                    ),
+                  child: Column(
+                    children: List.generate(7, (index){
+                    return Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                      decoration: const BoxDecoration(
+                
+                      ),
+                      child: Row(
+                        children: [
+                          const SizedBox(width: 10,),
+                
+                          Flexible(
+                            flex: 1,
+                            fit: FlexFit.tight,
+                            child: Text(
+                              dailyTotal.keys.elementAt(index).substring(0, 3),
+                
+                              style: const TextStyle(
+                                color: Color.fromARGB(255, 83, 5, 192)
+                              ),
+                            )
+                          ),
+                    
+                          Flexible(
+                            flex: 7,
+                            //fit: FlexFit.tight,
+                            child: Row(
+                              children: [
+                                SizedBox(
+                                  width: ((dailyTotal.values.elementAt(index)/expTotal)*100)*2,
+                                  height: 6,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(6),
+                                      color: appDanger,
+                                    ),
+                                    
+                                  ),
+                                ),
+                
+                                Text(
+                                 (dailyTotal.values.elementAt(index)/expTotal)*100>0 ? ' ${Currency().wrapCurrencySymbol(dailyTotal.values.elementAt(index).toString())}( ${double.parse(((dailyTotal.values.elementAt(index)/expTotal)*100).toString()).toStringAsFixed(1)}%)' : '',
+                                  style: const TextStyle(
+                                    fontSize: 10
+                                  ),
+                                )
+                              ],
+                            ),
+                          )
+                          
+                        ],
+                      ),
+                    );
+                  }),
+                  ),
+                ),
+                
+
+                const SizedBox(height: 25,)
              
             ],
           ),

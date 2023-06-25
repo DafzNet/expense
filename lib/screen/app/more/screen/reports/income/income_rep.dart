@@ -4,11 +4,14 @@ import 'package:expense/models/expense_model.dart';
 import 'package:expense/models/income_model.dart';
 import 'package:expense/utils/constants/colors.dart';
 import 'package:expense/utils/currency/currency.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:sembast/sembast.dart';
 
 import '../../../../../../utils/month.dart';
+import '../../income/income_exps.dart';
 
 
 
@@ -20,22 +23,25 @@ class IncomeReportScreen extends StatefulWidget {
 }
 
 class _IncomeReportScreenState extends State<IncomeReportScreen> {
+  int touchedIndex = -1;
   IncomeDb incomeDb = IncomeDb();
   ExpenseDb expenseDb = ExpenseDb();
 
   List<IncomeModel> allIncomesForPeriod = [];
   List<ExpenseModel> allExpensesForPeriod = [];
 
-  Map<int, List<ExpenseModel>> expensesForIncome = {};
-  Map<int, Map<String, double>> expensesCatTotalForIncome = {};
-  Map<int, Set<String>> perIncomeExpCat = {};
+  Map<int, List<ExpenseModel>> expensesForIncome = {}; //exps per individual income
+  Map<int, Map<String, double>> expensesCatTotalForIncome = {}; //exps category total per individual income
+  Map<int, Set<String>> perIncomeExpCat = {}; //exps categories in any individual income
+
+
+  Map<String, double> allIncomeExpCatsAndTotal = {}; /// all exps categories for all incomes
 
   double totalIncome = 0;
   double incomeBalance = 0;
   double incomeSpent = 0;
 
   void getIncome()async{
-
     final filter = Filter.equals('month', Month().currentMonthNumber); //filter the db based on period
 
     final incomes = await incomeDb.retrieveBasedOn(filter); //get all incomes for the period
@@ -76,6 +82,15 @@ class _IncomeReportScreenState extends State<IncomeReportScreen> {
         expensesCatTotalForIncome[income.id]![exp.category!.name] = expensesCatTotalForIncome[income.id]![exp.category!.name]! + exp.amount;
         perIncomeExpCat[income.id]!.add(exp.category!.name);
       }
+    }
+
+    for (var expense in expenses) {
+      allIncomeExpCatsAndTotal[expense.category!.name]=0;
+    }
+
+
+    for (var expense in expenses) {
+      allIncomeExpCatsAndTotal[expense.category!.name] = allIncomeExpCatsAndTotal[expense.category!.name]! + expense.amount;
     }
   
     incomeSpent = totalIncome - incomeBalance; //total income spent
@@ -225,6 +240,163 @@ class _IncomeReportScreenState extends State<IncomeReportScreen> {
               ),
 
               const SizedBox(height: 10,),
+
+
+              Row(
+                children: const  [
+                  Text('Expense Category against overall Income'),
+                ],
+              ),
+
+              const SizedBox(height: 10,),
+
+              Container(
+                
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  color: Colors.white,
+                  border: Border.all(
+                    color: appOrange.shade200
+                  )
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        SizedBox(
+                          height: 240,
+                          child: AspectRatio(
+                            aspectRatio: 0.9,
+                            child: PieChart(
+                              PieChartData(
+                                pieTouchData: PieTouchData(
+                                  touchCallback: (FlTouchEvent event, pieTouchResponse) {
+                                    setState(() {
+                                      if (!event.isInterestedForInteractions ||
+                                          pieTouchResponse == null ||
+                                          pieTouchResponse.touchedSection == null) {
+                                        touchedIndex = -1;
+                                        return;
+                                      }
+                                      touchedIndex = pieTouchResponse
+                                          .touchedSection!.touchedSectionIndex;
+                                    });
+                                  },
+                                ),
+                                borderData: FlBorderData(
+                                  show: false,
+                                ),
+                                sectionsSpace: 1,
+                                centerSpaceRadius: 40,
+                                centerSpaceColor: appSuccess.shade50,
+                                sections: List.generate(allIncomeExpCatsAndTotal.length, (i) {
+                                  final isTouched = i == touchedIndex;
+                                  final fontSize = isTouched ? 25.0 : 16.0;
+                                  final radius = isTouched ? 70.0 : 60.0;
+                                  const shadows = [Shadow(color: Color.fromARGB(255, 106, 69, 69), blurRadius: 2)];
+                                              
+                                  return PieChartSectionData(
+                                      color: reportColors[i+1],
+                                      value: (allIncomeExpCatsAndTotal.values.elementAt(i)/totalIncome)*100,
+                                        title: '${double.parse(((allIncomeExpCatsAndTotal.values.elementAt(i)/totalIncome)*100).toString()).toStringAsFixed(1)}%',
+                                        radius: radius,
+                                        titleStyle: TextStyle(
+                                          fontSize: fontSize,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                          shadows: shadows,
+                                        ),
+                                      );
+                                     }
+                                  )
+                                 )
+                                  
+                            ),
+                          ),
+                        ),
+              
+                        SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: List.generate(
+                              allIncomeExpCatsAndTotal.values.length, (iC) => Padding(
+                                padding: const EdgeInsets.only(bottom: 5),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      MdiIcons.circle,
+                                      color: reportColors[iC+1],
+                                      size: 14,
+                                    ),
+                              
+                                    const SizedBox(width: 5,),
+                                                
+                                    Text(
+                                      allIncomeExpCatsAndTotal.keys.elementAt(iC),
+                              
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            )
+                          ),
+                        )          
+                      ],
+                    ),
+
+                    Divider(
+                      color: appOrange,
+                    ),
+
+                    ...List.generate(allIncomeExpCatsAndTotal.length, (index){
+                      return Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+
+                        child: Row(
+                          children: [
+                            Icon(
+                              MdiIcons.trendingDown,
+                              color: appDanger,
+                              size: 12,
+                            ),
+                            const SizedBox(width: 5,),
+
+                            Flexible(
+                              flex: 3,
+                              fit: FlexFit.tight,
+                              child: Text(
+                                allIncomeExpCatsAndTotal.keys.elementAt(index)
+                              ),
+                            ),
+
+                            Flexible(
+                              flex: 5,
+                              //fit: FlexFit.tight,
+                              child: Text(
+                                Currency().wrapCurrencySymbol(allIncomeExpCatsAndTotal.values.elementAt(index).toString()),
+
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: appDanger,
+                                  fontWeight: FontWeight.bold
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    })
+
+
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 20,),
 
               //////////////////////////////////////////////////
               //////////////////////////////////////////////////
@@ -487,8 +659,7 @@ class _IncomeReportScreenState extends State<IncomeReportScreen> {
                                         ),
 
                                          subtitle: Text(
-                                          double.parse(((expensesCatTotalForIncome[allIncomesForPeriod.elementAt(index).id]![perIncomeExpCat[allIncomesForPeriod[index].id]!.elementAt(i)]!/totalIncome)*100).toString()).toStringAsFixed(1)+'% spent from overall income\n'+
-                                          double.parse(((expensesCatTotalForIncome[allIncomesForPeriod.elementAt(index).id]![perIncomeExpCat[allIncomesForPeriod[index].id]!.elementAt(i)]!/allIncomesForPeriod.elementAt(index).amount)*100).toString()).toStringAsFixed(1)+'% spent from this income'
+                                          '${double.parse(((expensesCatTotalForIncome[allIncomesForPeriod.elementAt(index).id]![perIncomeExpCat[allIncomesForPeriod[index].id]!.elementAt(i)]!/totalIncome)*100).toString()).toStringAsFixed(1)}% spent from overall income\n${double.parse(((expensesCatTotalForIncome[allIncomesForPeriod.elementAt(index).id]![perIncomeExpCat[allIncomesForPeriod[index].id]!.elementAt(i)]!/allIncomesForPeriod.elementAt(index).amount)*100).toString()).toStringAsFixed(1)}% spent from this income'
                                         ),
                                       ),
                                     )
@@ -501,25 +672,128 @@ class _IncomeReportScreenState extends State<IncomeReportScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
 
-                              children: const [
-                                Text(
-                                  'View individual Expenses',
-
-                                  style: TextStyle(
-                                            color: Colors.blueAccent
-                                          ),
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(context,
+                                    PageTransition(
+                                      type: PageTransitionType.rightToLeft,
+                                      child: IncomeExpensesScreen(
+                                        income: allIncomesForPeriod.elementAt(index),
+                                      
+                                      )
+                                    )
+                                   );
+                                  },
+                                  child: const Text(
+                                    'View individual Expenses',
+                                
+                                    style: TextStyle(
+                                              color: Colors.blueAccent
+                                            ),
+                                  ),
                                 )
                               ],
+                            ),
+
+                            const Divider(),
+
+
+                      Row(      
+                      children: [
+                        SizedBox(
+                          height: 120,
+                          width: 160,
+                          child: AspectRatio(
+                            aspectRatio: 0.9,
+                            child: PieChart(
+                              PieChartData(
+                                pieTouchData: PieTouchData(
+                                  touchCallback: (FlTouchEvent event, pieTouchResponse) {
+                                    setState(() {
+                                      if (!event.isInterestedForInteractions ||
+                                          pieTouchResponse == null ||
+                                          pieTouchResponse.touchedSection == null) {
+                                        touchedIndex = -1;
+                                        return;
+                                      }
+                                      touchedIndex = pieTouchResponse
+                                          .touchedSection!.touchedSectionIndex;
+                                    });
+                                  },
+                                ),
+                                borderData: FlBorderData(
+                                  show: false,
+                                ),
+                                sectionsSpace: 1,
+                                centerSpaceRadius: 20,
+                                centerSpaceColor: appSuccess.shade50,
+                                sections: List.generate(expensesCatTotalForIncome[allIncomesForPeriod.elementAt(index).id]!.length, (i) {
+                                  final isTouched = i == touchedIndex;
+                                  final fontSize = isTouched ? 16.0 : 10.0;
+                                  final radius = isTouched ? 40.0 : 30.0;
+                                  const shadows = [Shadow(color: Color.fromARGB(255, 106, 69, 69), blurRadius: 2)];
+                                              
+                                  return PieChartSectionData(
+                                      color: reportColors[i+1],
+                                      value: (expensesCatTotalForIncome[allIncomesForPeriod.elementAt(index).id]!.values.elementAt(i)/allIncomesForPeriod.elementAt(index).amount)*100,
+                                        title: '${double.parse(((expensesCatTotalForIncome[allIncomesForPeriod.elementAt(index).id]!.values.elementAt(i)/allIncomesForPeriod.elementAt(index).amount)*100).toString()).toStringAsFixed(1)}%',
+                                        radius: radius,
+                                        titleStyle: TextStyle(
+                                          fontSize: fontSize,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                          shadows: shadows,
+                                        ),
+                                      );
+                                     }
+                                  )
+                                 )
+                                  
+                            ),
+                          ),
+                        ),
+              
+                        SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: List.generate(
+                              expensesCatTotalForIncome[allIncomesForPeriod.elementAt(index).id]!.keys.length, (iC) => Padding(
+                                padding: const EdgeInsets.only(bottom: 2),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      MdiIcons.circle,
+                                      color: reportColors[iC+1],
+                                      size: 10,
+                                    ),
+                              
+                                    const SizedBox(width: 5,),
+                                                
+                                    Text(
+                                      expensesCatTotalForIncome[allIncomesForPeriod.elementAt(index).id]!.keys.elementAt(iC),
+                              
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
                             )
+                          ),
+                        )          
+                      ],
+                    ),
+
+
                           ],
                         ),
                       ),
                     );
                   }
                 )
-
-
-
             ],
           ),
         ),

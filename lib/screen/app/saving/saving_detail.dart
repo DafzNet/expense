@@ -359,16 +359,29 @@ class _SavingDetailState extends State<SavingDetail> {
 
                                     Row(
                                       children: [
-                                        SizedBox(
-                                          width: MediaQuery.of(context).size.width-60,
-                                          child: Text(
-                                            Currency().wrapCurrencySymbol('${widget.savingModel.targetAmount}'),
-                                        
-                                            style: const TextStyle(
-                                              fontSize: 40,
-                                              letterSpacing: 1.3,
-                                              fontWeight: FontWeight.w600
-                                            ),
+                                        Container(
+                                          padding: const EdgeInsets.all(5),
+                                          decoration: BoxDecoration(
+                                            color: appSuccess
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                Currency().wrapCurrencySymbol('${widget.savingModel.targetAmount} '),
+                                                                                    
+                                                style: TextStyle(
+                                                  fontSize: 30,
+                                                  letterSpacing: 1.3,
+                                                  color: appSuccess.shade50,
+                                                  fontWeight: FontWeight.w600
+                                                ),
+                                              ),
+
+                                              Icon(
+                                                MdiIcons.arrowUpCircleOutline,
+                                                color: appSuccess.shade50,
+                                              )
+                                            ],
                                           ),
                                         ),
                                       ],
@@ -420,9 +433,10 @@ class _SavingDetailState extends State<SavingDetail> {
                                           child: Text(
                                             Currency().wrapCurrencySymbol('${widget.savingModel.currentAmount}'),
                                         
-                                            style: const TextStyle(
+                                            style: TextStyle(
                                               fontSize: 25,
                                               letterSpacing: 1.3,
+                                              color: appSuccess,
                                               fontWeight: FontWeight.w600
                                             ),
                                           ),
@@ -437,6 +451,7 @@ class _SavingDetailState extends State<SavingDetail> {
                                             style: const TextStyle(
                                               fontSize: 25,
                                               letterSpacing: 1.3,
+                                              color: Color.fromARGB(255, 233, 182, 16),
                                               fontWeight: FontWeight.w600
                                             ),
                                           ),
