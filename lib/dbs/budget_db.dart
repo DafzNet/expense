@@ -125,10 +125,7 @@ class BudgetDb{
     var store = intMapStoreFactory.store();
     var storeQuery = store.query(
       finder: Finder(
-        filter: Filter.or(
-          [
-            //Filter.and([Filter.equals('month', month??Month().currentMonthNumber), Filter.equals('year', DateTime.now().year)]),
-            Filter.custom((record){
+        filter: Filter.custom((record){
               final budg = record.value as Map<String, dynamic>;
               final myBudg = BudgetModel.fromMap(budg);
 
@@ -140,7 +137,7 @@ class BudgetDb{
               
             })
             
-          ])));
+          ));
     var subscription = storeQuery.onSnapshots(db).map((snapshot) => snapshot.map((e) => BudgetModel.fromMap(e.value)).toList(growable: false)
       );
     //.transform(expensesTransformer);

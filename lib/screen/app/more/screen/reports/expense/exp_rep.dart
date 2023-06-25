@@ -174,7 +174,7 @@ class _ExpReportScreenState extends State<ExpReportScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 20),
 
                     decoration: BoxDecoration(
-                      color: appSuccess.shade300,
+                      color: appSuccess.shade800,
                       borderRadius: BorderRadius.circular(15)
                     ),
                     child: SizedBox(
@@ -190,7 +190,8 @@ class _ExpReportScreenState extends State<ExpReportScreen> {
                                 '${Month().currentMonth} Expense',
                                     
                                 style: const TextStyle(
-                                  fontSize: 16
+                                  fontSize: 16,
+                                  color: Colors.white
                                 ),
                               ),
                 
@@ -201,7 +202,8 @@ class _ExpReportScreenState extends State<ExpReportScreen> {
                                     
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w600,
-                                  fontSize: 20
+                                  fontSize: 25,
+                                  color: Colors.white
                                 ),
                               )
                             ],

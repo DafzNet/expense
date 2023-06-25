@@ -3,6 +3,7 @@ import 'package:expense/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
+import 'budget/budget_rep.dart';
 import 'expense/exp_rep.dart';
 import 'income/income_rep.dart';
 
@@ -72,11 +73,11 @@ class _ReportScreenState extends State<ReportScreen> {
             ]),
         ),
 
-        body: TabBarView(
+        body: const TabBarView(
           children: [
-            const ExpReportScreen(),
-            const IncomeReportScreen(),
-            Container()
+            ExpReportScreen(),
+            IncomeReportScreen(),
+            BudgetReportScreen()
           ],
         ),
       ),

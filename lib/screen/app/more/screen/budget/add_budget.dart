@@ -318,7 +318,30 @@ class _AddBudgetScreenState extends State<AddBudgetScreen> {
 
                                         final expenseDb = ExpenseDb();
 
-                                        List<ExpenseModel> expenses = await expenseDb.retrieveBasedOn(filter);
+                                        List<ExpenseModel> expenses = await expenseDb.retrieveBasedOn(
+                                          Filter.and(
+                                            [
+                                              filter,
+                                              Filter.or(
+                                                [
+                                                  Filter.and(
+                                                    [
+                                                      Filter.equals('month', Month().currentMonthNumber),
+                                                      Filter.equals('year', DateTime.now().year),
+                                                    ]
+                                                  ),
+
+                                                  Filter.and(
+                                                    [
+                                                      Filter.greaterThanOrEquals('date', _starDate!.millisecondsSinceEpoch),
+                                                      Filter.lessThanOrEquals('date', _endDate!.millisecondsSinceEpoch)
+                                                    ]
+                                                  )
+                                                ]
+                                              )
+                                            ]
+                                          )
+                                        );
 
                                         double _catBal = double.parse(amountController.text);
 
