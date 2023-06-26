@@ -37,6 +37,7 @@ class _BudgetReportScreenState extends State<BudgetReportScreen> {
 
 
   Map<int, List<ExpenseModel>> expensesPerBudgets = {}; //sotre exps by their budgets
+  List<ExpenseModel> allBudgetExps = [];
 
 
   
@@ -60,12 +61,13 @@ class _BudgetReportScreenState extends State<BudgetReportScreen> {
 
     for (var budget in budgets) {
       expensesPerBudgets[budget.id] = [];
+      bugettedAmountForAllBudgets += budget.amount;
+      actualAmountForAllBudgets += (budget.amount - budget.balance);
     }
 
 
     for (var budget in budgets) {
       expensesPerBudgets[budget.id] = await expenseDb.retrieveBasedOn(
-
           Filter.and(
             [
               Filter.custom((record){
@@ -95,6 +97,10 @@ class _BudgetReportScreenState extends State<BudgetReportScreen> {
             ]
           )
       );
+    }
+
+    for (var element in expensesPerBudgets.values) {
+      allBudgetExps.addAll(element);
     }
 
 
@@ -128,118 +134,202 @@ class _BudgetReportScreenState extends State<BudgetReportScreen> {
                 padding: const EdgeInsets.symmetric(vertical: 10),
                 child: Card(
                   elevation: 1,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: Stack(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
 
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 2, 68, 90),
-                      borderRadius: BorderRadius.circular(15)
-                    ),
-                    child: SizedBox(
-                      height: 120,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 2, 68, 90),
+                          borderRadius: BorderRadius.circular(15)
+                        ),
+                        child: SizedBox(
+                          height: 200,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                                     
                             children: [
-                              const Text(
-                                'Total Income',
-                                    
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.white
-                                ),
-                              ),
-                
-                              const SizedBox(height: 10,),
-                                    
-                              Text(
-                                Currency().wrapCurrencySymbol('0000'),
-                                    
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
-                                  fontSize: 25
-                                ),
-                              ),
-
-                              const SizedBox(height: 10,),
-                            ],
-                          ),
-
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: const [
-                                  Text(
-                                    'Spent:',    
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text(
+                                    'Number of Budgets: ',
+                                        
                                     style: TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.white,
-                                      fontSize: 14
+                                      fontSize: 16,
+                                      color: Colors.white
                                     ),
                                   ),
+
+                                  Text(
+                                    
+                                    budgets.length.toString(),
+                                    
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                      fontSize: 25
+                                    ),
+                                  ),
+
                                 ],
                               ),
+
+                              const SizedBox(height: 10,),
+
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: const [
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text(
+                                    'Budgeted Amount: ',
+                                        
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.white
+                                    ),
+                                  ),
+
                                   Text(
-                                    '2222',    
+                                    
+                                    Currency().wrapCurrencySymbol(bugettedAmountForAllBudgets.toString()),
+                                    
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                      fontSize: 20
+                                    ),
+                                  ),
+
+                                ],
+                              ),
+
+                              const SizedBox(height: 10,),
+
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text(
+                                    'Actual Amount: ',
+                                        
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.white
+                                    ),
+                                  ),
+
+                                  Text(
+                                    
+                                    Currency().wrapCurrencySymbol(actualAmountForAllBudgets.toString()),
+                                    
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                      fontSize: 20
+                                    ),
+                                  ),
+
+                                ],
+                              ),
+
+
+                              const Divider(
+                                height: 30,
+                              ),
+
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Variance: ',
+                                        
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: appOrange.shade100
+                                    ),
+                                  ),
+
+                                  Text(
+                                    
+                                    Currency().wrapCurrencySymbol(
+                                      (bugettedAmountForAllBudgets - actualAmountForAllBudgets)
+                                    .toString()),
+                                    
                                     style: TextStyle(
                                       fontWeight: FontWeight.w600,
-                                      color: Colors.redAccent,
-                                      fontSize: 16
+                                      color: bugettedAmountForAllBudgets - actualAmountForAllBudgets < 0 ? appDanger :
+                                        bugettedAmountForAllBudgets - actualAmountForAllBudgets == 0?
+                                          appOrange : Colors.greenAccent,
+                                      fontSize: 20
                                     ),
                                   ),
+
                                 ],
                               ),
 
-                              const SizedBox(height: 10,),
+                              const SizedBox(height: 5,),
 
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: const [
-                                  Text(
-                                    'Balance:',    
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.white,
-                                      fontSize: 14
+                              if(bugettedAmountForAllBudgets - actualAmountForAllBudgets < 0)...
+                              [
+                                Text(
+                                  'Overall budget over spent by ${Currency().wrapCurrencySymbol((actualAmountForAllBudgets-bugettedAmountForAllBudgets).toString())}',
+
+                                  style: TextStyle(
+                                      color: appDanger,
+                                      fontSize: 12
                                     ),
-                                  ),
-                                ],
-                              ),                 
+                                  
+                                 )
+                              ],
 
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: const[
-                                  Text(
-                                    '0000',    
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
+                              if(bugettedAmountForAllBudgets - actualAmountForAllBudgets > 0)...
+                              [
+                                Text(
+                                  '${Currency().wrapCurrencySymbol((bugettedAmountForAllBudgets-actualAmountForAllBudgets).toString())} of overall budget saved',
+                                  style: const TextStyle(
                                       color: Colors.greenAccent,
-                                      fontSize: 16
+                                      fontSize: 12
                                     ),
-                                  ),
-                                ],
-                              ),
+                                )
+                              ],
+
+                              if(bugettedAmountForAllBudgets - actualAmountForAllBudgets == 0)...
+                              [
+                                Text(
+                                  'Overall budget spent exactly as planned',
+
+                                  style: TextStyle(
+                                      color: appOrange,
+                                      fontSize: 12
+                                    ),
+                                )
+                              ]
+
                             ],
                           ),
-                        ],
+                        ),
                       ),
-                    ),
+
+                      Positioned(
+                        right: 20,
+                        bottom: 20,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 1),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12)
+                          ),
+                          child: const Text(
+                            'View Expenses',
+
+                             style: TextStyle(
+                                color: Color.fromARGB(255, 1, 35, 46),
+                                fontSize: 12
+                              ),
+                          ),
+                        )
+                      )
+                    ],
                   ),
                 ),
               ),
@@ -248,13 +338,13 @@ class _BudgetReportScreenState extends State<BudgetReportScreen> {
 
               ...budgets.map((e) => BudgetCard(budget: e)),
 
-              ...List.generate(expensesPerBudgets.length, (index){
-                return Column(
-                  children: expensesPerBudgets.values.elementAt(index).map((e){
-                    return Text(e.title+expensesPerBudgets.keys.elementAt(index).toString());
-                  }).toList(),
-                );
-              })
+              // ...List.generate(expensesPerBudgets.length, (index){
+              //   return Column(
+              //     children: expensesPerBudgets.values.elementAt(index).map((e){
+              //       return Text(e.title+expensesPerBudgets.keys.elementAt(index).toString());
+              //     }).toList(),
+              //   );
+              // })
             ],
           ),
         ),
