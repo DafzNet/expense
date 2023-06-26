@@ -11,6 +11,7 @@ import 'package:expense/models/expense_model.dart';
 import 'package:sembast/sembast.dart';
 import '../../dbs/income_db.dart';
 import '../../models/vault.dart';
+import '../../utils/month.dart';
 
 
 
@@ -36,13 +37,36 @@ Future<void> deleteExpenseProcedure(ExpenseModel expense)async{
   var category = expense.category!;
 
   var budget = await budgetDb.retrieveBasedOn(
-    Filter.custom((record){
-      var bud = record.value as Map<String, dynamic>;
-      var _bud = BudgetModel.fromMap(bud);
+    Filter.and(
+            [
+              Filter.custom((record){
+                var bud = record.value as Map<String, dynamic>;
+                var _bud = BudgetModel.fromMap(bud);
 
-      return _bud.category == category;
+                return _bud.category == category;
 
-    })
+              }),
+
+              Filter.or(
+                [
+                  Filter.and(
+                    [
+                      Filter.equals('month', Month().currentMonthNumber),
+                      Filter.equals('year', DateTime.now().year),
+                    ]
+                  ),
+
+                  Filter.and(
+                    [
+                      Filter.lessThanOrEquals('startDate', expense.date.millisecondsSinceEpoch),
+                      Filter.greaterThanOrEquals('endDate', expense.date.millisecondsSinceEpoch)
+                    ]
+                  )
+                ]
+              )
+            ]
+          )
+    
   );
 
   BudgetModel? expBudget;

@@ -9,6 +9,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:sembast/sembast.dart';
 
 import '../../dbs/category_db.dart';
+import '../../utils/capitalize.dart';
 import '../../utils/constants/colors.dart';
 
 
@@ -138,7 +139,42 @@ class _CategoryCardState extends State<CategoryCard> {
                   ),
     
                   GestureDetector(
-                    onTap: widget.onDelete,
+                    onTap: widget.onDelete??(){
+                      showDialog(
+                        context: widget.ctx!,
+                        barrierDismissible: false, // user must tap button!
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            //backgroundColor: appOrange,
+                            title: Text('Delete ${capitalize(widget.category.name)}?'),
+                            content:  SingleChildScrollView(
+                              child: ListBody(
+                                children: const <Widget>[
+                                  Text('Deleting this category will remove it and all expenses and budgets from the database'),
+                                ],
+                              ),
+                            ),
+                            actions: <Widget>[
+                              TextButton(
+                                child: const Text(
+                                  'Cancel'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                              TextButton(
+                                child: const Text('Confirm'),
+                                onPressed: () async {
+                                  
+                                  
+                                  
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ],
+                          );}
+                        );
+                    },
                     child: Icon(
                       MdiIcons.deleteOutline,
                       size: 22,

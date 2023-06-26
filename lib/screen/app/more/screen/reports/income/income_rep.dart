@@ -41,13 +41,15 @@ class _IncomeReportScreenState extends State<IncomeReportScreen> {
   double incomeBalance = 0;
   double incomeSpent = 0;
 
-  void getIncome()async{
+  getIncome()async{
     final filter = Filter.equals('month', Month().currentMonthNumber); //filter the db based on period
 
     final incomes = await incomeDb.retrieveBasedOn(filter); //get all incomes for the period
     final expenses = await expenseDb.retrieveBasedOn(filter); //get all expenses for samme period as income
     
     allIncomesForPeriod = incomes;
+
+    if(incomes.isEmpty){return null;}
 
     for (var income in incomes) {
         expensesForIncome[income.id] = [];
@@ -113,7 +115,33 @@ class _IncomeReportScreenState extends State<IncomeReportScreen> {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 245, 245, 245),
     
-      body: Padding(
+      body: allIncomesForPeriod.isEmpty ? 
+      Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+
+        children: [
+
+          Icon(
+            MdiIcons.informationOffOutline,
+
+            size: 35,
+            color: appDanger,
+          ),
+
+          const Center(
+            child: Text(
+              'No Income found for this period',
+
+              style: TextStyle(
+                fontSize: 18,
+
+              ),
+            ),
+          )
+        ],
+      )
+      :
+      Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12),
 
         child: SingleChildScrollView(

@@ -4,9 +4,7 @@ import 'package:expense/models/expense_model.dart';
 import 'package:expense/utils/constants/colors.dart';
 import 'package:expense/utils/currency/currency.dart';
 import 'package:expense/widgets/cards/budget_card.dart';
-import 'package:expense/widgets/cards/expense_tile.dart';
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:sembast/sembast.dart';
 
 import '../../../../../../models/budget.dart';
@@ -336,7 +334,7 @@ class _BudgetReportScreenState extends State<BudgetReportScreen> {
 
               const SizedBox(height: 10,),
 
-              ...budgets.map((e) => BudgetCard(budget: e)),
+              ...budgets.map((e) => BudgetCard(budget: e, ctx: context,)),
 
               // ...List.generate(expensesPerBudgets.length, (index){
               //   return Column(

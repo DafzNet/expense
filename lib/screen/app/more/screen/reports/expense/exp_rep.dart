@@ -45,13 +45,23 @@ class _ExpReportScreenState extends State<ExpReportScreen> {
   double expTotal = 0;
   List<PieChartSectionData> expCatsList = [];
 
-  void getExps()async{
+  List<ExpenseModel> _exps = [];
+
+
+
+  getExps()async{
     final exps = await expenseDb.retrieveBasedOn(
       Filter.and([
         Filter.equals('month', Month().currentMonthNumber),
         Filter.equals('year', DateTime.now().year)
       ])
     );
+
+    _exps = exps;
+
+    if (exps.isEmpty) {
+      return null;
+    }
 
     //Get the weekday each expense ocurred
     for (var exp in exps) {
@@ -159,7 +169,33 @@ class _ExpReportScreenState extends State<ExpReportScreen> {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 245, 245, 245),
     
-      body: Padding(
+      body: _exps.isEmpty ? 
+      Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+
+        children: [
+
+          Icon(
+            MdiIcons.informationOffOutline,
+
+            size: 35,
+            color: appDanger,
+          ),
+
+          const Center(
+            child: Text(
+              'No Expenses to analyze',
+
+              style: TextStyle(
+                fontSize: 18,
+
+              ),
+            ),
+          )
+        ],
+      )
+      :
+       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12),
 
         child: SingleChildScrollView(
@@ -418,7 +454,7 @@ class _ExpReportScreenState extends State<ExpReportScreen> {
                     
                                   subtitle: RichText(
                                     text: TextSpan(
-                                      text: Currency().wrapCurrencySymbol(e.amount.toString())+'\n',
+                                      text: '${Currency().wrapCurrencySymbol(e.amount.toString())}\n',
 
                                       style: TextStyle(
                                         color: appDanger

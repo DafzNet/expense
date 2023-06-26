@@ -70,7 +70,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
                 itemCount: budgetForMonth.length,
 
                 itemBuilder: (context, index){
-                  return BudgetCard(budget: budgetForMonth[index]);
+                  return BudgetCard(budget: budgetForMonth[index], ctx: context,);
                 }
               )
               :
