@@ -15,6 +15,7 @@ import '../../../dbs/expense.dart';
 import '../../../models/user_model.dart';
 import '../../../utils/capitalize.dart';
 import '../../../utils/constants/colors.dart';
+import '../../../utils/constants/images.dart';
 import 'screen/vaults/vault.dart';
 
 class MoreScreen extends StatefulWidget {
@@ -147,9 +148,19 @@ class _MoreScreenState extends State<MoreScreen> {
                               ),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: const [
-                                  Text('Income', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
-                                  Icon(MdiIcons.chevronRight)
+                                children: [
+                                  Row(
+                                    children: const [
+                                      ImageIcon(
+                                        AssetImage(
+                                          incomeIcon,
+                                        )
+                                      ),
+                                      SizedBox(width: 10,),
+                                      Text('Income', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
+                                    ],
+                                  ),
+                                  const Icon(MdiIcons.chevronRight)
                                 ],)
                             ),
       
@@ -171,8 +182,18 @@ class _MoreScreenState extends State<MoreScreen> {
                               ),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: const [
-                                  Text('Budget', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
+                                children: [
+                                  Row(
+                                    children: const [
+                                      ImageIcon(
+                                        AssetImage(
+                                          budgetIcon,
+                                        )
+                                      ),
+                                      SizedBox(width: 10,),
+                                      Text('Budget', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
+                                    ],
+                                  ),
                                   Icon(MdiIcons.chevronRight)
                                 ],)
                             ),
@@ -197,8 +218,18 @@ class _MoreScreenState extends State<MoreScreen> {
                               ),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: const [
-                                  Text('Categories', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
+                                children: [
+                                  Row(
+                                    children: const [
+                                      ImageIcon(
+                                        AssetImage(
+                                          categoryIcon,
+                                        )
+                                      ),
+                                      SizedBox(width: 10,),
+                                      Text('Categories', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
+                                    ],
+                                  ),
                                   Icon(MdiIcons.chevronRight)
                                 ],)
                             ),
@@ -221,8 +252,14 @@ class _MoreScreenState extends State<MoreScreen> {
                               ),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: const [
-                                  Text('Income/Savings Vaults', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
+                                children: [
+                                  Row(
+                                    children: const[
+                                      Icon(MdiIcons.bank),
+                                      SizedBox(width: 10,),
+                                      Text('Income/Savings Vaults', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
+                                    ],
+                                  ),
                                   Icon(MdiIcons.chevronRight)
                                 ],)
                             ),
@@ -237,8 +274,18 @@ class _MoreScreenState extends State<MoreScreen> {
                               ),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: const [
-                                  Text('Accountability', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
+                                children: [
+                                  Row(
+                                    children: const [
+                                      ImageIcon(
+                                        AssetImage(
+                                          accountabilityIcon,
+                                        )
+                                      ),
+                                      SizedBox(width: 10,),
+                                      Text('Accountability', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
+                                    ],
+                                  ),
                                   Icon(MdiIcons.chevronRight)
                                 ],)
                             ),
@@ -261,8 +308,18 @@ class _MoreScreenState extends State<MoreScreen> {
                               ),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: const [
-                                  Text('Financial Reports', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
+                                children: [
+                                  Row(
+                                    children: const [
+                                      ImageIcon(
+                                        AssetImage(
+                                          reportIcon,
+                                        )
+                                      ),
+                                      SizedBox(width: 10,),
+                                      Text('Financial Reports', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
+                                    ],
+                                  ),
                                   Icon(MdiIcons.chevronRight)
                                 ],)
                             ),
@@ -277,8 +334,18 @@ class _MoreScreenState extends State<MoreScreen> {
                               ),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: const [
-                                  Text('Archive', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
+                                children: [
+                                  Row(
+                                    children: const [
+                                      ImageIcon(
+                                        AssetImage(
+                                          archiveIcon,
+                                        )
+                                      ),
+                                      SizedBox(width: 10,),
+                                      Text('Archive', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
+                                    ],
+                                  ),
                                   Icon(MdiIcons.chevronRight)
                                 ],)
                             ),
@@ -293,8 +360,42 @@ class _MoreScreenState extends State<MoreScreen> {
                               ),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: const [
-                                  Text('Subscribe', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
+                                children: [
+                                  Row(
+                                    children: const [
+                                      ImageIcon(
+                                        AssetImage(
+                                          subscribeIcon,
+                                        )
+                                      ),
+                                      SizedBox(width: 10,),
+                                      Text('Subscribe', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
+                                    ],
+                                  ),
+                                  Icon(MdiIcons.chevronRight)
+                                ],)
+                            ),
+
+                            const Divider(),
+                      
+                            TextButton(
+                              onPressed: (){},
+                              style: TextButton.styleFrom(
+                                shape: const RoundedRectangleBorder(),
+                                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5)
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: const [
+                                      Icon(
+                                        MdiIcons.tools
+                                      ),
+                                      SizedBox(width: 10,),
+                                      Text('Settings', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
+                                    ],
+                                  ),
                                   Icon(MdiIcons.chevronRight)
                                 ],)
                             ),
@@ -309,8 +410,18 @@ class _MoreScreenState extends State<MoreScreen> {
                               ),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: const [
-                                  Text('Feedback', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
+                                children: [
+                                  Row(
+                                    children: const [
+                                      ImageIcon(
+                                        AssetImage(
+                                         feedbackIcon,
+                                        )
+                                      ),
+                                      SizedBox(width: 10,),
+                                      Text('Feedback', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
+                                    ],
+                                  ),
                                   Icon(MdiIcons.chevronRight)
                                 ],)
                             ),
@@ -325,8 +436,18 @@ class _MoreScreenState extends State<MoreScreen> {
                               ),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: const [
-                                  Text('About', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
+                                children: [
+                                  Row(
+                                    children: const [
+                                      ImageIcon(
+                                        AssetImage(
+                                          lifiIcon,
+                                        )
+                                      ),
+                                      SizedBox(width: 10,),
+                                      Text('About', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
+                                    ],
+                                  ),
                                   Icon(MdiIcons.chevronRight)
                                 ],)
                             )

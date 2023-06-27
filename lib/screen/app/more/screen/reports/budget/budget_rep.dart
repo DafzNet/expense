@@ -3,13 +3,16 @@ import 'package:expense/dbs/expense.dart';
 import 'package:expense/models/expense_model.dart';
 import 'package:expense/utils/constants/colors.dart';
 import 'package:expense/utils/currency/currency.dart';
-import 'package:expense/widgets/cards/budget_card.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:sembast/sembast.dart';
 
 import '../../../../../../models/budget.dart';
 import '../../../../../../models/category_model.dart';
 import '../../../../../../utils/month.dart';
+import 'budget_exps.dart';
 
 
 
@@ -17,10 +20,21 @@ class BudgetReportScreen extends StatefulWidget {
   const BudgetReportScreen({super.key});
 
   @override
-  State<BudgetReportScreen> createState() => _BudgetReportScreenState();
+  State<BudgetReportScreen> createState() => BudgetReportScreenState();
 }
 
-class _BudgetReportScreenState extends State<BudgetReportScreen> {
+class BudgetReportScreenState extends State<BudgetReportScreen> {
+
+
+  String reportPeriod = '';
+
+  void updateReportPeriod(String newReportPeriod) {
+    setState(() {
+      reportPeriod = newReportPeriod;
+    });
+  }
+
+
 
   int touchedIndex = -1;
 
@@ -311,19 +325,31 @@ class _BudgetReportScreenState extends State<BudgetReportScreen> {
                       Positioned(
                         right: 20,
                         bottom: 20,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 1),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(12)
-                          ),
-                          child: const Text(
-                            'View Expenses',
-
-                             style: TextStyle(
-                                color: Color.fromARGB(255, 1, 35, 46),
-                                fontSize: 12
-                              ),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              PageTransition(
+                                child: BudgetExpensesScreen(
+                                  expenses: allBudgetExps,
+                                  total: actualAmountForAllBudgets,
+                                ), type: PageTransitionType.rightToLeft)
+                            );
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 1),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12)
+                            ),
+                            child: const Text(
+                              'View Expenses',
+                        
+                               style: TextStyle(
+                                  color: Color.fromARGB(255, 1, 35, 46),
+                                  fontSize: 12
+                                ),
+                            ),
                           ),
                         )
                       )
@@ -334,15 +360,251 @@ class _BudgetReportScreenState extends State<BudgetReportScreen> {
 
               const SizedBox(height: 10,),
 
-              ...budgets.map((e) => BudgetCard(budget: e, ctx: context,)),
+              
 
-              // ...List.generate(expensesPerBudgets.length, (index){
-              //   return Column(
-              //     children: expensesPerBudgets.values.elementAt(index).map((e){
-              //       return Text(e.title+expensesPerBudgets.keys.elementAt(index).toString());
-              //     }).toList(),
-              //   );
-              // })
+              ...budgets.map(
+                (e) => Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: appOrange.shade100
+                      ),
+                
+                      borderRadius: BorderRadius.circular(8)
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  const Icon(
+                                    MdiIcons.calculator,
+                                    size: 16,
+                                  ),
+                
+                                  const SizedBox(width: 8,),
+                
+                                  Text(
+                                    e.name,
+                
+                                    style: const TextStyle(
+                                      color: Color.fromARGB(255, 1, 35, 46),
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold
+                                    ),
+                                  ),
+                
+                                  const SizedBox(width: 8,),
+                
+                                  const Icon(
+                                    MdiIcons.circle,
+                                    size: 6,
+                                  ),
+                
+                                  const SizedBox(width: 8,),
+                
+                                  Text(
+                                    e.category!.name,
+                
+                                    style: const TextStyle(
+                                      color: Color.fromARGB(255, 1, 35, 46),
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                
+                              if(e.startDate == e.endDate)...[
+                                Row(
+                                  children: [
+                                    const Text(
+                                  'for: ',
+                
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 1, 35, 46),
+                                    fontSize: 14,
+                                  ),
+                                ),
+                
+                                Container(
+                                  color: appOrange.shade700,
+                                  padding: const EdgeInsets.symmetric(horizontal: 2),
+                                  child: Text(
+                                    DateTime.now().year == e.year? Month().getMonth(e.month) : '${Month().getMonth(e.month)} ${e.year}',
+                                
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                                  ],
+                                )
+                              ],
+                
+                
+                              if(e.startDate != e.endDate)...[
+                                Row(
+                                  children: [
+                                   
+                
+                                Container(
+                                  color: appOrange.shade700,
+                                  padding: const EdgeInsets.symmetric(horizontal: 2),
+                                  child: Text(
+                                    '${DateTime.now().year == e.startDate!.year ?
+                                      DateFormat.MMMd().format(e.startDate!):
+                                        DateFormat.yMMMd().format(e.startDate!)} - ${DateTime.now().year == e.endDate!.year ?
+                                      DateFormat.MMMd().format(e.endDate!):
+                                        DateFormat.yMMMd().format(e.endDate!)}',
+                                
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ),
+                                  ],
+                                )
+                              ]
+                            ],
+                          ),
+
+                          const SizedBox(
+                            height: 10,
+                          ),
+
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text('Budgeted Amount: '),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 3),
+                                      decoration: BoxDecoration(
+                                        color: appSuccess,
+                                        borderRadius: BorderRadius.circular(8)
+                                      ),
+                                      child: Text(
+                                        Currency().wrapCurrencySymbol(e.amount.toString()),
+                                    
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18,
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+
+                                const SizedBox(height: 5,),
+
+
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text('Actual Amount Spent: '),
+
+                                    Text(
+                                      Currency().wrapCurrencySymbol((e.amount - e.balance).toString()),
+                                    
+                                      style: TextStyle(
+                                        color: (e.amount - e.balance) < e.amount ? appSuccess : appDanger,
+                                        fontSize: 18,
+                                      ),
+                                    )
+                                  ],
+                                ),
+
+                                
+                                const SizedBox(height: 5,),
+
+
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text('Difference (Variance): '),
+
+                                    Text(
+                                      Currency().wrapCurrencySymbol((e.amount-(e.amount - e.balance)).toString()),
+                                    
+                                      style: TextStyle(
+                                        color: (e.amount - e.balance) < e.amount ? appSuccess : appDanger,
+                                        fontSize: 18,
+                                      ),
+                                    )
+                                  ],
+                                ),
+
+
+                                const Divider(
+
+                                ),
+
+
+                                if((e.amount - e.balance)>e.amount)...[
+                                  Text(
+                                   'This budget was over-spent by ${Currency().wrapCurrencySymbol(((e.amount - e.balance)-e.amount).toString())}',
+                                  
+                                    style: TextStyle(
+                                      color: (e.amount - e.balance) < e.amount ? appSuccess : appDanger,
+                                      fontSize: 12,
+                                    ),
+                                  )
+                                ]else...[
+                                  Text(
+                                   'Saved ${Currency().wrapCurrencySymbol((e.amount-(e.amount - e.balance)).toString())} from this budget',
+                                  
+                                    style: TextStyle(
+                                      color: appSuccess,
+                                      fontSize: 12,
+                                    ),
+                                  )
+                                ],
+
+
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+
+                                  children: [
+                                    TextButton(
+                                      onPressed: (){
+                                        Navigator.push(
+                                          context,
+                                          PageTransition(
+                                            child: BudgetExpensesScreen(
+                                              expenses: expensesPerBudgets[e.id]!,
+                                              total: e.amount - e.balance,
+                                            ), type: PageTransitionType.rightToLeft)
+                                        );
+                                      }, 
+                                      child: const Text(
+                                        'View expenses'
+                                      ))
+                                  ],
+                                )
+
+
+
+
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+              ),
             ],
           ),
         ),

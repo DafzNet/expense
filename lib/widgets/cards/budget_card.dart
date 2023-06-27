@@ -1,9 +1,11 @@
 import 'package:expense/dbs/budget_db.dart';
 import 'package:expense/models/budget.dart';
+import 'package:expense/screen/app/expense/add_expense.dart';
 import 'package:expense/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
 import '../../utils/capitalize.dart';
@@ -97,54 +99,89 @@ class _BudgetCardState extends State<BudgetCard> {
                                 ],
                               ),
         
-                              ClipOval(
-                                child: GestureDetector(
-                                  onTap: widget.onDelete??(){
-                                    showDialog(
-                                      context: widget.ctx,
-                                      barrierDismissible: false, // user must tap button!
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          //backgroundColor: appOrange,
-                                          title: Text('Delete ${capitalize(widget.budget.name)}?'),
-                                          content:  SingleChildScrollView(
-                                            child: ListBody(
-                                              children: const <Widget>[
-                                                Text('Deleting this budget will remove it from the database'),
-                                              ],
+                              Row(
+                                children: [
+                                  
+                                  ClipOval(
+                                    child: GestureDetector(
+                                      onTap: (){
+                                        Navigator.push(
+                                          context,
+                                          PageTransition(
+                                            child: AddExpenseScreen(
+                                              category: widget.budget.category
                                             ),
-                                          ),
-                                          actions: <Widget>[
-                                            TextButton(
-                                              child: const Text(
-                                                'Cancel'),
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                            ),
-                                            TextButton(
-                                              child: const Text('Confirm'),
-                                              onPressed: () async {
-                                                
-                                                await BudgetDb().deleteData(widget.budget);
-                                                
-                                                Navigator.pop(context);
-                                              },
-                                            ),
-                                          ],
-                                        );}
-                                      );
-                                  },
-                                  child: Container(
-                                    padding: const EdgeInsets.all(4),
-                                    color: appDanger,
-                                    child: const Icon(
-                                      MdiIcons.deleteOutline,
-                                      size: 18,
-                                      color: Colors.white,
+
+                                            type: PageTransitionType.rightToLeft
+                                          )
+                                        );
+                                      },
+                                      child: Container(
+                                        padding: const EdgeInsets.all(2),
+                                        color: appSuccess,
+                                        child: const Icon(
+                                          MdiIcons.plus,
+                                          size: 20,
+                                          color: Colors.white,
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
+
+                                  const SizedBox(width: 5,),
+
+
+                                  ClipOval(
+                                    child: GestureDetector(
+                                      onTap: widget.onDelete??(){
+                                        showDialog(
+                                          context: widget.ctx,
+                                          barrierDismissible: false, // user must tap button!
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              //backgroundColor: appOrange,
+                                              title: Text('Delete ${capitalize(widget.budget.name)}?'),
+                                              content:  SingleChildScrollView(
+                                                child: ListBody(
+                                                  children: const <Widget>[
+                                                    Text('Deleting this budget will remove it from the database'),
+                                                  ],
+                                                ),
+                                              ),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  child: const Text(
+                                                    'Cancel'),
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                ),
+                                                TextButton(
+                                                  child: const Text('Confirm'),
+                                                  onPressed: () async {
+                                                    
+                                                    await BudgetDb().deleteData(widget.budget);
+                                                    
+                                                    Navigator.pop(context);
+                                                  },
+                                                ),
+                                              ],
+                                            );
+                                          }
+                                        );
+                                      },
+                                      child: Container(
+                                        padding: const EdgeInsets.all(2),
+                                        color: appDanger,
+                                        child: const Icon(
+                                          MdiIcons.deleteOutline,
+                                          size: 18,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               )
                             ],
                           ),

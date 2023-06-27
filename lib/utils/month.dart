@@ -9,7 +9,7 @@ class Month{
   }
 
   String getMonth(int month) {
-    return months[DateTime.now().month-1];
+    return months[month-1];
   }
 
   int get currentMonthNumber {

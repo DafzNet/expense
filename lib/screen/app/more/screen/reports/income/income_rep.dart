@@ -19,10 +19,19 @@ class IncomeReportScreen extends StatefulWidget {
   const IncomeReportScreen({super.key});
 
   @override
-  State<IncomeReportScreen> createState() => _IncomeReportScreenState();
+  State<IncomeReportScreen> createState() => IncomeReportScreenState();
 }
 
-class _IncomeReportScreenState extends State<IncomeReportScreen> {
+class IncomeReportScreenState extends State<IncomeReportScreen> {
+
+  String reportPeriod = '';
+
+  void updateReportPeriod(String newReportPeriod) {
+    setState(() {
+      reportPeriod = newReportPeriod;
+    });
+  }
+
   int touchedIndex = -1;
   IncomeDb incomeDb = IncomeDb();
   ExpenseDb expenseDb = ExpenseDb();

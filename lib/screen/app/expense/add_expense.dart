@@ -26,8 +26,10 @@ import '../../../widgets/text_field.dart';
 
 class AddExpenseScreen extends StatefulWidget {
   final IncomeModel? income;
+  final CategoryModel? category;
   const AddExpenseScreen({
     this.income,
+    this.category,
     super.key
     });
 
@@ -111,6 +113,11 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
     if (widget.income != null) {
       income = widget.income;
       incomeController.text = widget.income!.name!;
+    }
+
+    if (widget.category != null) {
+      category = widget.category;
+      categoryController.text = widget.category!.name;
     }
 
     super.initState();

@@ -1,4 +1,6 @@
 
+// ignore_for_file: prefer_interpolation_to_compose_strings
+
 import 'package:expense/models/expense_model.dart';
 import 'package:expense/utils/currency/currency.dart';
 import 'package:flutter/material.dart';
@@ -15,13 +17,39 @@ import '../../../../expense/expense_detail.dart';
 
 
 class ExpReportScreen extends StatefulWidget {
-  const ExpReportScreen({super.key});
+
+  const ExpReportScreen(
+    {super.key});
+  
 
   @override
-  State<ExpReportScreen> createState() => _ExpReportScreenState();
+  State<ExpReportScreen> createState() => ExpReportScreenState();
 }
 
-class _ExpReportScreenState extends State<ExpReportScreen> {
+class ExpReportScreenState extends State<ExpReportScreen> {
+
+  String reportPeriod = '';
+
+  void updateReportPeriod(String newReportPeriod) {
+    setState(() {
+      reportPeriod = newReportPeriod;
+    });
+  }
+
+
+  void showReportPeriod(BuildContext context){
+    showBottomSheet(
+      context: context, 
+      builder: (context){
+        return Container(
+          height: 200,
+          color: appDanger,
+        );
+      });
+  }
+
+
+
   int touchedIndex = -1;
 
 

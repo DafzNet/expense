@@ -4,6 +4,7 @@ import 'package:expense/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 
 import '../../utils/currency/currency.dart';
 
@@ -121,10 +122,16 @@ class _IncomeCardState extends State<IncomeCard> {
                         ],
                       ),
         
-                      Divider(
-                        height: 30,
-                        thickness: 0.3,
-                        color: appOrange,
+                      Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: LinearPercentIndicator(
+                            progressColor: const Color.fromARGB(255, 2, 142, 6),
+                            //width: MediaQuery.of(context).size.width-60,
+                            lineHeight: 6.0,
+                            percent: ((widget.income.balance/widget.income.amount)*100)/100,
+                            barRadius: const Radius.circular(5),
+                            backgroundColor: const Color.fromARGB(255, 250, 13, 13),
+                          ),
                       ),
         
                       Row(
