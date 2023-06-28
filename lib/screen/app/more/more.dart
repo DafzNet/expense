@@ -16,6 +16,8 @@ import '../../../models/user_model.dart';
 import '../../../utils/capitalize.dart';
 import '../../../utils/constants/colors.dart';
 import '../../../utils/constants/images.dart';
+import 'screen/about/about.dart';
+import 'screen/setting/setting.dart';
 import 'screen/vaults/vault.dart';
 
 class MoreScreen extends StatefulWidget {
@@ -194,7 +196,7 @@ class _MoreScreenState extends State<MoreScreen> {
                                       Text('Budget', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
                                     ],
                                   ),
-                                  Icon(MdiIcons.chevronRight)
+                                  const Icon(MdiIcons.chevronRight)
                                 ],)
                             ),
       
@@ -230,7 +232,7 @@ class _MoreScreenState extends State<MoreScreen> {
                                       Text('Categories', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
                                     ],
                                   ),
-                                  Icon(MdiIcons.chevronRight)
+                                  const Icon(MdiIcons.chevronRight)
                                 ],)
                             ),
 
@@ -260,7 +262,7 @@ class _MoreScreenState extends State<MoreScreen> {
                                       Text('Income/Savings Vaults', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
                                     ],
                                   ),
-                                  Icon(MdiIcons.chevronRight)
+                                  const Icon(MdiIcons.chevronRight)
                                 ],)
                             ),
       
@@ -286,7 +288,7 @@ class _MoreScreenState extends State<MoreScreen> {
                                       Text('Accountability', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
                                     ],
                                   ),
-                                  Icon(MdiIcons.chevronRight)
+                                  const Icon(MdiIcons.chevronRight)
                                 ],)
                             ),
 
@@ -320,35 +322,35 @@ class _MoreScreenState extends State<MoreScreen> {
                                       Text('Financial Reports', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
                                     ],
                                   ),
-                                  Icon(MdiIcons.chevronRight)
+                                  const Icon(MdiIcons.chevronRight)
                                 ],)
                             ),
       
-                            const Divider(),
+                            // const Divider(),
                       
-                            TextButton(
-                              onPressed: (){},
-                              style: TextButton.styleFrom(
-                                shape: const RoundedRectangleBorder(),
-                                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5)
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    children: const [
-                                      ImageIcon(
-                                        AssetImage(
-                                          archiveIcon,
-                                        )
-                                      ),
-                                      SizedBox(width: 10,),
-                                      Text('Archive', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
-                                    ],
-                                  ),
-                                  Icon(MdiIcons.chevronRight)
-                                ],)
-                            ),
+                            // TextButton(
+                            //   onPressed: (){},
+                            //   style: TextButton.styleFrom(
+                            //     shape: const RoundedRectangleBorder(),
+                            //     padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5)
+                            //   ),
+                            //   child: Row(
+                            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            //     children: [
+                            //       Row(
+                            //         children: const [
+                            //           ImageIcon(
+                            //             AssetImage(
+                            //               archiveIcon,
+                            //             )
+                            //           ),
+                            //           SizedBox(width: 10,),
+                            //           Text('Archive', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
+                            //         ],
+                            //       ),
+                            //       const Icon(MdiIcons.chevronRight)
+                            //     ],)
+                            // ),
       
                             const Divider(),
                       
@@ -372,14 +374,22 @@ class _MoreScreenState extends State<MoreScreen> {
                                       Text('Subscribe', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
                                     ],
                                   ),
-                                  Icon(MdiIcons.chevronRight)
+                                  const Icon(MdiIcons.chevronRight)
                                 ],)
                             ),
 
                             const Divider(),
                       
                             TextButton(
-                              onPressed: (){},
+                              onPressed: (){
+                                Navigator.push(
+                                  context,
+                                  PageTransition(
+                                    child: const SettingScreen(), //PieChartSample2(), //
+                                    type: PageTransitionType.fade
+                                  )
+                                );
+                              },
                               style: TextButton.styleFrom(
                                 shape: const RoundedRectangleBorder(),
                                 padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5)
@@ -396,14 +406,48 @@ class _MoreScreenState extends State<MoreScreen> {
                                       Text('Settings', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
                                     ],
                                   ),
-                                  Icon(MdiIcons.chevronRight)
+                                  const Icon(MdiIcons.chevronRight)
                                 ],)
                             ),
                       
                             const Divider(),
                       
+                            // TextButton(
+                            //   onPressed: (){},
+                            //   style: TextButton.styleFrom(
+                            //     shape: const RoundedRectangleBorder(),
+                            //     padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5)
+                            //   ),
+                            //   child: Row(
+                            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            //     children: [
+                            //       Row(
+                            //         children: const [
+                            //           ImageIcon(
+                            //             AssetImage(
+                            //              feedbackIcon,
+                            //             )
+                            //           ),
+                            //           SizedBox(width: 10,),
+                            //           Text('Feedback', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
+                            //         ],
+                            //       ),
+                            //       const Icon(MdiIcons.chevronRight)
+                            //     ],)
+                            // ),
+                      
+                            // const Divider(),
+                      
                             TextButton(
-                              onPressed: (){},
+                              onPressed: (){
+                                Navigator.push(
+                                  context,
+                                  PageTransition(
+                                    child: const AboutScreen(), //PieChartSample2(), //
+                                    type: PageTransitionType.fade
+                                  )
+                                );
+                              },
                               style: TextButton.styleFrom(
                                 shape: const RoundedRectangleBorder(),
                                 padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5)
@@ -412,43 +456,20 @@ class _MoreScreenState extends State<MoreScreen> {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Row(
-                                    children: const [
-                                      ImageIcon(
-                                        AssetImage(
-                                         feedbackIcon,
-                                        )
-                                      ),
-                                      SizedBox(width: 10,),
-                                      Text('Feedback', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
-                                    ],
-                                  ),
-                                  Icon(MdiIcons.chevronRight)
-                                ],)
-                            ),
-                      
-                            const Divider(),
-                      
-                            TextButton(
-                              onPressed: (){},
-                              style: TextButton.styleFrom(
-                                shape: const RoundedRectangleBorder(),
-                                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5)
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    children: const [
-                                      ImageIcon(
-                                        AssetImage(
-                                          lifiIcon,
-                                        )
-                                      ),
+                                    children: [
+                                        SizedBox(
+                                          height: 26,
+                                          width: 26,
+                                          child: Image(
+                                            image: AssetImage(lifiIcon),
+                                          
+                                                                              ),
+                                        ),
                                       SizedBox(width: 10,),
                                       Text('About', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
                                     ],
                                   ),
-                                  Icon(MdiIcons.chevronRight)
+                                  const Icon(MdiIcons.chevronRight)
                                 ],)
                             )
                           ],

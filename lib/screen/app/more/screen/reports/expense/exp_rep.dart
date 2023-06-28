@@ -2,11 +2,13 @@
 // ignore_for_file: prefer_interpolation_to_compose_strings
 
 import 'package:expense/models/expense_model.dart';
+import 'package:expense/providers/report_period.dart';
 import 'package:expense/utils/currency/currency.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:provider/provider.dart';
 import 'package:sembast/sembast.dart';
 import '../../../../../../dbs/expense.dart';
 import '../../../../../../utils/constants/colors.dart';
@@ -29,24 +31,16 @@ class ExpReportScreen extends StatefulWidget {
 class ExpReportScreenState extends State<ExpReportScreen> {
 
   String reportPeriod = '';
+  var selectedDate;
 
-  void updateReportPeriod(String newReportPeriod) {
-    setState(() {
-      reportPeriod = newReportPeriod;
-    });
-  }
+  // void updateReportPeriod(String newReportPeriod, newDate) {
+  //   reportPeriod = newReportPeriod;
+  //   selectedDate = newDate; 
 
-
-  void showReportPeriod(BuildContext context){
-    showBottomSheet(
-      context: context, 
-      builder: (context){
-        return Container(
-          height: 200,
-          color: appDanger,
-        );
-      });
-  }
+  //   setState(() {
+      
+  //   });
+  // }
 
 
 
@@ -76,14 +70,69 @@ class ExpReportScreenState extends State<ExpReportScreen> {
   List<ExpenseModel> _exps = [];
 
 
-
   getExps()async{
-    final exps = await expenseDb.retrieveBasedOn(
-      Filter.and([
-        Filter.equals('month', Month().currentMonthNumber),
-        Filter.equals('year', DateTime.now().year)
-      ])
-    );
+
+  
+
+    //Default report range filter(Current month)
+    //List<ExpenseModel> exps = [];
+
+ 
+
+    List<ExpenseModel> exps = [];
+    // await expenseDb.retrieveBasedOn(
+    //     Filter.and([
+    //       Filter.equals('month', Month().currentMonthNumber),
+    //       Filter.equals('year', DateTime.now().year)
+    //     ])
+    //   );
+
+
+    if (reportPeriod.toLowerCase() == 'current month' || reportPeriod.isEmpty) {
+      exps = await expenseDb.retrieveBasedOn(
+        Filter.and([
+          Filter.equals('month', Month().currentMonthNumber),
+          Filter.equals('year', DateTime.now().year)
+        ])
+      );
+    }else if(reportPeriod.toLowerCase() == 'one year ago') {
+      
+      DateTime start = selectedDate as DateTime;
+
+      exps = await expenseDb.retrieveBasedOn(
+        Filter.custom((record){
+          final data = record.value as Map<String, dynamic>;
+          final recordExp = ExpenseModel.fromMap(data);
+
+          return recordExp.date.isAfter(start);
+        })
+      );
+    }else{
+      try {
+        DateTime lastMonth = selectedDate as DateTime;
+
+        exps = await expenseDb.retrieveBasedOn(
+          Filter.and([
+            Filter.equals('month', lastMonth.month),
+            Filter.equals('year', lastMonth.year)
+          ])
+        );
+      } catch (e) {
+        DateTimeRange date = selectedDate as DateTimeRange;
+
+        exps = await expenseDb.retrieveBasedOn(
+          Filter.custom((record){
+            final data = record.value as Map<String, dynamic>;
+            final recordExp = ExpenseModel.fromMap(data);
+
+            return recordExp.date.isAfter(date.start) && recordExp.date.isBefore(date.end);
+          })
+        );
+      }
+     
+    }
+
+
 
     _exps = exps;
 
@@ -154,7 +203,6 @@ class ExpReportScreenState extends State<ExpReportScreen> {
       }
 
     expenseCatTotal[cat] = catTotal;
-
     
      expCatsList.add(
        PieChartSectionData(
@@ -177,8 +225,6 @@ class ExpReportScreenState extends State<ExpReportScreen> {
 
     _categoryAmount = expenseCatTotal[expensesCats.first]!;
 
-
-
     setState(() {
       
     });
@@ -193,7 +239,12 @@ class ExpReportScreenState extends State<ExpReportScreen> {
 
   @override
   Widget build(BuildContext context) {
-    
+
+    reportPeriod = Provider.of<ReportProvider>(context).currentDateString;
+    selectedDate = Provider.of<ReportProvider>(context).currentPeriodDate;
+
+    getExps();
+
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 245, 245, 245),
     
@@ -251,7 +302,7 @@ class ExpReportScreenState extends State<ExpReportScreen> {
                                     
                             children: [
                               Text(
-                                '${Month().currentMonth} Expense',
+                                Month().currentMonth+' Expense',
                                     
                                 style: const TextStyle(
                                   fontSize: 16,

@@ -1,3 +1,4 @@
+import 'package:expense/providers/report_period.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,7 @@ void main() async{
     MultiProvider(
       providers: [
         Provider(create: (_)=>ExpenseProvider()),
+        Provider(create: (_)=>ReportProvider()),
         //Provider(create: (_)=>CategoryDb().onCategories(catDb!)),
         StreamProvider<User?>.value(value: FireAuth().authStateChange, initialData: null)
         //Provider(create: (_)=>FireAuth().authStateChange)

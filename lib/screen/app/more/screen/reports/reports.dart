@@ -1,8 +1,11 @@
 
+import 'package:expense/providers/report_period.dart';
 import 'package:expense/utils/constants/colors.dart';
 import 'package:expense/utils/month.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:provider/provider.dart';
 
 import 'budget/budget_rep.dart';
 import 'expense/exp_rep.dart';
@@ -20,6 +23,8 @@ class _ReportScreenState extends State<ReportScreen> {
   static String reportPeriod = "Current Month";
   var reportDate;
 
+  DateTimeRange range = DateTimeRange(start: DateTime.now().subtract(const Duration(days: 7)), end: DateTime.now());
+
 
   static GlobalKey<ExpReportScreenState> expReportKey = GlobalKey();
   static GlobalKey<IncomeReportScreenState> incReportKey = GlobalKey();
@@ -33,11 +38,10 @@ class _ReportScreenState extends State<ReportScreen> {
     });
 
     // Update the report period in the ExpReportScreen
-    expReportKey.currentState?.updateReportPeriod(newReportPeriod);
-    incReportKey.currentState?.updateReportPeriod(newReportPeriod);
-    budgetReportKey.currentState?.updateReportPeriod(newReportPeriod);
+    // expReportKey.currentState?.updateReportPeriod(newReportPeriod, newReportDate);
+    incReportKey.currentState?.updateReportPeriod(newReportPeriod, newReportDate);
+    budgetReportKey.currentState?.updateReportPeriod(newReportPeriod, newReportDate);
   }
-
 
 
 
@@ -72,8 +76,9 @@ class _ReportScreenState extends State<ReportScreen> {
                             GestureDetector(
                               onTap: () {
                                 String rPrd = 'Current Month';
-                                var rDate = Month().currentMonthNumber;
+                                var rDate =DateTime.now();
 
+                                Provider.of<ReportProvider>(context, listen: false).changePeriod(rPrd, rDate);
                                 updateReportPeriod(rPrd, rDate);
 
                                 Navigator.pop(context);
@@ -92,13 +97,13 @@ class _ReportScreenState extends State<ReportScreen> {
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Row(
-                                      children: [
-                                        const Icon(
+                                      children: const [
+                                        Icon(
                                           MdiIcons.calendarTodayOutline,
                                           size: 18,
                                         ),
-                                        const SizedBox(width: 10,),
-                                        const Text(
+                                        SizedBox(width: 10,),
+                                        Text(
                                           'Current Month',
                                           style: TextStyle(
                                             fontSize: 18,
@@ -119,9 +124,11 @@ class _ReportScreenState extends State<ReportScreen> {
 
                              GestureDetector(
                               onTap: () {
-                                String rPrd = Month().getMonth(Month().currentMonthNumber-1);
-                                var rDate = Month().currentMonthNumber-1;
+                                String rPrd = Month().currentMonthNumber == 1 ? Month().getMonth(12) +', '+ (DateTime.now().year-1).toString() : Month().getMonth(Month().currentMonthNumber-1);
+                                var rDate = Month().currentMonthNumber == 1 ? DateTime(DateTime.now().year-1, 12, 1) : DateTime(DateTime.now().year, DateTime.now().month-1, DateTime.now().day);
 
+
+                                Provider.of<ReportProvider>(context, listen: false).changePeriod(rPrd, rDate);
                                 updateReportPeriod(rPrd, rDate);
 
                                 Navigator.pop(context);
@@ -140,13 +147,13 @@ class _ReportScreenState extends State<ReportScreen> {
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Row(
-                                      children: [
-                                        const Icon(
+                                      children: const [
+                                        Icon(
                                           MdiIcons.calendar,
                                           size: 18,
                                         ),
-                                        const SizedBox(width: 10,),
-                                        const Text(
+                                        SizedBox(width: 10,),
+                                        Text(
                                           'Previous Month',
                                           style: TextStyle(
                                             fontSize: 18,
@@ -169,8 +176,9 @@ class _ReportScreenState extends State<ReportScreen> {
                             GestureDetector(
                               onTap: () {
                                 String rPrd = 'One Year ago';
-                                var rDate = DateTime.now().subtract(Duration(days: 365)).millisecondsSinceEpoch;
+                                var rDate = DateTime.now().subtract(const Duration(days: 365));
 
+                                Provider.of<ReportProvider>(context, listen: false).changePeriod(rPrd, rDate);
                                 updateReportPeriod(rPrd, rDate);
 
                                 Navigator.pop(context);
@@ -189,13 +197,13 @@ class _ReportScreenState extends State<ReportScreen> {
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Row(
-                                      children: [
-                                        const Icon(
+                                      children: const [
+                                        Icon(
                                           MdiIcons.calendar,
                                           size: 18,
                                         ),
-                                        const SizedBox(width: 10,),
-                                        const Text(
+                                        SizedBox(width: 10,),
+                                        Text(
                                           'One Year ago',
                                           style: TextStyle(
                                             fontSize: 18,
@@ -216,38 +224,72 @@ class _ReportScreenState extends State<ReportScreen> {
                             const SizedBox(height: 15,),
 
 
-                            Container(
-                              padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                border: Border.all(
+                            GestureDetector(
+                              onTap: () async{
 
-                                ),
+                                Navigator.pop(context);
 
-                                borderRadius: BorderRadius.circular(8)
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    children: [
-                                      const Icon(
-                                        MdiIcons.calendar,
-                                        size: 18,
-                                      ),
-                                      const SizedBox(width: 10,),
-                                      const Text(
-                                        'Select Date Range',
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          
-                                        ),
-                                      ),
-                                    ],
+                                final dateRange = await showDateRangePicker(
+                                  context: context, 
+                                  firstDate: DateTime(2023, 1, 1, 0, 0, 0),
+                                  lastDate: range.end,
+                                  initialDateRange: range,
+                                  helpText: 'Decide Report Range',
+                                  confirmText: 'Confirm',
+                                  cancelText: 'Cancel',
+                                  initialEntryMode: DatePickerEntryMode.inputOnly
+                                
+                                );
+
+                                if (dateRange != null) {
+                                  range = dateRange;
+                                  String newReportDate = '${dateRange.start.year == DateTime.now().year? DateFormat.MMMd().format(dateRange.start): DateFormat.yMMMd().format(dateRange.start)} - ${dateRange.end.year == DateTime.now().year? DateFormat.MMMd().format(dateRange.end): DateFormat.yMMMd().format(dateRange.end)}';
+
+                                  Provider.of<ReportProvider>(context, listen: false).changePeriod(newReportDate,dateRange);
+                                  updateReportPeriod(newReportDate, dateRange);
+                                }
+
+                                // String rPrd = 'One Year ago';
+                                // var rDate = DateTime.now().subtract(Duration(days: 365)).millisecondsSinceEpoch;
+
+                                // updateReportPeriod(rPrd, rDate);
+
+                                // Navigator.pop(context);
+
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                            
                                   ),
-                                  const Icon(
-                                    MdiIcons.chevronRightCircleOutline
-                                  )
-                                ],
+                            
+                                  borderRadius: BorderRadius.circular(8)
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: const [
+                                        Icon(
+                                          MdiIcons.calendar,
+                                          size: 18,
+                                        ),
+                                        SizedBox(width: 10,),
+                                        Text(
+                                          'Select Date Range',
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const Icon(
+                                      MdiIcons.chevronRightCircleOutline
+                                    )
+                                  ],
+                                ),
                               ),
                             )
                           ],
@@ -271,7 +313,7 @@ class _ReportScreenState extends State<ReportScreen> {
                         reportPeriod
                       ),
                 
-                      Icon(
+                      const Icon(
                         MdiIcons.chevronDown
                       )
                     ],

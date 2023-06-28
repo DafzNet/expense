@@ -27,10 +27,12 @@ class BudgetReportScreenState extends State<BudgetReportScreen> {
 
 
   String reportPeriod = '';
+  var selectedDate;
 
-  void updateReportPeriod(String newReportPeriod) {
+  void updateReportPeriod(String newReportPeriod, newDate) {
     setState(() {
       reportPeriod = newReportPeriod;
+      selectedDate = newDate;
     });
   }
 
