@@ -72,7 +72,7 @@ class _HomeSummaryState extends State<HomeSummary> {
                         ),
                       ),
                       SizedBox(
-                        height: (i+1)*20,
+                        height: ((i+1)*20)-10,
                         width: 10,
                         child: Container(
                           color: appDanger,
@@ -85,7 +85,7 @@ class _HomeSummaryState extends State<HomeSummary> {
               ),
 
               Positioned(
-                top: 20,
+                top: 10,
                 child: Container(
                   padding: EdgeInsets.all(1),
                   decoration: BoxDecoration(
@@ -141,7 +141,7 @@ class _HomeSummaryState extends State<HomeSummary> {
 
                       RichText(
                         text: TextSpan(
-                          text: 'Highest spending Day: ',
+                          text: 'Least spending Day: ',
                     
                           style: TextStyle(
                             color: appSuccess.shade800,
@@ -160,7 +160,7 @@ class _HomeSummaryState extends State<HomeSummary> {
                             ),
 
                             TextSpan(
-                              text: Currency(context).wrapCurrencySymbol('30000'),
+                              text: Currency(context).wrapCurrencySymbol('7000'),
                     
                               style: TextStyle(
                                 color: appSuccess.shade800,
