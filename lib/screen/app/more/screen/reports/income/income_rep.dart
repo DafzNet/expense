@@ -192,7 +192,7 @@ class IncomeReportScreenState extends State<IncomeReportScreen> {
                               const SizedBox(height: 10,),
                                     
                               Text(
-                                Currency().wrapCurrencySymbol(totalIncome.toString()),
+                                Currency(context).wrapCurrencySymbol(totalIncome.toString()),
                                     
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w600,
@@ -228,7 +228,7 @@ class IncomeReportScreenState extends State<IncomeReportScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
                                   Text(
-                                    Currency().wrapCurrencySymbol(incomeSpent.toString()),    
+                                    Currency(context).wrapCurrencySymbol(incomeSpent.toString()),    
                                     style: const TextStyle(
                                       fontWeight: FontWeight.w600,
                                       color: Colors.redAccent,
@@ -260,7 +260,7 @@ class IncomeReportScreenState extends State<IncomeReportScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
                                   Text(
-                                    Currency().wrapCurrencySymbol(incomeBalance.toString()),    
+                                    Currency(context).wrapCurrencySymbol(incomeBalance.toString()),    
                                     style: const TextStyle(
                                       fontWeight: FontWeight.w600,
                                       color: Colors.greenAccent,
@@ -416,7 +416,7 @@ class IncomeReportScreenState extends State<IncomeReportScreen> {
                               flex: 5,
                               //fit: FlexFit.tight,
                               child: Text(
-                                Currency().wrapCurrencySymbol(allIncomeExpCatsAndTotal.values.elementAt(index).toString()),
+                                Currency(context).wrapCurrencySymbol(allIncomeExpCatsAndTotal.values.elementAt(index).toString()),
 
                                 style: TextStyle(
                                   fontSize: 14,
@@ -541,7 +541,7 @@ class IncomeReportScreenState extends State<IncomeReportScreen> {
                                   color: appSuccess,
                                   padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 1),
                                   child: Text(
-                                    Currency().wrapCurrencySymbol('${allIncomesForPeriod.elementAt(index).amount}'),
+                                    Currency(context).wrapCurrencySymbol('${allIncomesForPeriod.elementAt(index).amount}'),
                                 
                                     style: const TextStyle(
                                       fontSize: 18,
@@ -587,7 +587,7 @@ class IncomeReportScreenState extends State<IncomeReportScreen> {
                                 ),
 
                                 Text(
-                                  Currency().wrapCurrencySymbol(
+                                  Currency(context).wrapCurrencySymbol(
                                     '${allIncomesForPeriod.elementAt(index).amount-allIncomesForPeriod.elementAt(index).balance}  '),
 
                                   style: TextStyle(
@@ -633,7 +633,7 @@ class IncomeReportScreenState extends State<IncomeReportScreen> {
                                 ),
 
                                 Text(
-                                  Currency().wrapCurrencySymbol(
+                                  Currency(context).wrapCurrencySymbol(
                                     '${allIncomesForPeriod.elementAt(index).balance}  '),
 
                                   style: const TextStyle(
@@ -687,7 +687,7 @@ class IncomeReportScreenState extends State<IncomeReportScreen> {
                                         ),
 
                                         trailing: Text(
-                                         Currency().wrapCurrencySymbol(expensesCatTotalForIncome[allIncomesForPeriod.elementAt(index).id]![perIncomeExpCat[allIncomesForPeriod[index].id]!.elementAt(i)].toString())
+                                         Currency(context).wrapCurrencySymbol(expensesCatTotalForIncome[allIncomesForPeriod.elementAt(index).id]![perIncomeExpCat[allIncomesForPeriod[index].id]!.elementAt(i)].toString())
                                         ,style: TextStyle(
                                             color: appDanger
                                           ),

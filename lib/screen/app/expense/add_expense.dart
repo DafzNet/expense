@@ -192,7 +192,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                                   const SizedBox(height: 30,),
                                   
                                   MyTextField(
-                                    Currency().currencySymbol,
+                                    Currency(context).currencySymbol,
                                     headerText: 'Amount',
                                     keyboardType: TextInputType.number,
                                     controller: amountController,

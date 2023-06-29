@@ -188,7 +188,7 @@ class _IncomeDetailScreenState extends State<IncomeDetailScreen> {
                     fit: FlexFit.tight,
                     child: Center(
                       child: Text(
-                        Currency().wrapCurrencySymbol(widget.income.amount.toString()),
+                        Currency(context).wrapCurrencySymbol(widget.income.amount.toString()),
                     
                         style: const TextStyle(
                           fontSize: 20
@@ -202,7 +202,7 @@ class _IncomeDetailScreenState extends State<IncomeDetailScreen> {
                     fit: FlexFit.tight,
                     child: Center(
                       child: Text(
-                        Currency().wrapCurrencySymbol(widget.income.balance.toString()),
+                        Currency(context).wrapCurrencySymbol(widget.income.balance.toString()),
                     
                         style: const TextStyle(
                           fontSize: 20

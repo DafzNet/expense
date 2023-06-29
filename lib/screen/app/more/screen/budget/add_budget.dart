@@ -179,7 +179,7 @@ class _AddBudgetScreenState extends State<AddBudgetScreen> {
                                   const SizedBox(height: 30,),
                                   
                                   MyTextField(
-                                    Currency().currencySymbol,
+                                    Currency(context).currencySymbol,
                                     headerText: 'Budgeted Amount',
                                     keyboardType: TextInputType.number,
                                     controller: amountController,

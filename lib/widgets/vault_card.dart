@@ -74,7 +74,7 @@ class _VaultCardState extends State<VaultCard> {
                   ),
                 ),
                 Text(
-                  Currency().wrapCurrencySymbol(widget.vault.amountInVault.toString()),
+                  Currency(context).wrapCurrencySymbol(widget.vault.amountInVault.toString()),
                 
                   style: const TextStyle(
                     fontSize: 16,

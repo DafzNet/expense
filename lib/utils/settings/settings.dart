@@ -1,88 +1,86 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-class Settings {
-  
-  bool useCustomCurrency;
+class SettingsObj {
+  dynamic id;
   String currencyCode;
+  String currencySymbol;
   String currencySymbolPosition;
 
   DateTime? reminder;
-  String? accountabilityEmail;
 
 
-  Settings({
-    this.useCustomCurrency = false,
+  SettingsObj({
+    required this.id,
     this.currencyCode = 'NGN',
-    required this.currencySymbolPosition,
+    this.currencySymbol = '₦',
+    this.currencySymbolPosition = 'Left',
     this.reminder,
-    this.accountabilityEmail,
   });
-  
 
-  Settings copyWith({
-    bool? useCustomCurrency,
+  @override
+  int get hashCode {
+    return id.hashCode ^
+      currencyCode.hashCode ^
+      currencySymbol.hashCode ^
+      currencySymbolPosition.hashCode ^
+      reminder.hashCode;
+  }
+
+  SettingsObj copyWith({
+    dynamic? id,
     String? currencyCode,
+    String? currencySymbol,
     String? currencySymbolPosition,
     DateTime? reminder,
-    String? accountabilityEmail,
   }) {
-    return Settings(
-      useCustomCurrency: useCustomCurrency ?? this.useCustomCurrency,
+    return SettingsObj(
+      id: id ?? this.id,
       currencyCode: currencyCode ?? this.currencyCode,
+      currencySymbol: currencySymbol ?? this.currencySymbol,
       currencySymbolPosition: currencySymbolPosition ?? this.currencySymbolPosition,
       reminder: reminder ?? this.reminder,
-      accountabilityEmail: accountabilityEmail ?? this.accountabilityEmail,
     );
   }
+
+  factory SettingsObj.fromMap(Map<String, dynamic> map) {
+    return SettingsObj(
+      id: map['id'] as dynamic,
+      currencyCode: map['currencyCode'] as String,
+      currencySymbol: map['currencySymbol'] as String,
+      currencySymbolPosition: map['currencySymbolPosition'] as String,
+      reminder: map['reminder'] != null ? DateTime.fromMillisecondsSinceEpoch(map['reminder'] as int) : null,
+    );
+  }
+
+  factory SettingsObj.fromJson(String source) => SettingsObj.fromMap(json.decode(source) as Map<String, dynamic>);
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'useCustomCurrency': useCustomCurrency,
+      'id': id,
       'currencyCode': currencyCode,
+      'currencySymbol': currencySymbol,
       'currencySymbolPosition': currencySymbolPosition,
       'reminder': reminder?.millisecondsSinceEpoch,
-      'accountabilityEmail': accountabilityEmail,
     };
-  }
-
-  factory Settings.fromMap(Map<String, dynamic> map) {
-    return Settings(
-      useCustomCurrency: map['useCustomCurrency'] as bool,
-      currencyCode: map['currencyCode'] as String,
-      currencySymbolPosition: map['currencySymbolPosition'] as String,
-      reminder: map['reminder'] != null ? DateTime.fromMillisecondsSinceEpoch(map['reminder'] as int) : null,
-      accountabilityEmail: map['accountabilityEmail'] != null ? map['accountabilityEmail'] as String : null,
-    );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory Settings.fromJson(String source) => Settings.fromMap(json.decode(source) as Map<String, dynamic>);
-
   @override
   String toString() {
-    return 'Settings(useCustomCurrency: $useCustomCurrency, currencyCode: $currencyCode, currencySymbolPosition: $currencySymbolPosition, reminder: $reminder, accountabilityEmail: $accountabilityEmail)';
+    return 'SettingsObj(id: $id, currencyCode: $currencyCode, currencySymbol: $currencySymbol, currencySymbolPosition: $currencySymbolPosition, reminder: $reminder)';
   }
 
   @override
-  bool operator ==(covariant Settings other) {
+  bool operator ==(covariant SettingsObj other) {
     if (identical(this, other)) return true;
   
     return 
-      other.useCustomCurrency == useCustomCurrency &&
+      other.id == id &&
       other.currencyCode == currencyCode &&
+      other.currencySymbol == currencySymbol &&
       other.currencySymbolPosition == currencySymbolPosition &&
-      other.reminder == reminder &&
-      other.accountabilityEmail == accountabilityEmail;
-  }
-
-  @override
-  int get hashCode {
-    return useCustomCurrency.hashCode ^
-      currencyCode.hashCode ^
-      currencySymbolPosition.hashCode ^
-      reminder.hashCode ^
-      accountabilityEmail.hashCode;
+      other.reminder == reminder;
   }
 }

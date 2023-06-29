@@ -214,7 +214,7 @@ class _ExpenseDetailState extends State<ExpenseDetail> {
                                     Row(
                                       children: [
                                         Text(
-                                          Currency().wrapCurrencySymbol('${widget.expenseModel.amount}'),
+                                          Currency(context).wrapCurrencySymbol('${widget.expenseModel.amount}'),
 
                                           style: TextStyle(
                                             fontSize: 32,

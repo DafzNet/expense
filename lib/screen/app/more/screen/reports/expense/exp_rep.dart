@@ -33,14 +33,16 @@ class ExpReportScreenState extends State<ExpReportScreen> {
   String reportPeriod = '';
   var selectedDate;
 
-  // void updateReportPeriod(String newReportPeriod, newDate) {
-  //   reportPeriod = newReportPeriod;
-  //   selectedDate = newDate; 
+  void updateReportPeriod(String newReportPeriod, newDate) {
+    reportPeriod = newReportPeriod;
+    selectedDate = newDate;
 
-  //   setState(() {
+    getExps();
+
+    setState(() {
       
-  //   });
-  // }
+    });
+  }
 
 
 
@@ -240,10 +242,10 @@ class ExpReportScreenState extends State<ExpReportScreen> {
   @override
   Widget build(BuildContext context) {
 
-    reportPeriod = Provider.of<ReportProvider>(context).currentDateString;
-    selectedDate = Provider.of<ReportProvider>(context).currentPeriodDate;
+    //reportPeriod = Provider.of<ReportProvider>(context).currentDateString;
+    //selectedDate = Provider.of<ReportProvider>(context).currentPeriodDate;
 
-    getExps();
+    
 
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 245, 245, 245),
@@ -313,7 +315,7 @@ class ExpReportScreenState extends State<ExpReportScreen> {
                               const SizedBox(height: 10,),
                                     
                               Text(
-                                Currency().wrapCurrencySymbol(expTotal.toString()),
+                                Currency(context).wrapCurrencySymbol(expTotal.toString()),
                                     
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w600,
@@ -439,7 +441,7 @@ class ExpReportScreenState extends State<ExpReportScreen> {
                       color: Colors.white
                     ),
                     child: Text(
-                      Currency().wrapCurrencySymbol(_categoryAmount.toString())
+                      Currency(context).wrapCurrencySymbol(_categoryAmount.toString())
                     ),
                   )
                 ]
@@ -533,7 +535,7 @@ class ExpReportScreenState extends State<ExpReportScreen> {
                     
                                   subtitle: RichText(
                                     text: TextSpan(
-                                      text: '${Currency().wrapCurrencySymbol(e.amount.toString())}\n',
+                                      text: '${Currency(context).wrapCurrencySymbol(e.amount.toString())}\n',
 
                                       style: TextStyle(
                                         color: appDanger
@@ -647,7 +649,7 @@ class ExpReportScreenState extends State<ExpReportScreen> {
                                 ),
                 
                                 Text(
-                                 (dailyTotal.values.elementAt(index)/expTotal)*100>0 ? ' ${Currency().wrapCurrencySymbol(dailyTotal.values.elementAt(index).toString())}( ${double.parse(((dailyTotal.values.elementAt(index)/expTotal)*100).toString()).toStringAsFixed(1)}%)' : '',
+                                 (dailyTotal.values.elementAt(index)/expTotal)*100>0 ? ' ${Currency(context).wrapCurrencySymbol(dailyTotal.values.elementAt(index).toString())}( ${double.parse(((dailyTotal.values.elementAt(index)/expTotal)*100).toString()).toStringAsFixed(1)}%)' : '',
                                   style: const TextStyle(
                                     fontSize: 10
                                   ),

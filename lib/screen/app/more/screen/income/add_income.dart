@@ -145,7 +145,7 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                                   const SizedBox(height: 30,),
                                   
                                   MyTextField(
-                                    Currency().currencySymbol,
+                                    Currency(context).currencySymbol,
                                     headerText: 'Amount',
                                     keyboardType: TextInputType.number,
                                     controller: amountController,

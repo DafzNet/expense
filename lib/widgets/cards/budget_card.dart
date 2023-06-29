@@ -199,7 +199,7 @@ class _BudgetCardState extends State<BudgetCard> {
 
                           children: [
                             TextSpan(
-                              text: Currency().wrapCurrencySymbol(widget.budget.amount.toString()),
+                              text: Currency(context).wrapCurrencySymbol(widget.budget.amount.toString()),
 
                               style: const TextStyle(
                                 fontSize: 18,

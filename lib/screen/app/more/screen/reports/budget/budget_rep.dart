@@ -206,7 +206,7 @@ class BudgetReportScreenState extends State<BudgetReportScreen> {
 
                                   Text(
                                     
-                                    Currency().wrapCurrencySymbol(bugettedAmountForAllBudgets.toString()),
+                                    Currency(context).wrapCurrencySymbol(bugettedAmountForAllBudgets.toString()),
                                     
                                     style: const TextStyle(
                                       fontWeight: FontWeight.w600,
@@ -234,7 +234,7 @@ class BudgetReportScreenState extends State<BudgetReportScreen> {
 
                                   Text(
                                     
-                                    Currency().wrapCurrencySymbol(actualAmountForAllBudgets.toString()),
+                                    Currency(context).wrapCurrencySymbol(actualAmountForAllBudgets.toString()),
                                     
                                     style: const TextStyle(
                                       fontWeight: FontWeight.w600,
@@ -265,7 +265,7 @@ class BudgetReportScreenState extends State<BudgetReportScreen> {
 
                                   Text(
                                     
-                                    Currency().wrapCurrencySymbol(
+                                    Currency(context).wrapCurrencySymbol(
                                       (bugettedAmountForAllBudgets - actualAmountForAllBudgets)
                                     .toString()),
                                     
@@ -286,7 +286,7 @@ class BudgetReportScreenState extends State<BudgetReportScreen> {
                               if(bugettedAmountForAllBudgets - actualAmountForAllBudgets < 0)...
                               [
                                 Text(
-                                  'Overall budget over spent by ${Currency().wrapCurrencySymbol((actualAmountForAllBudgets-bugettedAmountForAllBudgets).toString())}',
+                                  'Overall budget over spent by ${Currency(context).wrapCurrencySymbol((actualAmountForAllBudgets-bugettedAmountForAllBudgets).toString())}',
 
                                   style: TextStyle(
                                       color: appDanger,
@@ -299,7 +299,7 @@ class BudgetReportScreenState extends State<BudgetReportScreen> {
                               if(bugettedAmountForAllBudgets - actualAmountForAllBudgets > 0)...
                               [
                                 Text(
-                                  '${Currency().wrapCurrencySymbol((bugettedAmountForAllBudgets-actualAmountForAllBudgets).toString())} of overall budget saved',
+                                  '${Currency(context).wrapCurrencySymbol((bugettedAmountForAllBudgets-actualAmountForAllBudgets).toString())} of overall budget saved',
                                   style: const TextStyle(
                                       color: Colors.greenAccent,
                                       fontSize: 12
@@ -497,7 +497,7 @@ class BudgetReportScreenState extends State<BudgetReportScreen> {
                                         borderRadius: BorderRadius.circular(8)
                                       ),
                                       child: Text(
-                                        Currency().wrapCurrencySymbol(e.amount.toString()),
+                                        Currency(context).wrapCurrencySymbol(e.amount.toString()),
                                     
                                         style: const TextStyle(
                                           color: Colors.white,
@@ -517,7 +517,7 @@ class BudgetReportScreenState extends State<BudgetReportScreen> {
                                     const Text('Actual Amount Spent: '),
 
                                     Text(
-                                      Currency().wrapCurrencySymbol((e.amount - e.balance).toString()),
+                                      Currency(context).wrapCurrencySymbol((e.amount - e.balance).toString()),
                                     
                                       style: TextStyle(
                                         color: (e.amount - e.balance) < e.amount ? appSuccess : appDanger,
@@ -537,7 +537,7 @@ class BudgetReportScreenState extends State<BudgetReportScreen> {
                                     const Text('Difference (Variance): '),
 
                                     Text(
-                                      Currency().wrapCurrencySymbol((e.amount-(e.amount - e.balance)).toString()),
+                                      Currency(context).wrapCurrencySymbol((e.amount-(e.amount - e.balance)).toString()),
                                     
                                       style: TextStyle(
                                         color: (e.amount - e.balance) < e.amount ? appSuccess : appDanger,
@@ -555,7 +555,7 @@ class BudgetReportScreenState extends State<BudgetReportScreen> {
 
                                 if((e.amount - e.balance)>e.amount)...[
                                   Text(
-                                   'This budget was over-spent by ${Currency().wrapCurrencySymbol(((e.amount - e.balance)-e.amount).toString())}',
+                                   'This budget was over-spent by ${Currency(context).wrapCurrencySymbol(((e.amount - e.balance)-e.amount).toString())}',
                                   
                                     style: TextStyle(
                                       color: (e.amount - e.balance) < e.amount ? appSuccess : appDanger,
@@ -564,7 +564,7 @@ class BudgetReportScreenState extends State<BudgetReportScreen> {
                                   )
                                 ]else...[
                                   Text(
-                                   'Saved ${Currency().wrapCurrencySymbol((e.amount-(e.amount - e.balance)).toString())} from this budget',
+                                   'Saved ${Currency(context).wrapCurrencySymbol((e.amount-(e.amount - e.balance)).toString())} from this budget',
                                   
                                     style: TextStyle(
                                       color: appSuccess,

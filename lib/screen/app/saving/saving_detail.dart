@@ -367,7 +367,7 @@ class _SavingDetailState extends State<SavingDetail> {
                                           child: Row(
                                             children: [
                                               Text(
-                                                Currency().wrapCurrencySymbol('${widget.savingModel.targetAmount} '),
+                                                Currency(context).wrapCurrencySymbol('${widget.savingModel.targetAmount} '),
                                                                                     
                                                 style: TextStyle(
                                                   fontSize: 30,
@@ -431,7 +431,7 @@ class _SavingDetailState extends State<SavingDetail> {
                                         SizedBox(
                                           width: (MediaQuery.of(context).size.width/2)-25,
                                           child: Text(
-                                            Currency().wrapCurrencySymbol('${widget.savingModel.currentAmount}'),
+                                            Currency(context).wrapCurrencySymbol('${widget.savingModel.currentAmount}'),
                                         
                                             style: TextStyle(
                                               fontSize: 25,
@@ -446,7 +446,7 @@ class _SavingDetailState extends State<SavingDetail> {
                                         SizedBox(
                                           width: (MediaQuery.of(context).size.width/2)-25,
                                           child: Text(
-                                            Currency().wrapCurrencySymbol('${widget.savingModel.targetAmount - widget.savingModel.currentAmount}'),
+                                            Currency(context).wrapCurrencySymbol('${widget.savingModel.targetAmount - widget.savingModel.currentAmount}'),
                                             textAlign: TextAlign.right,
                                             style: const TextStyle(
                                               fontSize: 25,

@@ -152,7 +152,7 @@ class _IncomeCardState extends State<IncomeCard> {
                               ),
         
                               Text(
-                                Currency().wrapCurrencySymbol("${widget.income.amount.toString().substring(0, widget.income.amount.toString().length>=7? 7:widget.income.amount.toString().length)}${widget.income.amount.toString().length>=7 ? '..':''}"),
+                                Currency(context).wrapCurrencySymbol("${widget.income.amount.toString().substring(0, widget.income.amount.toString().length>=7? 7:widget.income.amount.toString().length)}${widget.income.amount.toString().length>=7 ? '..':''}"),
                       
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
@@ -180,7 +180,7 @@ class _IncomeCardState extends State<IncomeCard> {
                               ),
         
                               Text(
-                                Currency().wrapCurrencySymbol("${widget.income.balance.toString().substring(0, widget.income.balance.toString().length>=7? 7:widget.income.balance.toString().length)}${widget.income.balance.toString().length>=7 ? '..':''}"),
+                                Currency(context).wrapCurrencySymbol("${widget.income.balance.toString().substring(0, widget.income.balance.toString().length>=7? 7:widget.income.balance.toString().length)}${widget.income.balance.toString().length>=7 ? '..':''}"),
                               
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,

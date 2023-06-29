@@ -104,7 +104,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                  ),
            
                 Text(
-                  Currency().wrapCurrencySymbol('${Provider.of<ExpenseProvider>(context).totalExpenseAmnt}'),
+                  Currency(context).wrapCurrencySymbol('${Provider.of<ExpenseProvider>(context).totalExpenseAmnt}'),
                   style: const TextStyle(
                     fontSize: 45,
                     height: 1.4,
@@ -150,7 +150,9 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                       Expanded(
                         child: StreamBuilder<List<ExpenseModel>>(
                           stream: expenseDb.onExpenses(_db!),
-                          initialData: const [],
+                          initialData: const [
+                            
+                          ],
                           builder: (context, snapshot){
 
                             if (snapshot.hasData) {
