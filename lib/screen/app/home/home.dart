@@ -14,6 +14,7 @@ import '../expense/add_expense.dart';
 import '../more/screen/budget/add_budget.dart';
 import '../more/screen/vaults/add_vault.dart';
 import '../saving/add_saving.dart';
+import 'widgets/overspent_income.dart';
 
 
 class HomeScreen extends StatefulWidget {
@@ -264,8 +265,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
         
-        
-              
               // Expanded(
               //   child: ListView(
               //     children: const [
@@ -300,7 +299,7 @@ class _HomeScreenState extends State<HomeScreen> {
               if(true)
                 ...[
                   const SessionTopic(
-                    label: 'Almost spent out (incomes)',
+                    label: 'Incomes Over 80% Spent',
                   ),
 
                   const SizedBox(height: 5,),
@@ -313,9 +312,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         padding: const EdgeInsets.only(right: 10),
                         child: SizedBox(
                           width: 150,
-                          child: Container(
-                            color: appOrange,
-                          ),
+                          child: OverspentIncome()
                         ),
                       )),
                     ),
