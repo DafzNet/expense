@@ -2,7 +2,6 @@
 // ignore_for_file: prefer_interpolation_to_compose_strings
 
 import 'package:expense/models/expense_model.dart';
-import 'package:expense/providers/report_period.dart';
 import 'package:expense/utils/currency/currency.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -11,6 +10,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:sembast/sembast.dart';
 import '../../../../../../dbs/expense.dart';
+import '../../../../../../providers/report_period.dart';
 import '../../../../../../utils/constants/colors.dart';
 import 'package:fl_chart/fl_chart.dart';
 
@@ -19,9 +19,11 @@ import '../../../../expense/expense_detail.dart';
 
 
 class ExpReportScreen extends StatefulWidget {
-
+  final GlobalKey<ExpReportScreenState> reportKey;
   const ExpReportScreen(
-    {super.key});
+      this.reportKey,
+      {Key? key,}
+    ):super(key: key);
   
 
   @override
@@ -32,17 +34,6 @@ class ExpReportScreenState extends State<ExpReportScreen> {
 
   String reportPeriod = '';
   var selectedDate;
-
-  void updateReportPeriod(String newReportPeriod, newDate) {
-    reportPeriod = newReportPeriod;
-    selectedDate = newDate;
-
-    getExps();
-
-    setState(() {
-      
-    });
-  }
 
 
 
@@ -227,25 +218,26 @@ class ExpReportScreenState extends State<ExpReportScreen> {
 
     _categoryAmount = expenseCatTotal[expensesCats.first]!;
 
-    setState(() {
+    // setState(() {
       
-    });
+    // });
   }
 
   @override
   void initState() {
-    getExps();
-    //getExpenseSections();
+    // getExps();
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
 
-    //reportPeriod = Provider.of<ReportProvider>(context).currentDateString;
-    //selectedDate = Provider.of<ReportProvider>(context).currentPeriodDate;
-
-    
+    reportPeriod = Provider.of<ReportProvider>(context).currentDateString;
+    selectedDate = Provider.of<ReportProvider>(context).currentPeriodDate;
+    setState(() {
+      getExps();
+    });
 
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 245, 245, 245),
@@ -304,7 +296,7 @@ class ExpReportScreenState extends State<ExpReportScreen> {
                                     
                             children: [
                               Text(
-                                Month().currentMonth+' Expense',
+                                Month().currentMonth+' Expense '+reportPeriod,
                                     
                                 style: const TextStyle(
                                   fontSize: 16,
@@ -474,7 +466,7 @@ class ExpReportScreenState extends State<ExpReportScreen> {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
                                 child: Container(
-                                      color: _selectedCategory == expensesCats.elementAt(index) ? Colors.white10 : expenseCatColor[expensesCats.elementAt(index)],
+                                      color: _selectedCategory == expensesCats.elementAt(index) ? appSuccess.shade800 : expenseCatColor[expensesCats.elementAt(index)],
                     
                                       child: Center(
                                         child: Text(
@@ -483,7 +475,7 @@ class ExpReportScreenState extends State<ExpReportScreen> {
                                           style:  TextStyle(
                                             fontSize: 18,
                                             fontWeight: FontWeight.bold,
-                                            color: _selectedCategory == expensesCats.elementAt(index) ? Colors.black :Colors.white,
+                                            color: Colors.white,
                                             shadows: _selectedCategory == expensesCats.elementAt(index) ? [] :[const Shadow(blurRadius: 4)]
                                           ),
                                         ),

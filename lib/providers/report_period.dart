@@ -8,7 +8,7 @@ class ReportProvider with ChangeNotifier{
   String currentDateString = '';
 
 
-  void changePeriod(String p, value)async{
+  void changePeriod(String p, value){
     currentPeriodDate = value;
     currentDateString = p;
 

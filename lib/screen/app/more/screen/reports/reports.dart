@@ -26,7 +26,7 @@ class _ReportScreenState extends State<ReportScreen> {
   DateTimeRange range = DateTimeRange(start: DateTime.now().subtract(const Duration(days: 7)), end: DateTime.now());
 
 
-  static GlobalKey<ExpReportScreenState> expReportKey = GlobalKey();
+  static GlobalKey<ExpReportScreenState> reportKey = GlobalKey();
   static GlobalKey<IncomeReportScreenState> incReportKey = GlobalKey();
   static GlobalKey<BudgetReportScreenState> budgetReportKey = GlobalKey();
 
@@ -38,9 +38,9 @@ class _ReportScreenState extends State<ReportScreen> {
     });
 
     // Update the report period in the ExpReportScreen
-    expReportKey.currentState?.updateReportPeriod(newReportPeriod, newReportDate);
-    incReportKey.currentState?.updateReportPeriod(newReportPeriod, newReportDate);
-    budgetReportKey.currentState?.updateReportPeriod(newReportPeriod, newReportDate);
+    reportKey.currentState?.setState(() {});
+    incReportKey.currentState?.setState(() {});
+    budgetReportKey.currentState?.setState(() {});;
   }
 
 
@@ -78,7 +78,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                 String rPrd = 'Current Month';
                                 var rDate =DateTime.now();
 
-                                //Provider.of<ReportProvider>(context, listen: false).changePeriod(rPrd, rDate);
+                                Provider.of<ReportProvider>(context, listen: false).changePeriod(rPrd, rDate);
                                 updateReportPeriod(rPrd, rDate);
 
                                 Navigator.pop(context);
@@ -128,7 +128,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                 var rDate = Month().currentMonthNumber == 1 ? DateTime(DateTime.now().year-1, 12, 1) : DateTime(DateTime.now().year, DateTime.now().month-1, DateTime.now().day);
 
 
-                                //Provider.of<ReportProvider>(context, listen: false).changePeriod(rPrd, rDate);
+                                Provider.of<ReportProvider>(context, listen: false).changePeriod(rPrd, rDate);
                                 updateReportPeriod(rPrd, rDate);
 
                                 Navigator.pop(context);
@@ -178,7 +178,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                 String rPrd = 'One Year ago';
                                 var rDate = DateTime.now().subtract(const Duration(days: 365));
 
-                                //Provider.of<ReportProvider>(context, listen: false).changePeriod(rPrd, rDate);
+                                Provider.of<ReportProvider>(context, listen: false).changePeriod(rPrd, rDate);
                                 updateReportPeriod(rPrd, rDate);
 
                                 Navigator.pop(context);
@@ -232,8 +232,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                 final dateRange = await showDateRangePicker(
                                   context: context, 
                                   firstDate: DateTime(2023, 1, 1, 0, 0, 0),
-                                  lastDate: range.end,
-                                  initialDateRange: range,
+                                  lastDate: DateTime.now(),
                                   helpText: 'Decide Report Range',
                                   confirmText: 'Confirm',
                                   cancelText: 'Cancel',
@@ -245,7 +244,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                   range = dateRange;
                                   String newReportDate = '${dateRange.start.year == DateTime.now().year? DateFormat.MMMd().format(dateRange.start): DateFormat.yMMMd().format(dateRange.start)} - ${dateRange.end.year == DateTime.now().year? DateFormat.MMMd().format(dateRange.end): DateFormat.yMMMd().format(dateRange.end)}';
 
-                                  //Provider.of<ReportProvider>(context, listen: false).changePeriod(newReportDate,dateRange);
+                                  Provider.of<ReportProvider>(context, listen: false).changePeriod(newReportDate,dateRange);
                                   updateReportPeriod(newReportDate, dateRange);
                                 }
 
@@ -343,11 +342,11 @@ class _ReportScreenState extends State<ReportScreen> {
             ]),
         ),
 
-        body: const TabBarView(
+        body:  TabBarView(
           children: [
-            ExpReportScreen(),
-            IncomeReportScreen(),
-            BudgetReportScreen()
+            ExpReportScreen(reportKey),
+            IncomeReportScreen(incReportKey),
+            BudgetReportScreen(budgetReportKey)
           ],
         ),
       ),

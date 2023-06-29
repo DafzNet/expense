@@ -7,17 +7,23 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:provider/provider.dart';
 import 'package:sembast/sembast.dart';
 
 import '../../../../../../models/budget.dart';
 import '../../../../../../models/category_model.dart';
+import '../../../../../../providers/report_period.dart';
 import '../../../../../../utils/month.dart';
 import 'budget_exps.dart';
 
 
 
 class BudgetReportScreen extends StatefulWidget {
-  const BudgetReportScreen({super.key});
+  final GlobalKey<BudgetReportScreenState> reportKey;
+  const BudgetReportScreen(
+      this.reportKey,
+      {Key? key,}
+    ):super(key: key);
 
   @override
   State<BudgetReportScreen> createState() => BudgetReportScreenState();
@@ -29,15 +35,7 @@ class BudgetReportScreenState extends State<BudgetReportScreen> {
   String reportPeriod = '';
   var selectedDate;
 
-  void updateReportPeriod(String newReportPeriod, newDate) {
-    setState(() {
-      reportPeriod = newReportPeriod;
-      selectedDate = newDate;
-    });
-  }
-
-
-
+ 
   int touchedIndex = -1;
 
   BudgetDb budgetDb = BudgetDb();
@@ -134,7 +132,11 @@ class BudgetReportScreenState extends State<BudgetReportScreen> {
 
   @override
   Widget build(BuildContext context) {
-    
+
+    reportPeriod = Provider.of<ReportProvider>(context).currentDateString;
+    selectedDate = Provider.of<ReportProvider>(context).currentPeriodDate;
+   
+
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 245, 245, 245),
     

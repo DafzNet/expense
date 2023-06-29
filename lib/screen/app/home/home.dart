@@ -1,4 +1,5 @@
 import 'package:expense/models/user_model.dart';
+import 'package:expense/screen/app/home/widgets/daily_spending_card.dart';
 import 'package:expense/screen/app/more/screen/income/add_income.dart';
 import 'package:expense/utils/constants/images.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -244,17 +245,20 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 20,),
         
               SizedBox(
-                height: 250,
+                height: 300,
         
                 child: Stack(
 
                   children: [
                     Container(
+                      padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
                         color: const Color.fromARGB(31, 244, 244, 244),
                         border: Border.all(width: .4),
                         borderRadius: BorderRadius.circular(12)
                       ),
+
+                      child: const HomeSummary(),
                     ),
                   ],
                 ),

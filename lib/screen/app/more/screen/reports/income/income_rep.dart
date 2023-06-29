@@ -8,16 +8,21 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:provider/provider.dart';
 import 'package:sembast/sembast.dart';
 
+import '../../../../../../providers/report_period.dart';
 import '../../../../../../utils/month.dart';
 import '../../income/income_exps.dart';
 
 
 
 class IncomeReportScreen extends StatefulWidget {
-  const IncomeReportScreen({super.key});
-
+  final GlobalKey<IncomeReportScreenState> reportKey;
+  const IncomeReportScreen(
+      this.reportKey,
+      {Key? key,}
+    ):super(key: key);
   @override
   State<IncomeReportScreen> createState() => IncomeReportScreenState();
 }
@@ -27,12 +32,7 @@ class IncomeReportScreenState extends State<IncomeReportScreen> {
   String reportPeriod = '';
   var selectedDate;
 
-  void updateReportPeriod(String newReportPeriod, newDate) {
-    setState(() {
-      reportPeriod = newReportPeriod;
-      selectedDate = newDate;
-    });
-  }
+
 
   int touchedIndex = -1;
   IncomeDb incomeDb = IncomeDb();
@@ -122,6 +122,10 @@ class IncomeReportScreenState extends State<IncomeReportScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    reportPeriod = Provider.of<ReportProvider>(context).currentDateString;
+    selectedDate = Provider.of<ReportProvider>(context).currentPeriodDate;
+    
     
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 245, 245, 245),
@@ -180,8 +184,8 @@ class IncomeReportScreenState extends State<IncomeReportScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                                     
                             children: [
-                              const Text(
-                                'Total Income',
+                              Text(
+                                'Total Income'+selectedDate.toString(),
                                     
                                 style: TextStyle(
                                   fontSize: 16,
