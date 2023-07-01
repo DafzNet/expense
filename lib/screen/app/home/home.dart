@@ -1,5 +1,9 @@
+
+import 'package:expense/models/budget.dart';
+import 'package:expense/models/savings_model.dart';
 import 'package:expense/models/user_model.dart';
 import 'package:expense/screen/app/home/widgets/daily_spending_card.dart';
+import 'package:expense/screen/app/home/widgets/deadline_savings.dart';
 import 'package:expense/screen/app/more/screen/income/add_income.dart';
 import 'package:expense/utils/constants/images.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,13 +11,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:sembast/sembast.dart';
+import '../../../dbs/budget_db.dart';
+import '../../../dbs/income_db.dart';
+import '../../../dbs/saving_db.dart';
 import '../../../firebase/db/user.dart';
+import '../../../models/income_model.dart';
 import '../../../utils/capitalize.dart';
 import '../../../utils/constants/colors.dart';
+import '../../../utils/month.dart';
 import '../expense/add_expense.dart';
 import '../more/screen/budget/add_budget.dart';
 import '../more/screen/vaults/add_vault.dart';
 import '../saving/add_saving.dart';
+import 'widgets/overspent_budget.dart';
 import 'widgets/overspent_income.dart';
 
 
@@ -32,6 +43,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
+
+
   LightUser? _currentUser;
 
     void myUser(uid)async{
@@ -45,9 +58,85 @@ class _HomeScreenState extends State<HomeScreen> {
 
 
 
+    IncomeDb incomeDb = IncomeDb();
+    BudgetDb budgetDb = BudgetDb();
+    SavingsDb savingsDb = SavingsDb();
+
+    List<IncomeModel> incomesAboutFinishing = [];
+    List<BudgetModel> budgetsAboutFinishing = [];
+    List<TargetSavingModel> savingsReachingLimit = [];
+
+
+
+
+    void getIncomesFinishing()async{
+      Filter filter = Filter.custom((record){
+        final data = record.value as Map<String, dynamic>;
+        final _income = IncomeModel.fromMap(data);
+
+        return ((_income.balance/_income.amount)*100) < 20 && _income.month == DateTime.now().month;
+
+      });
+
+      incomesAboutFinishing = await incomeDb.retrieveBasedOn(filter);
+
+      setState(() {
+        
+      });
+    }
+
+
+    void getSavingsFinishing()async{
+      Filter filter = Filter.custom((record){
+        final data = record.value as Map<String, dynamic>;
+        final _savings = TargetSavingModel.fromMap(data);
+
+        return _savings.targetDate.difference(DateTime.now()).inDays < 20;
+
+      });
+
+      savingsReachingLimit = await savingsDb.retrieveBasedOn(filters: [filter]);
+
+      setState(() {
+        
+      });
+    }
+
+
+  void getBudgetsFinishing()async{
+      Filter filter = Filter.custom((record){
+              final budg = record.value as Map<String, dynamic>;
+              final myBudg = BudgetModel.fromMap(budg);
+
+              if (myBudg.startDate == myBudg.endDate) {
+                return myBudg.month == Month().currentMonthNumber && myBudg.year == DateTime.now().year && (((myBudg.balance/myBudg.amount)*100)<20);
+              }else{
+                return DateTime.now().isAfter(myBudg.startDate!) && DateTime.now().isBefore(myBudg.endDate!) && (((myBudg.balance/myBudg.amount)*100)<20);
+              }
+              
+            });
+
+      budgetsAboutFinishing = await budgetDb.retrieveBasedOn(filter);
+
+      setState(() {
+        
+      });
+    }
+
+
+
+
+
+
+
+
   @override
   void initState() {
     widget.user2 != null ? _currentUser = widget.user2 : myUser(widget.user!.uid);
+    getIncomesFinishing();
+    getBudgetsFinishing();
+    getSavingsFinishing();
+
     super.initState();
   }
 
@@ -259,47 +348,19 @@ class _HomeScreenState extends State<HomeScreen> {
                         borderRadius: BorderRadius.circular(12)
                       ),
 
-                      child: const HomeSummary(),
+                      child: HomeSummary(),
                     ),
                   ],
                 ),
               ),
         
-              // Expanded(
-              //   child: ListView(
-              //     children: const [
-        
-              //       HomeTile(
-              //         targetBudget: '₦90000',
-              //       ),
-        
-              //       SizedBox(height: 30,),
-                    
-              //       HomeTile(
-              //         subtitle: '80% budget spent',
-              //         title: 'Expenses',
-              //         percentage: 0.8,
-              //       ),
-        
-        
-              //       SizedBox(height: 30,),
-                    
-              //       HomeTile(
-              //         subtitle: '20% budget spent',
-              //         percentage: 0.2,
-              //         title: 'Saved Budget',
-              //       ),
-        
-              //     ],
-              //   ),
-              // )
         
               const SizedBox(height: 15,),
 
-              if(true)
+              if(incomesAboutFinishing.isNotEmpty)
                 ...[
                   const SessionTopic(
-                    label: 'Incomes Over 80% Spent',
+                    label: 'Incomes running low',
                   ),
 
                   const SizedBox(height: 5,),
@@ -308,11 +369,41 @@ class _HomeScreenState extends State<HomeScreen> {
                     height: 150,
                     child: ListView(
                       scrollDirection: Axis.horizontal,
-                      children: List.generate(10, (index) => Padding(
+                      children: incomesAboutFinishing.map((e) => 
+                        SizedBox(
+                          width: 150,
+                          child: OverspentIncome(
+                            income: e
+                          ),
+                        )
+                       ).toList()
+                    ),
+                  )
+
+                ],
+
+
+                const SizedBox(height: 15,),
+
+              if(budgetsAboutFinishing.isNotEmpty)
+                ...[
+                  const SessionTopic(
+                    label: 'Budgets running low',
+                  ),
+
+                  const SizedBox(height: 5,),
+
+                  SizedBox(
+                    height: 150,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: List.generate(budgetsAboutFinishing.length, (index) => Padding(
                         padding: const EdgeInsets.only(right: 10),
                         child: SizedBox(
                           width: 150,
-                          child: OverspentIncome()
+                          child: OverspentBudget(
+                            budget: budgetsAboutFinishing[index]
+                          )
                         ),
                       )),
                     ),
@@ -323,10 +414,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 const SizedBox(height: 15,),
 
-              if(true)
+              if(savingsReachingLimit.isNotEmpty)
                 ...[
                   const SessionTopic(
-                    label: 'Budget',
+                    label: 'Savings Close to Deadline',
                   ),
 
                   const SizedBox(height: 5,),
@@ -335,42 +426,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     height: 150,
                     child: ListView(
                       scrollDirection: Axis.horizontal,
-                      children: List.generate(10, (index) => Padding(
+                      children: List.generate(savingsReachingLimit.length, (index) => Padding(
                         padding: const EdgeInsets.only(right: 10),
                         child: SizedBox(
                           width: 150,
-                          child: Container(
-                            color: appOrange,
-                          ),
-                        ),
-                      )),
-                    ),
-                  )
-
-                ],
-
-
-                const SizedBox(height: 15,),
-
-              if(true)
-                ...[
-                  const SessionTopic(
-                    label: 'Incomes',
-                  ),
-
-                  const SizedBox(height: 5,),
-
-                  SizedBox(
-                    height: 150,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: List.generate(10, (index) => Padding(
-                        padding: const EdgeInsets.only(right: 10),
-                        child: SizedBox(
-                          width: 150,
-                          child: Container(
-                            color: appOrange,
-                          ),
+                          child: SavingsAproachingDeadline(
+                            saving: savingsReachingLimit[index]
+                          )
                         ),
                       )),
                     ),

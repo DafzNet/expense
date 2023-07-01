@@ -15,8 +15,7 @@ class SettingsProvider with ChangeNotifier{
   void getSet()async{
     final setting = SettingsDb();
     final myset = await setting.retrieveData();
-    print(myset);
-    mySettings = SettingsObj.fromMap(myset.first as Map<String, dynamic>);
+    mySettings = myset.last;
   }
 
   void changeSettings(SettingsObj setting)async{

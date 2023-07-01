@@ -48,7 +48,7 @@ class ExpenseDb{
   }
 
 
-  Future retrieveData({int? month})async{
+  Future<List<ExpenseModel>> retrieveData({int? month})async{
 
     final appDocumentDir = await getApplicationDocumentsDirectory();
     var store = intMapStoreFactory.store();
@@ -61,7 +61,7 @@ class ExpenseDb{
     var data = await store.records(keys).get(db);
     await db.close();
 
-    return data;
+    return data.map((e) => ExpenseModel.fromMap(e as Map<String, dynamic>)).toList();
   }
 
 

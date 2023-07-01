@@ -26,9 +26,8 @@ class SettingsDb{
     var factory = databaseFactoryIo;
 
     var db = await factory.openDatabase(join(appDocumentDir.path, 'setting.db'));
-
+    await store.drop(db);
     await store.add(db, setting.toMap());
-
     await db.close();
   }
 
@@ -45,7 +44,9 @@ class SettingsDb{
      var data = await store.records(keys).get(db);
      //await db.close();
 
-     return data.map((e) => SettingsObj.fromMap(e as Map<String, dynamic>)).toList();
+     print(data);
+
+     return data.map((e) => SettingsObj.fromMap(e as Map<String, dynamic>)).toList(growable: false);
   }
 
 
@@ -58,7 +59,7 @@ class SettingsDb{
     var db = await factory.openDatabase(join(appDocumentDir.path, 'setting.db'));
 
     await store.update(db, setting.toMap(), finder: Finder(filter: Filter.equals('id', setting.id)));
-    await db.close();
+    //await db.close();
   }
 
 

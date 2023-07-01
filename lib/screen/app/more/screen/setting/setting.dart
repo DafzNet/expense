@@ -24,30 +24,30 @@ class _SettingScreenState extends State<SettingScreen> {
   final settingsDb = SettingsDb();
   SettingsObj? setting;
   
+  String currencySymbol = '\$';
+  String currencyCode = '';
+
+  String currencySymbolPos = '';
+
 
   void getSettings()async{
     final settings = await settingsDb.retrieveData();
-    setting = settings.first;
+    setting = settings.last;
+
+    currencySymbol = setting!.currencySymbol;
+    currencyCode = setting!.currencyCode;
+    currencySymbolPos = setting!.currencySymbolPosition;
 
     setState(() {
       
     });
   }
-
-  
-  String _currencySymbol = '\$';
-  String _currencyCode = '';
-
-  String _currencySymbolPos = 'Left';
-  
   
   @override
   void initState() {
-    if (setting != null) {
-      _currencySymbol = setting!.currencySymbol;
-      _currencyCode = setting!.currencyCode;
-      _currencySymbolPos = setting!.currencySymbolPosition;
-    }
+  
+    getSettings();
+  
     super.initState();
   }
 
@@ -107,8 +107,8 @@ class _SettingScreenState extends State<SettingScreen> {
                                   padding: const EdgeInsets.only(bottom: 5),
                                   child: GestureDetector(
                                     onTap: () {
-                                      _currencySymbol = Currency(context).currencies.values.elementAt(index);
-                                      _currencyCode = Currency(context).currencies.keys.elementAt(index);
+                                      currencySymbol = Currency(context).currencies.values.elementAt(index);
+                                      currencyCode = Currency(context).currencies.keys.elementAt(index);
                                       setState(() {
                                         
                                       });
@@ -180,7 +180,7 @@ class _SettingScreenState extends State<SettingScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          _currencySymbol,
+                          currencySymbol,
                   
                           style: TextStyle(
                             fontSize: 16,
@@ -207,7 +207,7 @@ class _SettingScreenState extends State<SettingScreen> {
                           child: Text('Left'),
 
                           onTap: () {
-                            _currencySymbolPos='Left';
+                            currencySymbolPos='Left';
                             setState(() {
                               
                             });
@@ -218,7 +218,7 @@ class _SettingScreenState extends State<SettingScreen> {
                           child: Text('Right'),
 
                           onTap: () {
-                            _currencySymbolPos='Right';
+                            currencySymbolPos='Right';
                             setState(() {
                               
                             });
@@ -247,7 +247,7 @@ class _SettingScreenState extends State<SettingScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          _currencySymbolPos,
+                          currencySymbolPos,
                   
                           style: TextStyle(
                             fontSize: 16,
@@ -451,15 +451,16 @@ class _SettingScreenState extends State<SettingScreen> {
 
                 final newSetting = SettingsObj(
                   id: DateTime.now().millisecondsSinceEpoch, 
-                  currencySymbol: _currencySymbol,
-                  currencyCode: _currencyCode,
-                  currencySymbolPosition: _currencySymbolPos
+                  currencySymbol: currencySymbol,
+                  currencyCode: currencyCode,
+                  currencySymbolPosition: currencySymbolPos
                 );
+
+                print(newSetting);
 
                 Provider.of<SettingsProvider>(context, listen: false).changeSettings(newSetting);
                 await settingsDb.addData(newSetting);
 
-                print('saved');
 
               },
 

@@ -1,11 +1,17 @@
 
 
+import 'package:expense/models/income_model.dart';
 import 'package:expense/utils/constants/colors.dart';
 import 'package:expense/utils/currency/currency.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../dbs/expense.dart';
+import '../../../../dbs/income_db.dart';
+import '../../../../models/expense_model.dart';
+
 class HomeSummary extends StatefulWidget {
+  
   const HomeSummary({super.key});
 
   @override
@@ -16,9 +22,87 @@ class _HomeSummaryState extends State<HomeSummary> {
 
   final days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
+  
+  ExpenseDb expenseDb = ExpenseDb();
+  IncomeDb incomeDb = IncomeDb();
+
+  DateTime expStartDate = DateTime.now();
+
+  Map<String, double> daysOfExps = {'Sunday':0, 'Monday':0, 'Tuesday':0, 'Wednesday':0, 'Thursday':0, 'Friday':0, 'Saturday':0};
+
+  List<ExpenseModel> expensesAllTime = [];
+  double totalExpAllTime = 0;
+
+  String highestSpenderDay = 'Monday ';
+  double highestSpenderDayAmount = 0;
+
+  String lowestSpenderDay = '';
+  double lowestSpenderDayAmount = 0;
+
+
+
+  void getAllTimeExpenses()async{
+    expensesAllTime = await expenseDb.retrieveData();
+
+    for (var element in expensesAllTime) {
+      lowestSpenderDayAmount = element.amount;
+      totalExpAllTime += element.amount;
+      //Get exp total based on days
+      daysOfExps[DateFormat.EEEE().format(element.date)] = daysOfExps[DateFormat.EEEE().format(element.date)]! + element.amount;
+      //Get start date
+      expStartDate = element.date.isBefore(expStartDate)? element.date:expStartDate;
+    }
+
+
+    for (var element in daysOfExps.keys) {
+
+      if (highestSpenderDayAmount < daysOfExps[element]!) {
+        highestSpenderDay = element;
+        highestSpenderDayAmount = daysOfExps[element]!;
+      }
+
+      if (lowestSpenderDayAmount > daysOfExps[element]!) {
+        lowestSpenderDay = element;
+        lowestSpenderDayAmount = daysOfExps[element]!;
+      }
+    }
+
+    setState(() {
+      
+    });
+  }
+
+
+  List<IncomeModel> incomesAllTime = [];
+  double incomeTotal = 0;
+
+  void getAllTimeIncomes()async{
+    incomesAllTime = await incomeDb.retrieveData();
+
+    for (var element in incomesAllTime) {
+      incomeTotal += element.amount;
+      //Get exp total based on days
+      
+    }
+
+    setState(() {
+      
+    });
+  }
+
+  @override
+  void initState() {
+    getAllTimeExpenses();
+    getAllTimeIncomes();
+    super.initState();
+  }
+
+
+
+
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return expensesAllTime.isNotEmpty? Column(
       children: [
 
         Row(
@@ -41,7 +125,7 @@ class _HomeSummaryState extends State<HomeSummary> {
             
                   children: [
                     TextSpan(
-                      text: DateFormat.yMMMd().format(DateTime.now()),
+                      text: expStartDate.year == DateTime.now().year? DateFormat.MMMd().format(expStartDate) : DateFormat.yMMMd().format(expStartDate),
             
                       style: TextStyle(
                         color: Colors.black,
@@ -66,20 +150,23 @@ class _HomeSummaryState extends State<HomeSummary> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Text(
-                        ((i+1)*10).toString()+'%',
+                        double.parse(((daysOfExps[days.elementAt(i)]!/totalExpAllTime)*100).toString()).toStringAsFixed(0) +'%',
                         style: TextStyle(
-                          fontSize: 10
+                          fontSize: 9
                         ),
                       ),
                       SizedBox(
-                        height: ((i+1)*20)-10,
+                        height: ((daysOfExps[days.elementAt(i)]!/totalExpAllTime)*100)*2,
                         width: 10,
                         child: Container(
                           color: appDanger,
                         ),
                       ),
-                      SizedBox(height: 10,),
+
+                      SizedBox(height: 2,),
                       Text(days[i].substring(0,3))
+
+                      
                     ],
                   ), )
               ),
@@ -97,7 +184,7 @@ class _HomeSummaryState extends State<HomeSummary> {
                     children: [
                       RichText(
                         text: TextSpan(
-                          text: 'Highest spending Day: ',
+                          text: 'Highest spender: ',
                     
                           style: TextStyle(
                             color: appSuccess.shade800,
@@ -107,7 +194,7 @@ class _HomeSummaryState extends State<HomeSummary> {
                     
                           children: [
                             TextSpan(
-                              text: 'Saturday - ',
+                              text: highestSpenderDay,
                     
                               style: TextStyle(
                                 color: appSuccess.shade800,
@@ -116,7 +203,7 @@ class _HomeSummaryState extends State<HomeSummary> {
                             ),
 
                             TextSpan(
-                              text: Currency(context).wrapCurrencySymbol('30000'),
+                              text:' '+ Currency(context).wrapCurrencySymbol(highestSpenderDayAmount.toString()),
                     
                               style: TextStyle(
                                 color: appSuccess.shade800,
@@ -125,7 +212,7 @@ class _HomeSummaryState extends State<HomeSummary> {
                             ),
 
                             TextSpan(
-                              text: ' (70%)',
+                              text: ' ('+double.parse(((highestSpenderDayAmount/totalExpAllTime)*100).toString()).toStringAsFixed(0)+'%)',
                     
                               style: TextStyle(
                                 color: appOrange.shade800,
@@ -141,7 +228,7 @@ class _HomeSummaryState extends State<HomeSummary> {
 
                       RichText(
                         text: TextSpan(
-                          text: 'Least spending Day: ',
+                          text: 'Least Spender: ',
                     
                           style: TextStyle(
                             color: appSuccess.shade800,
@@ -151,7 +238,7 @@ class _HomeSummaryState extends State<HomeSummary> {
                     
                           children: [
                             TextSpan(
-                              text: 'Sunday - ',
+                              text: lowestSpenderDay + ' ',
                     
                               style: TextStyle(
                                 color: appSuccess.shade800,
@@ -160,7 +247,7 @@ class _HomeSummaryState extends State<HomeSummary> {
                             ),
 
                             TextSpan(
-                              text: Currency(context).wrapCurrencySymbol('7000'),
+                              text: Currency(context).wrapCurrencySymbol(lowestSpenderDayAmount.toString()),
                     
                               style: TextStyle(
                                 color: appSuccess.shade800,
@@ -169,7 +256,7 @@ class _HomeSummaryState extends State<HomeSummary> {
                             ),
 
                             TextSpan(
-                              text: ' (10%)',
+                              text: ' ('+double.parse(((lowestSpenderDayAmount/totalExpAllTime)*100).toString()).toStringAsFixed(0)+'%)',
                     
                               style: TextStyle(
                                 color: appOrange.shade800,
@@ -207,7 +294,7 @@ class _HomeSummaryState extends State<HomeSummary> {
 
                     children: [
                       TextSpan(
-                        text: Currency(context).wrapCurrencySymbol('1234567890'),
+                        text: Currency(context).wrapCurrencySymbol(incomeTotal.toString()),
 
                         style: TextStyle(
                           color: appSuccess.shade700,
@@ -232,7 +319,7 @@ class _HomeSummaryState extends State<HomeSummary> {
 
                     children: [
                       TextSpan(
-                        text: Currency(context).wrapCurrencySymbol('1234567890'),
+                        text: Currency(context).wrapCurrencySymbol(totalExpAllTime.toString()),
 
                         style: TextStyle(
                           color: Colors.redAccent,
@@ -251,24 +338,52 @@ class _HomeSummaryState extends State<HomeSummary> {
             SizedBox(
               width: 100,
               child: Container(
-                padding: EdgeInsets.all(10),
+                padding: EdgeInsets.all(5),
                 decoration: BoxDecoration(
                   color: appSuccess.shade700,
                   border: Border.all(width: .3, color: appSuccess),
                   borderRadius: BorderRadius.circular(8)
                 ),
                 child: Center(
-                  child: Text(
-                     Currency(context).wrapCurrencySymbol('20000000'),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                         'Balance:',
 
-                     style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold
-                     ),
+                         style: TextStyle(
+                          color: Color.fromARGB(255, 194, 249, 148),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 8
+                         ),
+                      ),
+                      Text(
+                         Currency(context).wrapCurrencySymbol((incomeTotal-totalExpAllTime).toString()),
+
+                         style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold
+                         ),
+                      ),
+                    ],
                   ),
                 )
               ),
             )
+          ],
+        )
+      ],
+    ):
+    Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'A Summary of all your\nfinances willbe displayed here',
+              textAlign: TextAlign.center,
+            ),
           ],
         )
       ],

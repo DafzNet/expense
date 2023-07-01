@@ -3,20 +3,21 @@
 import 'package:expense/utils/currency/currency.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../models/income_model.dart';
+import '../../../../models/budget.dart';
 import '../../../../utils/constants/colors.dart';
 
-class OverspentIncome extends StatefulWidget {
-  final IncomeModel income;
-  const OverspentIncome({
-    required this.income,
+class OverspentBudget extends StatefulWidget {
+  final BudgetModel budget;
+  
+  const OverspentBudget({
+    required this.budget,
     super.key});
 
   @override
-  State<OverspentIncome> createState() => _OverspentIncomeState();
+  State<OverspentBudget> createState() => _OverspentBudgetState();
 }
 
-class _OverspentIncomeState extends State<OverspentIncome> {
+class _OverspentBudgetState extends State<OverspentBudget> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -42,7 +43,7 @@ class _OverspentIncomeState extends State<OverspentIncome> {
                   ),
                 child: Center(
                   child: Text(
-                    double.parse((((widget.income.amount-widget.income.balance)/widget.income.amount)*100).toString()).toStringAsFixed(0)+'%',
+                    double.parse((((widget.budget.amount - widget.budget.balance)/widget.budget.amount)*100).toString()).toStringAsFixed(0)+'%',
                         
                     style: TextStyle(
                       color: Colors.white,
@@ -57,14 +58,12 @@ class _OverspentIncomeState extends State<OverspentIncome> {
             Divider(height: 14,),
 
             Text(
-              'of ${widget.income.name} spent',
-
-              maxLines: 1,
+              'of ${widget.budget.name}\'s spent',
         
               style: TextStyle(
                 color: appSuccess.shade800,
                 
-                fontSize: 14,
+                fontSize: 12,
               ),
             ),
 
@@ -72,7 +71,7 @@ class _OverspentIncomeState extends State<OverspentIncome> {
 
             RichText(
                 text: TextSpan(
-                  text: 'Balance: ',
+                  text: 'Actual Spending: \n',
             
                   style: TextStyle(
                     color: appSuccess.shade800,
@@ -83,20 +82,16 @@ class _OverspentIncomeState extends State<OverspentIncome> {
                   children: [
                     
                     TextSpan(
-                      text: Currency(context).wrapCurrencySymbol('${widget.income.balance}'),
+                      text: Currency(context).wrapCurrencySymbol((widget.budget.amount-widget.budget.balance).toString()),
             
                       style: TextStyle(
                         color: appSuccess.shade800,
                         fontSize: 12,
                       )
                     ),
-
                   ]
                 ),
               ),
-
-
-          
           ],
         ),
       ),
