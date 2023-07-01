@@ -6,9 +6,12 @@ import 'package:expense/dbs/settings.dart';
 import 'package:expense/providers/settings_provider.dart';
 import 'package:expense/utils/constants/colors.dart';
 import 'package:expense/utils/currency/currency.dart';
+import 'package:expense/utils/reminder.dart';
 import 'package:expense/utils/settings/settings.dart';
+import 'package:expense/widgets/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -261,6 +264,37 @@ class _SettingScreenState extends State<SettingScreen> {
                   ),
                 ),
               ),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: ()async{
+
+                      final newSetting = SettingsObj(
+                        id: DateTime.now().millisecondsSinceEpoch, 
+                        currencySymbol: currencySymbol,
+                        currencyCode: currencyCode,
+                        currencySymbolPosition: currencySymbolPos
+                      );
+
+                
+
+                      Provider.of<SettingsProvider>(context, listen: false).changeSettings(newSetting);
+                        await settingsDb.addData(newSetting);
+                      },
+
+                      style: TextButton.styleFrom(
+                        backgroundColor: appOrange,
+                        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 1),
+                        
+                      ),
+                    child: Text('Save',
+                      style: TextStyle(fontSize: 18),
+                    )
+                  ),
+                ],
+              ),
         
               Divider(
                 height: 30,
@@ -433,6 +467,33 @@ class _SettingScreenState extends State<SettingScreen> {
 
 
               ListTile(
+              onTap: () async{
+                TimeOfDay? _time = await showTimePicker (
+                  context: context,
+                  initialTime: TimeOfDay.now(),
+                  helpText: 'Reminder'
+                );
+
+                
+
+                if (_time != null) {
+                  int millisecondsSinceEpoch = DateTime.now().copyWith(
+                    hour: _time.hour, minute: _time.minute, second: 00
+                  ).millisecondsSinceEpoch;
+
+                  await setReminder(millisecondsSinceEpoch);
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    financeSnackBar('Reminder at ${_time.hour}:${_time.minute}${_time.period==DayPeriod.am?'AM':'PM'}')
+                  );
+
+                  
+
+                  
+                }
+
+
+              },
               title: const Text(
                 'Reminder'
               ),
@@ -444,36 +505,7 @@ class _SettingScreenState extends State<SettingScreen> {
               
             ),
 
-            SizedBox(height: 10,),
-
-            TextButton(
-              onPressed: ()async{
-
-                final newSetting = SettingsObj(
-                  id: DateTime.now().millisecondsSinceEpoch, 
-                  currencySymbol: currencySymbol,
-                  currencyCode: currencyCode,
-                  currencySymbolPosition: currencySymbolPos
-                );
-
-                print(newSetting);
-
-                Provider.of<SettingsProvider>(context, listen: false).changeSettings(newSetting);
-                await settingsDb.addData(newSetting);
-
-
-              },
-
-              style: TextButton.styleFrom(
-                padding: EdgeInsets.symmetric(horizontal: 40),
-                side: BorderSide(
-                  
-                )
-              ),
-              child: Text('Save',
-                style: TextStyle(fontSize: 18),
-              )
-            ),
+            
 
             SizedBox(height: 30,)
         
