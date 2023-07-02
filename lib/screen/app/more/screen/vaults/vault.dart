@@ -77,6 +77,7 @@ class _VaultScreenState extends State<VaultScreen> {
                   return VaultCard(
                     vault: vaults[index],
                     index: (index+1).toString(),
+                    ctx: context,
                   );
                 }
               )

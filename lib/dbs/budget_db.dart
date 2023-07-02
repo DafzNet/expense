@@ -134,10 +134,9 @@ class BudgetDb{
               }else{
                 return DateTime.now().isAfter(myBudg.startDate!) && DateTime.now().isBefore(myBudg.endDate!);
               }
-              
             })
-            
-          ));
+          )
+      );
     var subscription = storeQuery.onSnapshots(db).map((snapshot) => snapshot.map((e) => BudgetModel.fromMap(e.value)).toList(growable: false)
       );
     //.transform(expensesTransformer);

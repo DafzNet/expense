@@ -35,7 +35,8 @@ class Currency{
                   };
 
   String get currencySymbol {
-    return currencies[code];
+    final curC = Provider.of<SettingsProvider>(context).mySettings;
+    return currencies[curC.currencyCode];
   }
 
 

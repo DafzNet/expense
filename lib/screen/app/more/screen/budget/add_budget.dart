@@ -42,7 +42,9 @@ class _AddBudgetScreenState extends State<AddBudgetScreen> {
   List<CategoryModel> categories =[];
 
   void getCategories()async{
-    categories = await categoryDb.retrieveData();
+    categories = await categoryDb.retrieveBasedOn(filters: [
+      Filter.equals('hidden', false)
+    ]);
     setState(() {
       
     });
@@ -316,6 +318,30 @@ class _AddBudgetScreenState extends State<AddBudgetScreen> {
                                           return myCat == category;
                                         });
 
+
+                                        final budgetFilter = Filter.custom((record){
+                                          final d = record.value as Map<String, dynamic>;
+                                          final _bud = BudgetModel.fromMap(d);
+                                          
+                                          if(_bud.category == category){
+                                            if (useCurrentMonth && _bud.month == DateTime.now().month && _bud.year == DateTime.now().year) {
+                                              return true;
+                                            }
+
+                                            if (!useCurrentMonth) {
+                                              if ((_bud.startDate!.isAfter(_starDate!) && _bud.startDate!.isBefore(_endDate!)||_bud.endDate!.isAfter(_starDate!) && _bud.endDate!.isBefore(_endDate!))) {
+                                                return true;
+                                              }
+                                            }
+                                          }
+
+                                          return false;
+                                        });
+
+
+                                        ////Check if budget already exist with same category
+                                        final budgetsAlready = await budgetDb.retrieveBasedOn(budgetFilter);
+
                                         final expenseDb = ExpenseDb();
 
                                         List<ExpenseModel> expenses = await expenseDb.retrieveBasedOn(
@@ -365,7 +391,16 @@ class _AddBudgetScreenState extends State<AddBudgetScreen> {
                                         );
 
 
-                                        await budgetDb.addData(_budget);
+                                        if (budgetsAlready.isEmpty) {
+                                          await budgetDb.addData(_budget);
+                                        } else {
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            financeSnackBar('A budget with same category and period already exist')
+                                          );
+                                        }
+
+
+                                        
 
                                         loading = false;
 

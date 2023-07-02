@@ -6,7 +6,7 @@ import 'package:expense/dbs/settings.dart';
 import 'package:expense/providers/settings_provider.dart';
 import 'package:expense/utils/constants/colors.dart';
 import 'package:expense/utils/currency/currency.dart';
-import 'package:expense/utils/reminder.dart';
+import 'package:timezone/timezone.dart' as tz;
 import 'package:expense/utils/settings/settings.dart';
 import 'package:expense/widgets/snack_bar.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +14,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
+
+import '../../../../../dbs/category_db.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({super.key});
@@ -405,65 +407,50 @@ class _SettingScreenState extends State<SettingScreen> {
                   'hidden categories will be visible'
                 ),
         
-                trailing: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(),
-                    borderRadius: BorderRadius.circular(8)
-                  ),
-                  child: SizedBox(
-                    width: 65,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        Text(
-                          'Unhide',
-                  
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold
+                trailing: GestureDetector(
+                  onTap: () async{
+                    CategoryDb catDb = CategoryDb();
+                    final cats = await catDb.retrieveData();
+
+                    for (var cat in cats) {
+                      cat = cat.copyWith(
+                        hidden: false
+                      );
+
+                      await catDb.updateData(cat);
+                    }
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      financeSnackBar('Categories unhidden')
+                    );
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(),
+                      borderRadius: BorderRadius.circular(8)
+                    ),
+                    child: SizedBox(
+                      width: 65,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          Text(
+                            'Unhide',
+                    
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold
+                            ),
                           ),
-                        ),
-                  
-                      ],
+                    
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
         
         
-              ListTile(
-                title: const Text(
-                  'Unhide hidden Vaults'
-                ),
-        
-                subtitle: const Text(
-                  'all hidden vaults will be visible'
-                ),
-        
-                trailing: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(),
-                    borderRadius: BorderRadius.circular(8)
-                  ),
-                  child: SizedBox(
-                    width: 65,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        Text(
-                          'Unhide',
-                  
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold
-                          ),
-                        ),
-                  
-                      ],
-                    ),
-                  ),
-                ),
-              ),
 
 
               ListTile(
@@ -481,7 +468,31 @@ class _SettingScreenState extends State<SettingScreen> {
                     hour: _time.hour, minute: _time.minute, second: 00
                   ).millisecondsSinceEpoch;
 
-                  await setReminder(millisecondsSinceEpoch);
+                  // await setReminder(millisecondsSinceEpoch);
+                  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+                          FlutterLocalNotificationsPlugin();
+
+                  final NotificationDetails notificationDetails = NotificationDetails(
+                      android: AndroidNotificationDetails(
+                        'lifi_id',
+                        'Lifi',
+                        channelDescription: 'Your Channel Description',
+                        importance: Importance.high,
+                        priority: Priority.max
+                      ),
+                    );
+
+                     await flutterLocalNotificationsPlugin.zonedSchedule(
+                        DateTime.now().microsecond,
+                        'LiFi',
+                        'Update your daily transactions',
+                        tz.TZDateTime.from(DateTime.now().add(Duration(minutes: 2)), tz.local),
+                        notificationDetails,
+                        uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+                        matchDateTimeComponents: DateTimeComponents.time,
+                      );
+
+                  
 
                   ScaffoldMessenger.of(context).showSnackBar(
                     financeSnackBar('Reminder at ${_time.hour}:${_time.minute}${_time.period==DayPeriod.am?'AM':'PM'}')

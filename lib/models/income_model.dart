@@ -8,6 +8,8 @@ class IncomeModel {
   String? name;
   String? source;
   double amount;
+  bool carriedOverIncome;
+  bool broughtDownIncome;
   double balance;
   DateTime date;
   int? day;
@@ -22,6 +24,8 @@ class IncomeModel {
     this.name,
     this.source,
     required this.amount,
+    this.carriedOverIncome = false,
+    this.broughtDownIncome = false,
     required this.balance,
     required this.date,
     this.day,
@@ -34,10 +38,12 @@ class IncomeModel {
 
 
   IncomeModel copyWith({
-    dynamic id,
+    dynamic? id,
     String? name,
     String? source,
     double? amount,
+    bool? carriedOverIncome,
+    bool? broughtDownIncome,
     double? balance,
     DateTime? date,
     int? day,
@@ -52,6 +58,8 @@ class IncomeModel {
       name: name ?? this.name,
       source: source ?? this.source,
       amount: amount ?? this.amount,
+      carriedOverIncome: carriedOverIncome ?? this.carriedOverIncome,
+      broughtDownIncome: broughtDownIncome ?? this.broughtDownIncome,
       balance: balance ?? this.balance,
       date: date ?? this.date,
       day: day ?? this.day,
@@ -69,6 +77,8 @@ class IncomeModel {
       'name': name,
       'source': source,
       'amount': amount,
+      'carriedOverIncome': carriedOverIncome,
+      'broughtDownIncome': broughtDownIncome,
       'balance': balance,
       'date': date.millisecondsSinceEpoch,
       'day': day,
@@ -86,6 +96,8 @@ class IncomeModel {
       name: map['name'] != null ? map['name'] as String : null,
       source: map['source'] != null ? map['source'] as String : null,
       amount: map['amount'] as double,
+      carriedOverIncome: map['carriedOverIncome'] as bool,
+      broughtDownIncome: map['broughtDownIncome'] as bool,
       balance: map['balance'] as double,
       date: DateTime.fromMillisecondsSinceEpoch(map['date'] as int),
       day: map['day'] != null ? map['day'] as int : null,
@@ -103,7 +115,7 @@ class IncomeModel {
 
   @override
   String toString() {
-    return 'IncomeModel(id: $id, name: $name, source: $source, amount: $amount, balance: $balance, date: $date, day: $day, month: $month, year: $year, deductions: $deductions, incomeVault: $incomeVault, note: $note)';
+    return 'IncomeModel(id: $id, name: $name, source: $source, amount: $amount, carriedOverIncome: $carriedOverIncome, broughtDownIncome: $broughtDownIncome, balance: $balance, date: $date, day: $day, month: $month, year: $year, deductions: $deductions, incomeVault: $incomeVault, note: $note)';
   }
 
   @override
@@ -120,6 +132,8 @@ class IncomeModel {
       name.hashCode ^
       source.hashCode ^
       amount.hashCode ^
+      carriedOverIncome.hashCode ^
+      broughtDownIncome.hashCode ^
       balance.hashCode ^
       date.hashCode ^
       day.hashCode ^

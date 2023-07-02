@@ -9,6 +9,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:sembast/sembast.dart';
 
 import '../../dbs/category_db.dart';
+import '../../procedures/expenses/expense_procedure.dart';
 import '../../utils/capitalize.dart';
 import '../../utils/constants/colors.dart';
 
@@ -36,6 +37,9 @@ class _CategoryCardState extends State<CategoryCard> {
   final expenseDb = ExpenseDb();
   final budgetDb = BudgetDb();
   final categoryDb = CategoryDb(); 
+
+
+  bool deleting = false;
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +87,12 @@ class _CategoryCardState extends State<CategoryCard> {
               ),
             ),
     
-            trailing: SizedBox(
+            trailing: deleting? SizedBox(
+              width: 20,
+              height: 20,
+
+              child: CircularProgressIndicator(),
+            ) : SizedBox(
               width: 20,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -166,9 +175,46 @@ class _CategoryCardState extends State<CategoryCard> {
                                 child: const Text('Confirm'),
                                 onPressed: () async {
                                   
-                                  
-                                  
                                   Navigator.pop(context);
+
+                                  setState(() {
+                                    deleting = true;
+                                  });
+
+                                  Filter filterExp = Filter.custom((record){
+                                    final d = record.value as Map<String, dynamic>;
+                                    final exp = ExpenseModel.fromMap(d);
+
+                                    return exp.category == widget.category;
+                                  });
+
+                                  Filter filterBud = Filter.custom((record){
+                                    final d = record.value as Map<String, dynamic>;
+                                    final bud = BudgetModel.fromMap(d);
+
+                                    return bud.category == widget.category;
+                                  });
+
+
+                                  ExpenseDb expenseDb = ExpenseDb();
+                                  BudgetDb budgetDb = BudgetDb();
+
+                                  final expsForCat = await expenseDb.retrieveBasedOn(filterExp);
+                                  final budgetsForCat = await budgetDb.retrieveBasedOn(filterBud);
+
+                                  for (var e in expsForCat) {
+                                    await deleteExpenseProcedure(e);
+                                  } 
+
+                                  for (var b in budgetsForCat) {
+                                    await budgetDb.deleteData(b);
+                                  }
+
+
+                                  await categoryDb.deleteData(widget.category);
+
+                                  
+
                                 },
                               ),
                             ],

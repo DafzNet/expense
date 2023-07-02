@@ -44,7 +44,6 @@ class SettingsDb{
      var data = await store.records(keys).get(db);
      //await db.close();
 
-     print(data);
 
      return data.map((e) => SettingsObj.fromMap(e as Map<String, dynamic>)).toList(growable: false);
   }

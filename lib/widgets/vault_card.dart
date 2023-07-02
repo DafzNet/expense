@@ -1,8 +1,12 @@
+import 'package:expense/dbs/income_db.dart';
+import 'package:expense/models/income_model.dart';
 import 'package:expense/utils/currency/currency.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:sembast/sembast.dart';
 
 import '../models/vault.dart';
+import '../procedures/income/income_procedure.dart';
 import '../utils/capitalize.dart';
 import '../utils/constants/colors.dart';
 
@@ -25,6 +29,8 @@ class VaultCard extends StatefulWidget {
 }
 
 class _VaultCardState extends State<VaultCard> {
+
+  bool deleting = false;
 
   @override
   Widget build(BuildContext context) {
@@ -85,114 +91,77 @@ class _VaultCardState extends State<VaultCard> {
                 ),
               ],
             ),
-            // Text(
-            //   widget.category.description,
-            
-            //   style: const TextStyle(
-            //     fontSize: 14,
-            //     //color: appOrange
-            //   ),
-            // ),
+           
     
-            trailing: SizedBox(
+            trailing: deleting ? SizedBox(
               width: 20,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  GestureDetector(
-                    onTap: () async{
-                      // Filter filterExp = Filter.custom((record){
-                      //   var exp = record.value as Map<String, dynamic>;
-                      //   ExpenseModel expense = ExpenseModel.fromMap(exp);
-
-                      //   return expense.category == widget.category && expense.month == DateTime.now().month && expense.year == DateTime.now().year;
-
-                      // });
-
-                      // Filter filterBudget = Filter.custom((record){
-                      //   var exp = record.value as Map<String, dynamic>;
-                      //   BudgetModel budget = BudgetModel.fromMap(exp);
-
-                      //   return budget.category == widget.category && budget.month == DateTime.now().month && budget.year == DateTime.now().year;
-
-                      // });
-
-
-                      // List<ExpenseModel> expenses = await expenseDb.retrieveBasedOn(filterExp);
-                      // List<BudgetModel> budgets = await budgetDb.retrieveBasedOn(filterBudget);
-
-                      // if (expenses.isEmpty && budgets.isEmpty) {
-                      //   CategoryModel hiddenCat = widget.category.copyWith(
-                      //     hidden: true
-                      //   );
-
-                      //   await categoryDb.updateData(hiddenCat);
-
-                      // } else {
-                      //   ScaffoldMessenger.of(widget.ctx!).showSnackBar(
-                      //     financeSnackBar(
-                      //       widget.category.name + ' has data associated with it'
-                      //     )
-                      //   );
-                      // }
-
-
-                    },
-                    child: const Icon(
-                      MdiIcons.eyeOffOutline,
-                      size: 22,
-                    ),
-                  ),
-    
-                  const SizedBox(
-                    height: 10,
-                  ),
-    
-                  GestureDetector(
-                    onTap: widget.onDelete??(){
-                      showDialog(
-                        context: widget.ctx!,
-                        barrierDismissible: false, // user must tap button!
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            //backgroundColor: appOrange,
-                            title: Text('Delete ${capitalize(widget.vault.name)}?'),
-                            content:  SingleChildScrollView(
-                              child: ListBody(
-                                children: const <Widget>[
-                                  Text('Deleting this category will remove it and all expenses and budgets from the database'),
-                                ],
-                              ),
-                            ),
-                            actions: <Widget>[
-                              TextButton(
-                                child: const Text(
-                                  'Cancel'),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                              TextButton(
-                                child: const Text('Confirm'),
-                                onPressed: () async {
-                                  
-                                  
-                                  
-                                  Navigator.pop(context);
-                                },
-                              ),
+              height: 20,
+              child: CircularProgressIndicator(),
+            ) : SizedBox(
+              width: 20,
+              child: GestureDetector(
+                onTap: ()async{
+                  await showDialog(
+                    context: widget.ctx!,
+                    barrierDismissible: false, // user must tap button!
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        //backgroundColor: appOrange,
+                        title: Text('Delete ${capitalize(widget.vault.name)}?'),
+                        content:  SingleChildScrollView(
+                          child: ListBody(
+                            children: const <Widget>[
+                              Text('All incomes attached to this vault will be removed as well'),
                             ],
-                          );}
-                        );
-                    },
-                    child: Icon(
-                      MdiIcons.deleteOutline,
-                      size: 22,
-                      color: appDanger,
-                    ),
-                  )
-                ],
+                          ),
+                        ),
+                        actions: <Widget>[
+                          TextButton(
+                            child: const Text(
+                              'Cancel'),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                          TextButton(
+                            child: const Text('Confirm'),
+                            onPressed: () async {
+                              
+                              Navigator.pop(context);
+                              setState(() {
+                                deleting = true;
+                              });
+
+
+                              IncomeDb incomeDb = IncomeDb();
+
+                              Filter filter = Filter.custom((record){
+                                final d = record.value as Map<String, dynamic>;
+                                final inc = IncomeModel.fromMap(d);
+
+                                return inc.incomeVault == widget.vault;
+                              });
+
+
+                              final incomes =await incomeDb.retrieveBasedOn(filter);
+
+                              for (var i in incomes) {
+                                await deleteIncomeProcedure(i, context);
+                              }
+
+                              await vaultDb.deleteData(widget.vault);
+
+                            },
+                          ),
+                        ],
+                      );}
+                    );
+                },
+                child: Icon(
+                  MdiIcons.deleteOutline,
+                  size: 22,
+                  color: appDanger,
+                ),
               ),
             ),
           ),

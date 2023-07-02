@@ -58,7 +58,11 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
   }
 
   void getCategories()async{
-    categories = await categoryDb.retrieveData();
+    categories = await categoryDb.retrieveBasedOn(
+      filters: [
+        Filter.equals('hidden', false)
+      ] 
+    );
 
     setState(() {
       
