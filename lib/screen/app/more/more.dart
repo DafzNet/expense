@@ -5,6 +5,7 @@ import 'package:expense/screen/app/more/screen/accountability/accountability.dar
 import 'package:expense/screen/app/more/screen/budget/budget.dart';
 import 'package:expense/screen/app/more/screen/category/category.dart';
 import 'package:expense/screen/app/more/screen/income/income.dart';
+import 'package:expense/screen/app/more/screen/planner/planner.dart';
 import 'package:expense/screen/app/more/screen/reports/reports.dart';
 import 'package:expense/widgets/loading.dart';
 import 'package:flutter/material.dart';
@@ -61,7 +62,8 @@ class _MoreScreenState extends State<MoreScreen> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        toolbarHeight: 30,
+        toolbarHeight: 15,
+
 
         systemOverlayStyle: const SystemUiOverlayStyle(
             statusBarColor: Colors.transparent,
@@ -308,7 +310,7 @@ class _MoreScreenState extends State<MoreScreen> {
                                  Navigator.push(
                                   context,
                                   PageTransition(
-                                    child: const ReportScreen(), //PieChartSample2(), //
+                                    child: const BudgetPlanner(), //PieChartSample2(), //
                                     type: PageTransitionType.fade
                                   )
                                 );
