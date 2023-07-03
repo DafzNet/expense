@@ -59,13 +59,29 @@ class _VaultCardState extends State<VaultCard> {
               ),
             ),
     
-            title: Text(
-              widget.vault.name,
+            title: RichText(
+              text: TextSpan(
+                text: widget.vault.name,
             
               style: const TextStyle(
-                fontSize: 30,
+                fontSize: 24,
                 fontWeight: FontWeight.w500,
+                color: Colors.black
                 //color: appOrange
+              ),
+
+              children: [
+                TextSpan(
+                  text: ' - ${widget.vault.type}',
+              
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w300,
+                    color: Colors.black
+                    //color: appOrange
+                  ),
+                ),
+              ]
               ),
             ),
     

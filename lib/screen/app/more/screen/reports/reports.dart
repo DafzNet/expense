@@ -1,12 +1,9 @@
 
-import 'package:expense/providers/report_period.dart';
 import 'package:expense/utils/constants/colors.dart';
 import 'package:expense/utils/month.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:provider/provider.dart';
-
 import 'budget/budget_rep.dart';
 import 'expense/exp_rep.dart';
 import 'income/income_rep.dart';
@@ -22,6 +19,7 @@ class _ReportScreenState extends State<ReportScreen> {
 
   static String reportPeriod = "Current Month";
   var reportDate;
+  String dateR = 'cm';
 
   DateTimeRange range = DateTimeRange(start: DateTime.now().subtract(const Duration(days: 7)), end: DateTime.now());
 
@@ -30,17 +28,29 @@ class _ReportScreenState extends State<ReportScreen> {
   static GlobalKey<IncomeReportScreenState> incReportKey = GlobalKey();
   static GlobalKey<BudgetReportScreenState> budgetReportKey = GlobalKey();
 
-  void updateReportPeriod(String newReportPeriod, newReportDate) {
+  void updateReportPeriod(String newReportPeriod, newReportDate, {String p = 'cm'}) {
     setState(() {
       reportPeriod = newReportPeriod;
       reportDate = newReportDate;
-      
+      dateR = p;
     });
 
     // Update the report period in the ExpReportScreen
-    reportKey.currentState?.setState(() {});
+    reportKey.currentState?.setState(() {
+      
+    });
     incReportKey.currentState?.setState(() {});
     budgetReportKey.currentState?.setState(() {});;
+  }
+
+
+
+  @override
+  void initState() {
+    reportPeriod = "Current Month";
+    reportDate = DateTime.now();
+    dateR = 'cm';
+    super.initState();
   }
 
 
@@ -78,8 +88,8 @@ class _ReportScreenState extends State<ReportScreen> {
                                 String rPrd = 'Current Month';
                                 var rDate =DateTime.now();
 
-                                Provider.of<ReportProvider>(context, listen: false).changePeriod(rPrd, rDate);
-                                updateReportPeriod(rPrd, rDate);
+                                
+                                updateReportPeriod(rPrd, rDate, p: 'cm');
 
                                 Navigator.pop(context);
 
@@ -128,9 +138,9 @@ class _ReportScreenState extends State<ReportScreen> {
                                 var rDate = Month().currentMonthNumber == 1 ? DateTime(DateTime.now().year-1, 12, 1) : DateTime(DateTime.now().year, DateTime.now().month-1, DateTime.now().day);
 
 
-                                Provider.of<ReportProvider>(context, listen: false).changePeriod(rPrd, rDate);
-                                updateReportPeriod(rPrd, rDate);
-
+                                
+                                updateReportPeriod(rPrd, rDate, p: 'pm');
+                                
                                 Navigator.pop(context);
 
                               },
@@ -178,8 +188,8 @@ class _ReportScreenState extends State<ReportScreen> {
                                 String rPrd = 'One Year ago';
                                 var rDate = DateTime.now().subtract(const Duration(days: 365));
 
-                                Provider.of<ReportProvider>(context, listen: false).changePeriod(rPrd, rDate);
-                                updateReportPeriod(rPrd, rDate);
+                                
+                                updateReportPeriod(rPrd, rDate, p: 'ya');
 
                                 Navigator.pop(context);
 
@@ -233,10 +243,11 @@ class _ReportScreenState extends State<ReportScreen> {
                                   context: context, 
                                   firstDate: DateTime(2023, 1, 1, 0, 0, 0),
                                   lastDate: DateTime.now(),
+                                  initialDateRange: DateTimeRange(start: DateTime(2023, 1, 1), end: DateTime.now()),
                                   helpText: 'Decide Report Range',
                                   confirmText: 'Confirm',
                                   cancelText: 'Cancel',
-                                  initialEntryMode: DatePickerEntryMode.inputOnly
+                                  initialEntryMode: DatePickerEntryMode.input
                                 
                                 );
 
@@ -244,8 +255,8 @@ class _ReportScreenState extends State<ReportScreen> {
                                   range = dateRange;
                                   String newReportDate = '${dateRange.start.year == DateTime.now().year? DateFormat.MMMd().format(dateRange.start): DateFormat.yMMMd().format(dateRange.start)} - ${dateRange.end.year == DateTime.now().year? DateFormat.MMMd().format(dateRange.end): DateFormat.yMMMd().format(dateRange.end)}';
 
-                                  Provider.of<ReportProvider>(context, listen: false).changePeriod(newReportDate,dateRange);
-                                  updateReportPeriod(newReportDate, dateRange);
+                                  
+                                  updateReportPeriod(newReportDate, dateRange, p: 'range');
                                 }
 
                                 // String rPrd = 'One Year ago';
@@ -344,9 +355,9 @@ class _ReportScreenState extends State<ReportScreen> {
 
         body:  TabBarView(
           children: [
-            ExpReportScreen(reportKey),
-            IncomeReportScreen(incReportKey),
-            BudgetReportScreen(budgetReportKey)
+            ExpReportScreen(reportKey, period: reportDate, dateR: dateR,),
+            IncomeReportScreen(incReportKey, period: reportDate, dateR: dateR,),
+            BudgetReportScreen(budgetReportKey, period: reportDate, dateR: dateR,)
           ],
         ),
       ),

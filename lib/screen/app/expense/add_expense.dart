@@ -81,8 +81,6 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
   IncomeModel? income;
   DateTime? _date = DateTime.now();
 
-
-
   void getCat(cat){
     
     categoryController.text = cat.name;
@@ -92,7 +90,6 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
       
     });
   }
-
 
   void getIncome(inc){
     
@@ -126,7 +123,6 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
 
     super.initState();
   }
-
 
   @override
   Widget build(BuildContext context) {

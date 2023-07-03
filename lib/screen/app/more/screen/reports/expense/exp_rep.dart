@@ -7,10 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:provider/provider.dart';
 import 'package:sembast/sembast.dart';
 import '../../../../../../dbs/expense.dart';
-import '../../../../../../providers/report_period.dart';
 import '../../../../../../utils/constants/colors.dart';
 import 'package:fl_chart/fl_chart.dart';
 
@@ -20,9 +18,12 @@ import '../../../../expense/expense_detail.dart';
 
 class ExpReportScreen extends StatefulWidget {
   final GlobalKey<ExpReportScreenState> reportKey;
+  final period;
+  final String dateR;
   const ExpReportScreen(
       this.reportKey,
-      {Key? key,}
+      
+      {Key? key, this.period, required this.dateR}
     ):super(key: key);
   
 
@@ -34,11 +35,7 @@ class ExpReportScreenState extends State<ExpReportScreen> {
 
   String reportPeriod = '';
   var selectedDate;
-
-
-
-  int touchedIndex = -1;
-
+  
 
   //Group expenses by their weekdays
   List<String> daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -63,66 +60,48 @@ class ExpReportScreenState extends State<ExpReportScreen> {
   List<ExpenseModel> _exps = [];
 
 
-  getExps()async{
-
-  
-
-    //Default report range filter(Current month)
-    //List<ExpenseModel> exps = [];
-
- 
+  getExps(var date, String p)async{
 
     List<ExpenseModel> exps = [];
     // await expenseDb.retrieveBasedOn(
     //     Filter.and([
-    //       Filter.equals('month', Month().currentMonthNumber),
-    //       Filter.equals('year', DateTime.now().year)
+    //       Filter.equals('month', date.month),
+    //       Filter.equals('year', date.year)
     //     ])
     //   );
 
 
-    if (reportPeriod.toLowerCase() == 'current month' || reportPeriod.isEmpty) {
+    if (p == 'cm' || p == 'pm') {
       exps = await expenseDb.retrieveBasedOn(
         Filter.and([
-          Filter.equals('month', Month().currentMonthNumber),
-          Filter.equals('year', DateTime.now().year)
+          Filter.equals('month', date.month),
+          Filter.equals('year', date.year)
         ])
       );
-    }else if(reportPeriod.toLowerCase() == 'one year ago') {
-      
-      DateTime start = selectedDate as DateTime;
+    }
 
-      exps = await expenseDb.retrieveBasedOn(
+    if (p == 'ya') {
+        exps = await expenseDb.retrieveBasedOn(
         Filter.custom((record){
           final data = record.value as Map<String, dynamic>;
           final recordExp = ExpenseModel.fromMap(data);
 
-          return recordExp.date.isAfter(start);
+          return recordExp.date.isAfter(date);
         })
       );
-    }else{
-      try {
-        DateTime lastMonth = selectedDate as DateTime;
+    }
 
-        exps = await expenseDb.retrieveBasedOn(
-          Filter.and([
-            Filter.equals('month', lastMonth.month),
-            Filter.equals('year', lastMonth.year)
-          ])
-        );
-      } catch (e) {
-        DateTimeRange date = selectedDate as DateTimeRange;
 
-        exps = await expenseDb.retrieveBasedOn(
+    if (p == 'range') {
+
+      exps = await expenseDb.retrieveBasedOn(
           Filter.custom((record){
             final data = record.value as Map<String, dynamic>;
             final recordExp = ExpenseModel.fromMap(data);
 
             return recordExp.date.isAfter(date.start) && recordExp.date.isBefore(date.end);
           })
-        );
-      }
-     
+      );
     }
 
 
@@ -218,26 +197,49 @@ class ExpReportScreenState extends State<ExpReportScreen> {
 
     _categoryAmount = expenseCatTotal[expensesCats.first]!;
 
-    // setState(() {
+    setState(() {
       
-    // });
+    });
   }
+
+
+  var _initial;
 
   @override
   void initState() {
-    // getExps();
-
+    getExps(widget.period, widget.dateR);
+    _initial = widget.period;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
 
-    reportPeriod = Provider.of<ReportProvider>(context).currentDateString;
-    selectedDate = Provider.of<ReportProvider>(context).currentPeriodDate;
-    setState(() {
-      getExps();
-    });
+    if (_initial != widget.period) {
+
+        daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        daysOfExp = {};
+        expsByWeekDay = {};
+        dailyTotal = {'Sunday':0, 'Monday':0, 'Tuesday':0, 'Wednesday':0, 'Thursday':0, 'Friday':0, 'Saturday':0};
+
+        expensesCats = <String>{};
+        expensesByCat = {};
+        expenseCatColor = {};
+        expenseCatTotal = {};
+        _selectedCategory = '';
+
+        _categoryAmount = 0;
+
+
+        expTotal = 0;
+        expCatsList = [];
+
+        _exps = [];
+
+
+        getExps(widget.period, widget.dateR);
+        _initial = widget.period;
+    } 
 
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 245, 245, 245),

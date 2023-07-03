@@ -475,7 +475,7 @@ class _SettingScreenState extends State<SettingScreen> {
                   final NotificationDetails notificationDetails = NotificationDetails(
                       android: AndroidNotificationDetails(
                         'lifi_id',
-                        'Lifi',
+                        'LiFi',
                         channelDescription: 'Your Channel Description',
                         importance: Importance.high,
                         priority: Priority.max
@@ -486,7 +486,7 @@ class _SettingScreenState extends State<SettingScreen> {
                         DateTime.now().microsecond,
                         'LiFi',
                         'Update your daily transactions',
-                        tz.TZDateTime.from(DateTime.now().add(Duration(minutes: 2)), tz.local),
+                        tz.TZDateTime.from(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, _time.hour, _time.minute), tz.local),
                         notificationDetails,
                         uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
                         matchDateTimeComponents: DateTimeComponents.time,

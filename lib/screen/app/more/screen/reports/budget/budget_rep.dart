@@ -12,7 +12,6 @@ import 'package:sembast/sembast.dart';
 
 import '../../../../../../models/budget.dart';
 import '../../../../../../models/category_model.dart';
-import '../../../../../../providers/report_period.dart';
 import '../../../../../../utils/month.dart';
 import 'budget_exps.dart';
 
@@ -20,20 +19,19 @@ import 'budget_exps.dart';
 
 class BudgetReportScreen extends StatefulWidget {
   final GlobalKey<BudgetReportScreenState> reportKey;
+  final period;
+  final String dateR;
   const BudgetReportScreen(
       this.reportKey,
-      {Key? key,}
+      
+      {Key? key, this.period, required this.dateR}
     ):super(key: key);
-
+  
   @override
   State<BudgetReportScreen> createState() => BudgetReportScreenState();
 }
 
 class BudgetReportScreenState extends State<BudgetReportScreen> {
-
-
-  String reportPeriod = '';
-  var selectedDate;
 
  
   int touchedIndex = -1;
@@ -53,23 +51,59 @@ class BudgetReportScreenState extends State<BudgetReportScreen> {
 
 
   
-  void getBudget()async{
+  void getBudget(var date, String p)async{
     //filter by category
     
     //filter to get budgets by month or time periiod 
-    Filter filter =Filter.custom((record){
-      final budg = record.value as Map<String, dynamic>;
-      final myBudg = BudgetModel.fromMap(budg);
+    Filter? filter;
 
-      if (myBudg.startDate == myBudg.endDate) {
-        return myBudg.month == Month().currentMonthNumber && myBudg.year == DateTime.now().year;
-      }else{
-        return DateTime.now().isAfter(myBudg.startDate!) && DateTime.now().isBefore(myBudg.endDate!);
-        } 
-      }
-    );
 
-    budgets = await budgetDb.retrieveBasedOn(filter); //all budget
+    if (p == 'cm' || p == 'pm') {
+      filter = Filter.custom((record){
+        final budg = record.value as Map<String, dynamic>;
+        final myBudg = BudgetModel.fromMap(budg);
+
+        if (myBudg.startDate == myBudg.endDate) {
+          return myBudg.month == date.month && myBudg.year == date.year;
+        }else{
+          return date.isAfter(myBudg.startDate!) && date.isBefore(myBudg.endDate!);
+          } 
+        }
+      );
+    }
+
+    if (p == 'ya') {
+      filter = Filter.custom((record){
+        final budg = record.value as Map<String, dynamic>;
+        final myBudg = BudgetModel.fromMap(budg);
+
+        if (myBudg.startDate == myBudg.endDate) {
+          return myBudg.startDate!.isAfter(date);
+        }else{
+          return myBudg.startDate!.isAfter(date) || myBudg.endDate!.isAfter(date);
+          } 
+        }
+      );
+    }
+
+    if (p == 'range') {
+      DateTimeRange _date = date as DateTimeRange;
+
+      filter = Filter.custom((record){
+        final budg = record.value as Map<String, dynamic>;
+        final myBudg = BudgetModel.fromMap(budg);
+
+        if (myBudg.startDate == myBudg.endDate) {
+          return myBudg.startDate!.isAfter(_date.start) && myBudg.startDate!.isBefore(_date.end);
+        }else{
+          return myBudg.startDate!.isAfter(_date.start) &&  myBudg.startDate!.isBefore(_date.end)||myBudg.endDate!.isAfter(_date.start) &&  myBudg.endDate!.isBefore(_date.end);
+          } 
+        }
+      );
+    }
+
+
+    budgets = await budgetDb.retrieveBasedOn(filter!); //all budget
 
     for (var budget in budgets) {
       expensesPerBudgets[budget.id] = [];
@@ -123,19 +157,32 @@ class BudgetReportScreenState extends State<BudgetReportScreen> {
 
   }
 
+  var _initial; 
+
 
   @override
   void initState() {
-    getBudget();
+    getBudget(widget.period, widget.dateR);
+    _initial = widget.period;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
 
-    reportPeriod = Provider.of<ReportProvider>(context).currentDateString;
-    selectedDate = Provider.of<ReportProvider>(context).currentPeriodDate;
-   
+    if (_initial != widget.period) {
+      budgets = [];
+      bugettedAmountForAllBudgets = 0;
+      actualAmountForAllBudgets = 0;
+
+      expensesPerBudgets = {}; //sotre exps by their budgets
+      allBudgetExps = [];
+
+      getBudget(widget.period, widget.dateR);
+      _initial = widget.period;
+
+
+    } 
 
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 245, 245, 245),

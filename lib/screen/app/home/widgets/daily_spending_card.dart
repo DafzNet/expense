@@ -156,8 +156,8 @@ class _HomeSummaryState extends State<HomeSummary> {
                         ),
                       ),
                       SizedBox(
-                        height: ((daysOfExps[days.elementAt(i)]!/totalExpAllTime)*100)*2,
-                        width: 10,
+                        height:  ((daysOfExps[days.elementAt(i)]!/totalExpAllTime)*100)*1.5,
+                        width: 8,
                         child: Container(
                           color: appDanger,
                         ),

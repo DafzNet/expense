@@ -101,7 +101,34 @@ class _BudgetCardState extends State<BudgetCard> {
         
                               Row(
                                 children: [
-                                  
+                                  ClipOval(
+                                    child: GestureDetector(
+                                      onTap: (){
+                                        Navigator.push(
+                                          context,
+                                          PageTransition(
+                                            child: AddExpenseScreen(
+                                              category: widget.budget.category
+                                            ),
+
+                                            type: PageTransitionType.rightToLeft
+                                          )
+                                        );
+                                      },
+                                      child: Container(
+                                        padding: const EdgeInsets.all(2),
+                                        color: appOrange,
+                                        child: const Icon(
+                                          MdiIcons.menuOpen,
+                                          size: 20,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+
+                                  const SizedBox(width: 5,),
+ 
                                   ClipOval(
                                     child: GestureDetector(
                                       onTap: (){

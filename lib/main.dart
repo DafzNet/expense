@@ -1,4 +1,4 @@
-import 'package:expense/providers/report_period.dart';
+
 import 'package:expense/providers/settings_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -51,7 +51,6 @@ void main() async{
     MultiProvider(
       providers: [
         Provider(create: (_)=>ExpenseProvider()),
-        Provider(create: (_)=>ReportProvider()),
         Provider(create: (_)=>SettingsProvider()),
 
         //Provider(create: (_)=>CategoryDb().onCategories(catDb!)),

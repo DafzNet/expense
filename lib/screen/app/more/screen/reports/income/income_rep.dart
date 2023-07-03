@@ -8,30 +8,26 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:provider/provider.dart';
 import 'package:sembast/sembast.dart';
-
-import '../../../../../../providers/report_period.dart';
-import '../../../../../../utils/month.dart';
 import '../../income/income_exps.dart';
 
 
 
 class IncomeReportScreen extends StatefulWidget {
   final GlobalKey<IncomeReportScreenState> reportKey;
+  final period;
+   final String dateR;
   const IncomeReportScreen(
       this.reportKey,
-      {Key? key,}
+      
+      {Key? key, this.period, required this.dateR}
     ):super(key: key);
+  
   @override
   State<IncomeReportScreen> createState() => IncomeReportScreenState();
 }
 
 class IncomeReportScreenState extends State<IncomeReportScreen> {
-
-  String reportPeriod = '';
-  var selectedDate;
-
 
 
   int touchedIndex = -1;
@@ -52,12 +48,69 @@ class IncomeReportScreenState extends State<IncomeReportScreen> {
   double incomeBalance = 0;
   double incomeSpent = 0;
 
-  getIncome()async{
-    final filter = Filter.equals('month', Month().currentMonthNumber); //filter the db based on period
+  getIncome(var date, String p)async{ //filter the db based on period
 
-    final incomes = await incomeDb.retrieveBasedOn(filter); //get all incomes for the period
-    final expenses = await expenseDb.retrieveBasedOn(filter); //get all expenses for samme period as income
+    List<IncomeModel> incomes = []; //get all incomes for the period
+    List<ExpenseModel> expenses = []; //get all expenses for samme period as income
     
+    if (p == 'cm' || p == 'pm') {
+      expenses = await expenseDb.retrieveBasedOn(
+        Filter.and([
+          Filter.equals('month', date.month),
+          Filter.equals('year', date.year)
+        ])
+      );
+
+      incomes = await incomeDb.retrieveBasedOn(
+        Filter.and([
+          Filter.equals('month', date.month),
+          Filter.equals('year', date.year)
+        ])
+      );
+    }
+
+    if (p == 'ya') {
+      expenses = await expenseDb.retrieveBasedOn(
+        Filter.custom((record){
+          final data = record.value as Map<String, dynamic>;
+          final recordExp = ExpenseModel.fromMap(data);
+
+          return recordExp.date.isAfter(date);
+        })
+      );
+
+      incomes = await incomeDb.retrieveBasedOn(
+        Filter.custom((record){
+          final data = record.value as Map<String, dynamic>;
+          final recordExp = IncomeModel.fromMap(data);
+
+          return recordExp.date.isAfter(date);
+        })
+      );
+    }
+
+
+    if (p == 'range') {
+
+      expenses = await expenseDb.retrieveBasedOn(
+        Filter.custom((record){
+            final data = record.value as Map<String, dynamic>;
+            final recordExp = ExpenseModel.fromMap(data);
+
+            return recordExp.date.isAfter(date.start) && recordExp.date.isBefore(date.end);
+          })
+      );
+
+      incomes = await incomeDb.retrieveBasedOn(
+        Filter.custom((record){
+            final data = record.value as Map<String, dynamic>;
+            final recordExp = IncomeModel.fromMap(data);
+
+            return recordExp.date.isAfter(date.start) && recordExp.date.isBefore(date.end);
+          })
+      );
+    }
+
     allIncomesForPeriod = incomes;
 
     if(incomes.isEmpty){return null;}
@@ -113,19 +166,37 @@ class IncomeReportScreenState extends State<IncomeReportScreen> {
     });
   }
 
+   var _initial;
 
   @override
   void initState() {
-    getIncome();
+    getIncome(widget.period, widget.dateR);
+    _initial = widget.period;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
 
-    reportPeriod = Provider.of<ReportProvider>(context).currentDateString;
-    selectedDate = Provider.of<ReportProvider>(context).currentPeriodDate;
-    
+   if (_initial != widget.period) {
+
+      allIncomesForPeriod = [];
+      allExpensesForPeriod = [];
+
+      expensesForIncome = {}; //exps per individual income
+      expensesCatTotalForIncome = {}; //exps category total per individual income
+      perIncomeExpCat = {}; //exps categories in any individual income
+
+      allIncomeExpCatsAndTotal = {}; /// all exps categories for all incomes
+
+      totalIncome = 0;
+      incomeBalance = 0;
+      incomeSpent = 0;
+
+
+      getIncome(widget.period, widget.dateR);
+      _initial = widget.period;
+    }
     
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 245, 245, 245),
@@ -185,7 +256,7 @@ class IncomeReportScreenState extends State<IncomeReportScreen> {
                                     
                             children: [
                               Text(
-                                'Total Income'+selectedDate.toString(),
+                                'Total Income',
                                     
                                 style: TextStyle(
                                   fontSize: 16,
