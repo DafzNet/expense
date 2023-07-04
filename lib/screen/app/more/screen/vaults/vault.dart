@@ -52,6 +52,18 @@ class _VaultScreenState extends State<VaultScreen> {
             ),
             
             title: const Text('Vaults'),
+
+            actions: [
+              IconButton(onPressed: ()async{
+                showMenu(
+                  context: context, 
+                  position: RelativeRect.fromLTRB(200, 70, 30, 0), items: [
+                    PopupMenuItem(
+                      child: Text('A vault is where each income (revenue) is being kept. It could be Cash, a Bank account, Card or anywhere else. Vaults specific to each user')
+                    )
+                  ]);
+              }, icon: const Icon(MdiIcons.helpCircleOutline))
+            ],
         
           ),
         ],

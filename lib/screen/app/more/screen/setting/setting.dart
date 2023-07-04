@@ -1,6 +1,6 @@
 
 
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, use_build_context_synchronously, no_leading_underscores_for_local_identifiers, unused_local_variable
 
 import 'package:expense/dbs/settings.dart';
 import 'package:expense/providers/settings_provider.dart';
@@ -323,7 +323,7 @@ class _SettingScreenState extends State<SettingScreen> {
         
               Row(
                 
-                children: [
+                children: const [
                   Text(
                     'What to include in financial statement when generating pdf',
             
@@ -378,6 +378,107 @@ class _SettingScreenState extends State<SettingScreen> {
                  
                 ],
               ),
+
+
+                            Divider(
+                height: 30,
+              ),
+        
+              Row(
+                
+                children: [
+                  Text(
+                    'Planners',
+            
+                    style: TextStyle(
+                      fontSize: 16
+                    ),
+                  ),
+        
+                  Icon(
+                    MdiIcons.star,
+                    size: 18,
+                    color: appOrange,
+                  )
+                ],
+              ),
+        
+              Row(
+                
+                children: const [
+                  Text(
+                    'Choose default planner model',
+            
+                    style: TextStyle(
+                      fontSize: 12
+                    ),
+                  ),
+                ],
+              ),
+
+
+              Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Row(
+                  children: [
+                    Radio(
+                      value: 9, 
+                      groupValue: 9, 
+                      onChanged: (h){}),
+
+                    Text(
+                      'Weighted Averages',
+                          
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Row(
+                  children: [
+                    Radio(
+                      value: 9, 
+                      groupValue: 9, 
+                      onChanged: (h){}),
+
+                    Text(
+                      'Weighted Averages',
+                          
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Row(
+                  children: [
+                    Radio(
+                      value: 9, 
+                      groupValue: 9, 
+                      onChanged: (h){}),
+
+                    Text(
+                      'Weighted Averages',
+                          
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold
+                      ),
+                    ),
+                  ],
+                ),
+              ),
         
         
               Divider(
@@ -386,7 +487,7 @@ class _SettingScreenState extends State<SettingScreen> {
         
               Row(
                 
-                children: [
+                children: const [
                   Text(
                     'Others',
             
@@ -464,10 +565,7 @@ class _SettingScreenState extends State<SettingScreen> {
                 
 
                 if (_time != null) {
-                  int millisecondsSinceEpoch = DateTime.now().copyWith(
-                    hour: _time.hour, minute: _time.minute, second: 00
-                  ).millisecondsSinceEpoch;
-
+                  
                   // await setReminder(millisecondsSinceEpoch);
                   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
                           FlutterLocalNotificationsPlugin();

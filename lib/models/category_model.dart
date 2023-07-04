@@ -62,10 +62,8 @@ class CategoryModel {
     if (identical(this, other)) return true;
   
     return 
-      other.id == id &&
-      other.name == name &&
-      other.hidden == hidden &&
-      other.description == description;
+      other.id == id ||
+      other.name == name;
   }
 
   @override

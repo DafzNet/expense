@@ -1,4 +1,6 @@
 
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'package:expense/utils/constants/colors.dart';
 import 'package:expense/utils/month.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +42,7 @@ class _ReportScreenState extends State<ReportScreen> {
       
     });
     incReportKey.currentState?.setState(() {});
-    budgetReportKey.currentState?.setState(() {});;
+    budgetReportKey.currentState?.setState(() {});
   }
 
 
@@ -134,7 +136,7 @@ class _ReportScreenState extends State<ReportScreen> {
 
                              GestureDetector(
                               onTap: () {
-                                String rPrd = Month().currentMonthNumber == 1 ? Month().getMonth(12) +', '+ (DateTime.now().year-1).toString() : Month().getMonth(Month().currentMonthNumber-1);
+                                String rPrd = Month().currentMonthNumber == 1 ? '${Month().getMonth(12)}, ${DateTime.now().year-1}' : Month().getMonth(Month().currentMonthNumber-1);
                                 var rDate = Month().currentMonthNumber == 1 ? DateTime(DateTime.now().year-1, 12, 1) : DateTime(DateTime.now().year, DateTime.now().month-1, DateTime.now().day);
 
 

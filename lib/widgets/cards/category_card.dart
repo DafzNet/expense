@@ -87,7 +87,7 @@ class _CategoryCardState extends State<CategoryCard> {
               ),
             ),
     
-            trailing: deleting? SizedBox(
+            trailing: deleting? const SizedBox(
               width: 20,
               height: 20,
 

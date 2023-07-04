@@ -28,7 +28,7 @@ class SettingsObj {
   }
 
   SettingsObj copyWith({
-    dynamic? id,
+    dynamic id,
     String? currencyCode,
     String? currencySymbol,
     String? currencySymbolPosition,

@@ -212,7 +212,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                                         context: context, 
                                         initialDate: DateTime.now(), 
                                         firstDate: DateTime.now().subtract(const Duration(days: 366)), 
-                                        lastDate: DateTime.now().add(const Duration(days: 366)))??DateTime.now();
+                                        lastDate: DateTime.now().add(const Duration(hours: 1)))??DateTime.now();
 
                                       _date = DateTime(d.year, d.month, d.day, DateTime.now().hour, DateTime.now().minute, DateTime.now().second);
 

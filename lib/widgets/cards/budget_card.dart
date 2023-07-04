@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:expense/dbs/budget_db.dart';
 import 'package:expense/models/budget.dart';
 import 'package:expense/screen/app/expense/add_expense.dart';
@@ -8,6 +10,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:page_transition/page_transition.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
+import '../../screen/app/more/screen/planner/planner.dart';
 import '../../utils/capitalize.dart';
 import '../../utils/currency/currency.dart';
 import '../../utils/month.dart';
@@ -107,8 +110,8 @@ class _BudgetCardState extends State<BudgetCard> {
                                         Navigator.push(
                                           context,
                                           PageTransition(
-                                            child: AddExpenseScreen(
-                                              category: widget.budget.category
+                                            child: BudgetPlanner(
+                                              create: true,
                                             ),
 
                                             type: PageTransitionType.rightToLeft
@@ -430,7 +433,7 @@ class _BudgetCardState extends State<BudgetCard> {
 
                         Text(
                           ' ${double.parse((((widget.budget.amount-widget.budget.balance)/widget.budget.amount)*100).toString()).toStringAsFixed(0)}%',
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 10
                           ),
                         ),

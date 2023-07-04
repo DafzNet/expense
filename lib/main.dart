@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 
 import 'firebase/auth/auth.dart';
 import 'providers/expense_provider.dart';
+import 'providers/planner_provider.dart';
 import 'utils/constants/themes.dart';
 import 'wrapper.dart';
 
@@ -32,7 +33,7 @@ void main() async{
   const AndroidInitializationSettings initializationSettingsAndroid =
       AndroidInitializationSettings('mipmap/ic_launcher');
 
-  final InitializationSettings initializationSettings =  InitializationSettings(
+  const InitializationSettings initializationSettings =  InitializationSettings(
         android: initializationSettingsAndroid,
       //iOS: initializationSettingsDarwin,
       );
@@ -53,7 +54,7 @@ void main() async{
         Provider(create: (_)=>ExpenseProvider()),
         Provider(create: (_)=>SettingsProvider()),
 
-        //Provider(create: (_)=>CategoryDb().onCategories(catDb!)),
+        Provider(create: (_)=>PlannerProvider()),
         StreamProvider<User?>.value(value: FireAuth().authStateChange, initialData: null)
         //Provider(create: (_)=>FireAuth().authStateChange)
       ],

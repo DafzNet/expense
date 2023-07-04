@@ -7,6 +7,7 @@ import 'package:expense/models/user_model.dart';
 import 'package:expense/screen/app/home/widgets/daily_spending_card.dart';
 import 'package:expense/screen/app/home/widgets/deadline_savings.dart';
 import 'package:expense/screen/app/more/screen/income/add_income.dart';
+import 'package:expense/screen/app/more/screen/planner/planner.dart';
 import 'package:expense/utils/constants/images.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,7 @@ import '../../../utils/constants/colors.dart';
 import '../../../utils/month.dart';
 import '../expense/add_expense.dart';
 import '../more/screen/budget/add_budget.dart';
+import '../more/screen/category/add_cat.dart';
 import '../more/screen/vaults/add_vault.dart';
 import '../saving/add_saving.dart';
 import 'widgets/overspent_budget.dart';
@@ -316,6 +318,22 @@ class _HomeScreenState extends State<HomeScreen> {
                           },
                         ),
 
+                        QuickActionButton(
+                          label: 'Category',
+                          imageProvider: const AssetImage(
+                            categoryIcon
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                              context, 
+                              PageTransition(
+                                child: const AddCategoryScreen(), 
+                                type: PageTransitionType.fade)
+                            );
+                          },
+                        ),
+
+
                       ]
                     )
 
@@ -337,7 +355,7 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 20,),
         
               SizedBox(
-                height: 300,
+                height: 320,
         
                 child: Stack(
 
@@ -350,11 +368,42 @@ class _HomeScreenState extends State<HomeScreen> {
                         borderRadius: BorderRadius.circular(12)
                       ),
 
-                      child: HomeSummary(),
+                      child: const HomeSummary(),
                     ),
                   ],
                 ),
               ),
+
+              const SizedBox(height: 15,),
+
+
+              ListTile(
+
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    PageTransition(
+                      child: const BudgetPlanner(
+                      ), type: PageTransitionType.fade)
+                  );
+                },
+
+                leading: const Icon(
+                  MdiIcons.menuOpen,
+                  color: Color.fromARGB(255, 54, 53, 53),
+                  size: 30,
+                ),
+
+                trailing: const Icon(
+                  MdiIcons.chevronRight,
+                  color: Color.fromARGB(255, 54, 53, 53),
+                ),
+
+                title: Text('Open Planners'),
+              ),
+
+
+              
         
         
               const SizedBox(height: 15,),

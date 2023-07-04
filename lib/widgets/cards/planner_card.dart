@@ -1,27 +1,27 @@
-import 'package:expense/dbs/budget_db.dart';
-import 'package:expense/dbs/expense.dart';
-import 'package:expense/models/budget.dart';
-import 'package:expense/models/category_model.dart';
-import 'package:expense/models/expense_model.dart';
-import 'package:expense/screen/app/more/screen/planner/per_plan.dart';
-import 'package:expense/widgets/snack_bar.dart';
+import 'package:expense/dbs/plan_exp_db.dart';
+import 'package:expense/dbs/planner_db.dart';
+import 'package:expense/screen/app/more/screen/planner/plans/per_plan.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:sembast/sembast.dart';
 
-import '../../dbs/category_db.dart';
-import '../../procedures/expenses/expense_procedure.dart';
+import '../../models/plan_exp.dart';
+import '../../models/plan_model.dart';
 import '../../utils/capitalize.dart';
 import '../../utils/constants/colors.dart';
 
 
 class PlannerCard extends StatefulWidget {
 
+  final PlannerModel planner;
   final int? index;
+  final BuildContext ctx;
 
   const PlannerCard({
     this.index,
+    required this.planner,
+    required this.ctx,
     super.key});
 
   @override
@@ -53,7 +53,9 @@ class _PlannerCardState extends State<PlannerCard> {
               Navigator.push(
                 context,
                 PageTransition(
-                  child: PlannerDetail(), 
+                  child: PlannerDetail(
+                    widget.planner
+                  ), 
                   type: PageTransitionType.rightToLeft)
               );
             },
@@ -69,7 +71,7 @@ class _PlannerCardState extends State<PlannerCard> {
             ),
     
             title: Text(
-              'Title',
+              widget.planner.name!,
             
               style: const TextStyle(
                 fontSize: 30,
@@ -79,7 +81,7 @@ class _PlannerCardState extends State<PlannerCard> {
             ),
     
             subtitle: Text(
-              'Description',
+              widget.planner.description??'',
             
               style: const TextStyle(
                 fontSize: 14,
@@ -87,7 +89,7 @@ class _PlannerCardState extends State<PlannerCard> {
               ),
             ),
     
-            trailing: deleting? SizedBox(
+            trailing: deleting? const SizedBox(
               width: 20,
               height: 20,
 
@@ -102,77 +104,62 @@ class _PlannerCardState extends State<PlannerCard> {
     
                   GestureDetector(
                     onTap: (){
-                      // showDialog(
-                      //   context: widget.ctx!,
-                      //   barrierDismissible: false, // user must tap button!
-                      //   builder: (BuildContext context) {
-                      //     return AlertDialog(
-                      //       //backgroundColor: appOrange,
-                      //       title: Text('Delete ${capitalize(widget.category.name)}?'),
-                      //       content:  SingleChildScrollView(
-                      //         child: ListBody(
-                      //           children: const <Widget>[
-                      //             Text('Deleting this category will remove it and all expenses and budgets from the database'),
-                      //           ],
-                      //         ),
-                      //       ),
-                      //       actions: <Widget>[
-                      //         TextButton(
-                      //           child: const Text(
-                      //             'Cancel'),
-                      //           onPressed: () {
-                      //             Navigator.of(context).pop();
-                      //           },
-                      //         ),
-                      //         TextButton(
-                      //           child: const Text('Confirm'),
-                      //           onPressed: () async {
+                      showDialog(
+                        context: widget.ctx,
+                        barrierDismissible: false, // user must tap button!
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            //backgroundColor: appOrange,
+                            title: Text('Delete ${capitalize(widget.planner.name!)}?'),
+                            content:  SingleChildScrollView(
+                              child: ListBody(
+                                children: const <Widget>[
+                                  Text('Deleting this planner will remove all plans under it'),
+                                ],
+                              ),
+                            ),
+                            actions: <Widget>[
+                              TextButton(
+                                child: const Text(
+                                  'Cancel'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                              TextButton(
+                                child: const Text('Confirm'),
+                                onPressed: () async {
                                   
-                      //             Navigator.pop(context);
+                                  Navigator.pop(context);
 
-                      //             setState(() {
-                      //               deleting = true;
-                      //             });
+                                  setState(() {
+                                    deleting = true;
+                                  });
 
-                      //             Filter filterExp = Filter.custom((record){
-                      //               final d = record.value as Map<String, dynamic>;
-                      //               final exp = ExpenseModel.fromMap(d);
+                                  Filter filterPlannerExp = Filter.custom((record){
+                                    final d = record.value as Map<String, dynamic>;
+                                    final expPlan = PlanExpModel.fromMap(d);
 
-                      //               return exp.category == widget.category;
-                      //             });
-
-                      //             Filter filterBud = Filter.custom((record){
-                      //               final d = record.value as Map<String, dynamic>;
-                      //               final bud = BudgetModel.fromMap(d);
-
-                      //               return bud.category == widget.category;
-                      //             });
+                                    return expPlan.planner == widget.planner;
+                                  });
 
 
-                      //             ExpenseDb expenseDb = ExpenseDb();
-                      //             BudgetDb budgetDb = BudgetDb();
+                                  PlannerDb plannerDb = PlannerDb();
+                                  PlannerExpDb plannerExpDb =PlannerExpDb();
 
-                      //             final expsForCat = await expenseDb.retrieveBasedOn(filterExp);
-                      //             final budgetsForCat = await budgetDb.retrieveBasedOn(filterBud);
+                                  final plans = await plannerExpDb.retrieveBasedOn(filterPlannerExp);
 
-                      //             for (var e in expsForCat) {
-                      //               await deleteExpenseProcedure(e);
-                      //             } 
+                                  for (var p in plans) {
+                                    await plannerExpDb.deleteData(p);
+                                  }
 
-                      //             for (var b in budgetsForCat) {
-                      //               await budgetDb.deleteData(b);
-                      //             }
+                                  await plannerDb.deleteData(widget.planner);
 
-
-                      //             await categoryDb.deleteData(widget.category);
-
-                                  
-
-                      //           },
-                      //         ),
-                      //       ],
-                      //     );}
-//                        );
+                                },
+                              ),
+                            ],
+                          );}
+                       );
                     },
                     child: Icon(
                       MdiIcons.deleteOutline,

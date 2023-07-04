@@ -3,15 +3,21 @@ import 'package:expense/utils/currency/currency.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
+import '../../dbs/plan_exp_db.dart';
+import '../../models/plan_exp.dart';
 import '../../utils/constants/colors.dart';
 
 
 class PlanCard extends StatefulWidget {
 
   final int? index;
+  final BuildContext ctx;
+  final PlanExpModel plannerExp;
 
   const PlanCard({
     this.index,
+    required this.plannerExp,
+    required this.ctx,
     super.key});
 
   @override
@@ -50,7 +56,7 @@ class _PlanCardState extends State<PlanCard> {
             ),
     
             title: Text(
-              'Title',
+              widget.plannerExp.name,
             
               style: const TextStyle(
                 fontSize: 20,
@@ -74,7 +80,7 @@ class _PlanCardState extends State<PlanCard> {
 
                     children: [
                       TextSpan(
-                        text: Currency(context).wrapCurrencySymbol('3000'),
+                        text: Currency(context).wrapCurrencySymbol(widget.plannerExp.price.toString()),
                     
                         style: const TextStyle(
                           fontSize: 16,
@@ -86,13 +92,13 @@ class _PlanCardState extends State<PlanCard> {
                   ),
                 ),
 
-                SizedBox(height: 5,),
+                const SizedBox(height: 5,),
 
                 RichText(
                   text: TextSpan(
                     text: 'Scale of Preference: ',
                 
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 13,
                       color: Colors.black
                       //color: appOrange
@@ -100,9 +106,9 @@ class _PlanCardState extends State<PlanCard> {
 
                     children: [
                       TextSpan(
-                        text: '10',
+                        text: widget.plannerExp.scaleOfPref.toString(),
                     
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 16,
                           color: Colors.black
                           //color: appOrange
@@ -112,13 +118,13 @@ class _PlanCardState extends State<PlanCard> {
                   ),
                 ),
 
-                SizedBox(height: 5,),
+                const SizedBox(height: 5,),
 
                 RichText(
                   text: TextSpan(
                     text: 'Estimated Satisfaction: ',
                 
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 13,
                       color: Colors.black
                       //color: appOrange
@@ -126,9 +132,9 @@ class _PlanCardState extends State<PlanCard> {
 
                     children: [
                       TextSpan(
-                        text: '10',
+                        text: widget.plannerExp.satisfaction.toString(),
                     
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 16,
                           color: Colors.black
                           //color: appOrange
@@ -140,7 +146,7 @@ class _PlanCardState extends State<PlanCard> {
               ],
             ),
     
-            trailing: deleting? SizedBox(
+            trailing: deleting? const SizedBox(
               width: 20,
               height: 20,
 
@@ -154,7 +160,11 @@ class _PlanCardState extends State<PlanCard> {
                 
     
                   GestureDetector(
-                    onTap: (){
+                    onTap: ()async{
+
+                      PlannerExpDb plannerExpDb = PlannerExpDb();
+
+                      await plannerExpDb.deleteData(widget.plannerExp);
                       
                     },
                     child: Icon(

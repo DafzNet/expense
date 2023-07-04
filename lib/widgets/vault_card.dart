@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:expense/dbs/income_db.dart';
 import 'package:expense/models/income_model.dart';
 import 'package:expense/utils/currency/currency.dart';
@@ -109,7 +111,7 @@ class _VaultCardState extends State<VaultCard> {
             ),
            
     
-            trailing: deleting ? SizedBox(
+            trailing: deleting ? const SizedBox(
               width: 20,
               height: 20,
               child: CircularProgressIndicator(),

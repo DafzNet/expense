@@ -1,24 +1,119 @@
+import 'package:expense/dbs/budget_db.dart';
+import 'package:expense/models/plan_model.dart';
 import 'package:expense/widgets/cards/planner_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:page_transition/page_transition.dart';
+import 'package:provider/provider.dart';
+import 'package:sembast/sembast.dart';
 
+import '../../../../../dbs/planner_db.dart';
+import '../../../../../models/budget.dart';
+import '../../../../../providers/planner_provider.dart';
 import '../../../../../utils/constants/colors.dart';
-import '../../../../../utils/currency/currency.dart';
+import '../../../../../utils/month.dart';
 import '../../../../../widgets/default_button.dart';
+import '../../../../../widgets/snack_bar.dart';
 import '../../../../../widgets/text_field.dart';
 
 class BudgetPlanner extends StatefulWidget {
-  const BudgetPlanner({super.key});
+  final bool create;
+  final BudgetModel? budget;
+  const BudgetPlanner({
+    this.create = false,
+    this.budget,
+    super.key});
 
   @override
   State<BudgetPlanner> createState() => _BudgetPlannerState();
 }
 
 class _BudgetPlannerState extends State<BudgetPlanner> {
+
+  BudgetDb budgetDb = BudgetDb();
+  List<BudgetModel> budgets = [];
+
+  void getBudgets()async{
+    budgets = await budgetDb.retrieveBasedOn(
+            Filter.custom((record){
+              final budg = record.value as Map<String, dynamic>;
+              final myBudg = BudgetModel.fromMap(budg);
+
+              if (myBudg.startDate == myBudg.endDate) {
+                return myBudg.month == Month().currentMonthNumber && myBudg.year == DateTime.now().year;
+              }else{
+                return DateTime.now().isAfter(myBudg.startDate!) && DateTime.now().isBefore(myBudg.endDate!);
+              }
+          }
+        )
+    );
+
+    setState(() {
+      
+    });
+  }
+
+  //int selectedBud = 0;
+
+  final plannerDb = PlannerDb();
+  Database? db;
+
+
+  TextEditingController titleController = TextEditingController();
+  final desController = TextEditingController();
+  final budgetController = TextEditingController();
+
+  void getPlanners()async{
+    db = await plannerDb.openDb();
+    setState(() {
+      
+    });
+  }
+
+  bool saving = false;
+  bool? _create;
+
+  void createPlanner()async{
+      await Future.delayed(Duration(milliseconds: 200),
+      ()async{
+        return await addPlanner(context);
+      }
+    );
+  }
+
+
+  BudgetModel? budget;
+
+
+
+
+  @override
+  void initState() {
+    _create = widget.create;
+    getBudgets();
+
+    if(widget.budget!=null){
+      budget = widget.budget;
+      budgetController.text = widget.budget!.name;
+    }
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+
+    getPlanners();
+
+    if (_create == true) {
+      if(widget.budget!=null){
+        budget = widget.budget;
+        budgetController.text = widget.budget!.name;
+      }
+      createPlanner();
+      _create = false;
+    }
+
     return Scaffold(
       body: NestedScrollView(
         headerSliverBuilder: (context, bool innerBoxIsScrolled)=>[
@@ -28,110 +123,73 @@ class _BudgetPlannerState extends State<BudgetPlanner> {
               statusBarIconBrightness: Brightness.dark
             ),
             
-            title: const Text('All Plans'),
+            title: const Text('Planners'),
             actions: [
               IconButton(onPressed: ()async{
-                // showDialog(context: context, builder: (context){
-                //   return SizedBox(
-                //     width: 100,
-                //     height: 300,
-
-                //     child: Container(
-                //       color: Colors.white,
-                //     ),
-                //   );
-                // }
-                // );
-              }, icon: Icon(MdiIcons.helpCircleOutline))
+                showMenu(
+                  context: context, 
+                  position: const RelativeRect.fromLTRB(200, 70, 30, 0), items: [
+                    const PopupMenuItem(
+                      child: Text('A Planner holds a list of items you intend to get (a service or a good). Planners have integrated financial algorithms that suggests what to go for based on your preferences in a situation of limited finances')
+                    )
+                  ]);
+              }, icon: const Icon(MdiIcons.helpCircleOutline))
             ],
         
           ),
         ],
-      body: SingleChildScrollView(
-        child: Column(
-          children: List.generate(10, (index) => PlannerCard(index: index+1,)),
-        ),
-      ),
+      body: db != null ? Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          child: StreamBuilder<List<PlannerModel>>(
+            initialData: const [],
+            stream: plannerDb.onPlanners(db!),
+            builder: (context, snapshot){
+              if(snapshot.hasError){
+                return Column();
+              }
+              
+              final planners = snapshot.data;
+
+              return planners!.isNotEmpty ?  ListView.builder(
+                itemCount: planners.length,
+
+                itemBuilder: (context, index){
+                  return PlannerCard(
+                    index: index+1,
+                    planner: planners[index],
+                    ctx: context
+                  );
+                }
+              )
+              :
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Center(
+                    child: Text('No Planner added yet'),
+                  )
+                ],
+              );
+            }
+          )
+        ) 
+        
+        :
+
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            Center(
+              child: CircularProgressIndicator(),
+            )
+          ],
+        )
+        
       ),
 
       floatingActionButton: FloatingActionButton(
         onPressed: ()async{
-          await showModalBottomSheet(
-                    context: context, 
-                    builder: (context){
-                      return SizedBox(
-                        height: MediaQuery.of(context).size.height-200,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
-                          child: Container(
-                            color: Colors.white,
-
-                            padding: const EdgeInsets.symmetric(horizontal: 12),
-
-                            child: SingleChildScrollView(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 12, bottom: 5),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text('Add a Planner',
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold
-                                          ),
-                                        ),
-
-
-                                        IconButton(
-                                          onPressed: (){
-                                            Navigator.pop(context);
-                                          } , icon: Icon(MdiIcons.closeCircleOutline))
-                                      ],
-                                    ),
-                                  ),
-                            
-                                  Divider(height: 30,),
-
-                                  MyTextField(
-                                    'planner name',
-                                    headerText: 'Title',
-                                  ),
-                            
-                                  SizedBox(
-                                    height: 15,
-                                  ),
-                            
-                                  MyTextField(
-                                    '',
-                                    headerText: 'Choose a budget',
-                                    makeButton: true,
-                                  ),
-
-                                  SizedBox(
-                                    height: 15,
-                                  ),
-                            
-                                  MyTextField(
-                                    '',
-                                    headerText: 'Description',
-                                  ),
-                            
-                                  SizedBox(height: 25,),
-                            
-                                  DefaultButton(
-                                    
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
-                    }
-                  );
+          await addPlanner(context);
         },
         
         backgroundColor: appOrange,
@@ -147,5 +205,173 @@ class _BudgetPlannerState extends State<BudgetPlanner> {
         ),
       ),  
     );
+  }
+
+  Future<dynamic> addPlanner(BuildContext context) {
+    return showModalBottomSheet(
+                  context: context, 
+                  builder: (ctx){
+                    int selectedBud = 0;
+                    return SizedBox(
+                      height: 500,
+                      child: ClipRRect(
+                        borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
+                        child: Container(
+                          color: Colors.white,
+
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+
+                          child: saving ? Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Center(child: CircularProgressIndicator())
+                            ],
+                          ) : SingleChildScrollView(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 12, bottom: 5),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Text('Add a Planner',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold
+                                        ),
+                                      ),
+
+
+                                      IconButton(
+                                        onPressed: (){
+                                          Navigator.pop(context);
+                                        } , icon: const Icon(MdiIcons.closeCircleOutline))
+                                    ],
+                                  ),
+                                ),
+                          
+                                const Divider(height: 30,),
+
+                                MyTextField(
+                                  'planner name',
+                                  headerText: 'Title',
+                                  controller: titleController,
+                                ),
+                          
+
+                                if(budgets.isNotEmpty || widget.budget!=null)...
+                                [const SizedBox(
+                                  height: 15,
+                                ),
+
+                                 
+
+                                MyTextField(
+                                  '',
+                                  headerText: 'Choose Budget',
+                                  controller: budgetController,
+                                  makeButton: true,
+                                ),
+
+                                const SizedBox(
+                                  height: 5,
+                                ),
+
+                                SizedBox(
+                                  height: 80,
+                                  child: ListView(
+                                    scrollDirection: Axis.horizontal,
+                                
+                                    children: List.generate(budgets.length, (index){
+                                      return GestureDetector(
+                                        onTap: (){
+                                          budgetController.text = budgets[index].name;
+                                          budget = budgets[index];
+                                          setState(() {
+                                            
+                                          });
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(right: 4),
+                                          child: Container(
+                                            padding: const EdgeInsets.all(10),
+                                            width: 100,
+                                            decoration: BoxDecoration(
+                                            
+                                              border: Border.all(color: appOrange, width: .5),
+                                              borderRadius: BorderRadius.circular(10)
+                                            ),
+                                            child: Center(
+                                              child: Text(
+                                                budgets[index].name,
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.bold
+                                                ),
+                                              )
+                                              )
+                                            
+                                            ),
+                                        ),
+                                      );
+
+                                    }),
+                                  ),
+                                ),
+                                
+                                
+                                
+                                ],
+
+
+                                const SizedBox(
+                                  height: 15,
+                                ),
+                          
+                                MyTextField(
+                                  '',
+                                  headerText: 'Description',
+                                  controller: desController,
+                                ),
+                          
+                                const SizedBox(height: 25,),
+                          
+                                DefaultButton(
+                                  onTap: () async{
+
+                                    if (titleController.text.isEmpty) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        financeSnackBar('Title field cannot be empty')
+                                      );
+                                    }
+                                     else {
+
+                                    final planner = PlannerModel(
+                                      id: DateTime.now().millisecondsSinceEpoch,
+                                      name: titleController.text,
+                                      budget: budget,
+                                      description: desController.text
+                                    );
+
+
+                                    await plannerDb.addData(planner);
+
+                                    Navigator.pop(context);
+
+                                    }
+
+                                  },
+                                ),
+
+                                const SizedBox(height: 250,)
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                );
   }
 }

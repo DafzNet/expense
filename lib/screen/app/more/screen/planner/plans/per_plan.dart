@@ -1,23 +1,55 @@
 import 'package:expense/utils/currency/currency.dart';
-import 'package:expense/widgets/cards/planner_card.dart';
 import 'package:expense/widgets/default_button.dart';
 import 'package:expense/widgets/text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:sembast/sembast.dart';
 
-import '../../../../../widgets/cards/plan_exp_card.dart';
+import '../../../../../../dbs/plan_exp_db.dart';
+import '../../../../../../models/plan_exp.dart';
+import '../../../../../../models/plan_model.dart';
+import '../../../../../../widgets/cards/plan_exp_card.dart';
 
 class PlannerDetail extends StatefulWidget {
-  const PlannerDetail({super.key});
+
+  final PlannerModel plannerModel;
+
+  const PlannerDetail(
+    this.plannerModel,
+    {super.key});
 
   @override
   State<PlannerDetail> createState() => _PlannerDetailState();
 }
 
 class _PlannerDetailState extends State<PlannerDetail> {
+
+  final plannerExpDb = PlannerExpDb();
+  Database? db;
+
+
+  final titleController = TextEditingController();
+  final priceController = TextEditingController();
+  final prefController = TextEditingController();
+  final satisfactionController = TextEditingController();
+
+  void getPlannerExps()async{
+    db = await plannerExpDb.openDb();
+    setState(() {
+      
+    });
+  }
+
+  bool saving = false;
+
+
+
   @override
   Widget build(BuildContext context) {
+
+    getPlannerExps();
+
     return Scaffold(
       body: NestedScrollView(
         headerSliverBuilder: (context, bool innerBoxIsScrolled)=>[
@@ -27,7 +59,7 @@ class _PlannerDetailState extends State<PlannerDetail> {
               statusBarIconBrightness: Brightness.dark
             ),
             
-            title: const Text('Plan Name'),
+            title: Text(widget.plannerModel.name!),
             actions: [
               IconButton(
                 onPressed: ()async{
@@ -37,7 +69,7 @@ class _PlannerDetailState extends State<PlannerDetail> {
                       return SizedBox(
                         height: MediaQuery.of(context).size.height-200,
                         child: ClipRRect(
-                          borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+                          borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
                           child: Container(
                             color: Colors.white,
 
@@ -52,7 +84,7 @@ class _PlannerDetailState extends State<PlannerDetail> {
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text('Add Likely Expense to Plan',
+                                        const Text('Add Likely Expense to Plan',
                                           style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold
@@ -63,19 +95,20 @@ class _PlannerDetailState extends State<PlannerDetail> {
                                         IconButton(
                                           onPressed: (){
                                             Navigator.pop(context);
-                                          } , icon: Icon(MdiIcons.closeCircleOutline))
+                                          } , icon: const Icon(MdiIcons.closeCircleOutline))
                                       ],
                                     ),
                                   ),
                             
-                                  Divider(height: 30,),
+                                  const Divider(height: 30,),
 
                                   MyTextField(
                                     'What do you plan on spending',
                                     headerText: 'Title',
+                                    controller: titleController,
                                   ),
                             
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 15,
                                   ),
                             
@@ -88,10 +121,11 @@ class _PlannerDetailState extends State<PlannerDetail> {
                                           Currency(context).currencySymbol,
                                           headerText: 'Price',
                                           keyboardType: TextInputType.number,
+                                          controller: priceController,
                                         ),
                                       ),
                             
-                                      SizedBox(width: 10,),
+                                      const SizedBox(width: 10,),
                             
                                       SizedBox(
                                         width: 170,
@@ -99,24 +133,47 @@ class _PlannerDetailState extends State<PlannerDetail> {
                                           '1 - 10',
                                           headerText: 'Scale of Preference',
                                           keyboardType: TextInputType.number,
+                                          controller: prefController,
                                         ),
                                       )
                                     ],
                                   ),
                             
-                                  SizedBox(height: 15,),
+                                  const SizedBox(height: 15,),
                             
                                   MyTextField(
                                     '1 - 10',
                                     headerText: 'Estimated Level of Satisfaction',
                                     keyboardType: TextInputType.number,
+                                    controller: satisfactionController,
                                   ),
                             
-                                  SizedBox(height: 25,),
+                                  const SizedBox(height: 25,),
                             
                                   DefaultButton(
                                     text: 'Add',
-                                  )
+
+                                    onTap: () async{
+
+                                      
+
+                                      final plan = PlanExpModel(
+                                        id: DateTime.now().millisecondsSinceEpoch, 
+                                        planner: widget.plannerModel, 
+                                        name: titleController.text, 
+                                        price: double.parse(priceController.text), 
+                                        scaleOfPref: int.parse(prefController.text), 
+                                        satisfaction: int.parse(satisfactionController.text)
+                                      );
+
+
+                                      await plannerExpDb.addData(plan);
+
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+
+                                  const SizedBox(height: 200,)
                                 ],
                               ),
                             ),
@@ -125,16 +182,57 @@ class _PlannerDetailState extends State<PlannerDetail> {
                       );
                     }
                   );
-              }, icon: Icon(MdiIcons.plusCircleOutline))
+              }, icon: const Icon(MdiIcons.plusCircleOutline))
             ],
         
           ),
         ],
-      body: SingleChildScrollView(
-        child: Column(
-          children: List.generate(4, (index) => PlanCard(index: index+1,)),
-        ),
-      ),
+      body: db != null ? Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          child: StreamBuilder<List<PlanExpModel>>(
+            initialData: const [],
+            stream: plannerExpDb.onPlanners(db!, plannerModel: widget.plannerModel),
+            builder: (context, snapshot){
+              if(snapshot.hasError){
+                return Column();
+              }
+              
+              final planners = snapshot.data;
+
+              return planners!.isNotEmpty ?  ListView.builder(
+                itemCount: planners.length,
+
+                itemBuilder: (context, index){
+                  return PlanCard(
+                    index: index+1,
+                    plannerExp: planners[index],
+                    ctx: context
+                  );
+                }
+              )
+              :
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Center(
+                    child: Text('No items added to ${widget.plannerModel.name} yet'),
+                  )
+                ],
+              );
+            }
+          )
+        ) 
+        
+        :
+
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            Center(
+              child: CircularProgressIndicator(),
+            )
+          ],
+        )
       ),
   
     );

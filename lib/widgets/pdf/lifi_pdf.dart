@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:expense/utils/constants/images.dart';
-import 'package:path/path.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
 

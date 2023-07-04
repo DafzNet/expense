@@ -48,6 +48,19 @@ class _CategoryScreenState extends State<CategoryScreen> {
             ),
             
             title: const Text('Categories'),
+
+
+            actions: [
+              IconButton(onPressed: ()async{
+                showMenu(
+                  context: context, 
+                  position: RelativeRect.fromLTRB(200, 70, 30, 0), items: [
+                    PopupMenuItem(
+                      child: Text('Categories separate your spendings into groups for easy referencing, reports and comparison. They also link your expenses to their respective budgets')
+                    )
+                  ]);
+              }, icon: const Icon(MdiIcons.helpCircleOutline))
+            ],
         
           ),
         ],

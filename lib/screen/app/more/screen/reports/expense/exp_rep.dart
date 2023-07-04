@@ -1,5 +1,5 @@
 
-// ignore_for_file: prefer_interpolation_to_compose_strings
+// ignore_for_file: prefer_interpolation_to_compose_strings, prefer_typing_uninitialized_variables
 
 import 'package:expense/models/expense_model.dart';
 import 'package:expense/utils/currency/currency.dart';

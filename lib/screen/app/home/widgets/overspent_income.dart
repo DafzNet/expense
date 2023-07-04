@@ -22,7 +22,7 @@ class _OverspentIncomeState extends State<OverspentIncome> {
     return Padding(
       padding: const EdgeInsets.all(5.0),
       child: Container(
-        padding: EdgeInsets.all(4),
+        padding: const EdgeInsets.all(4),
           decoration: BoxDecoration(
             border: Border.all(width: .5, color: appSuccess),
             borderRadius: BorderRadius.circular(8)
@@ -34,7 +34,7 @@ class _OverspentIncomeState extends State<OverspentIncome> {
               height: 40,
               width: 40,
               child: Container(
-                padding: EdgeInsets.all(2),
+                padding: const EdgeInsets.all(2),
                   decoration: BoxDecoration(
                     color: appDanger,
                     border: Border.all(width: .5, color: appSuccess),
@@ -42,9 +42,9 @@ class _OverspentIncomeState extends State<OverspentIncome> {
                   ),
                 child: Center(
                   child: Text(
-                    double.parse((((widget.income.amount-widget.income.balance)/widget.income.amount)*100).toString()).toStringAsFixed(0)+'%',
+                    '${double.parse((((widget.income.amount-widget.income.balance)/widget.income.amount)*100).toString()).toStringAsFixed(0)}%',
                         
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.white,
                       
                       fontSize: 12,
@@ -54,7 +54,7 @@ class _OverspentIncomeState extends State<OverspentIncome> {
               ),
             ),
 
-            Divider(height: 14,),
+            const Divider(height: 14,),
 
             Text(
               'of ${widget.income.name} spent',
@@ -68,7 +68,7 @@ class _OverspentIncomeState extends State<OverspentIncome> {
               ),
             ),
 
-            Divider(height: 14,),
+            const Divider(height: 14,),
 
             RichText(
                 text: TextSpan(

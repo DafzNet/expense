@@ -276,7 +276,9 @@ class _MoreScreenState extends State<MoreScreen> {
                                 Navigator.push(
                                   context,
                                   PageTransition(
-                                    child: const Accountability(), //PieChartSample2(), //
+                                    child: Accountability(
+                                      user: widget.user,
+                                    ), //PieChartSample2(), //
                                     type: PageTransitionType.fade
                                   )
                                 );
@@ -501,7 +503,7 @@ class _MoreScreenState extends State<MoreScreen> {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Row(
-                                    children: [
+                                    children: const [
                                         SizedBox(
                                           height: 26,
                                           width: 26,

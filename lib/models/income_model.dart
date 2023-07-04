@@ -38,7 +38,7 @@ class IncomeModel {
 
 
   IncomeModel copyWith({
-    dynamic? id,
+    dynamic id,
     String? name,
     String? source,
     double? amount,

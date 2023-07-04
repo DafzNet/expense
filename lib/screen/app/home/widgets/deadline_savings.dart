@@ -24,7 +24,7 @@ class _SavingsAproachingDeadlineState extends State<SavingsAproachingDeadline> {
     return Padding(
       padding: const EdgeInsets.all(5.0),
       child: Container(
-        padding: EdgeInsets.all(4),
+        padding: const EdgeInsets.all(4),
           decoration: BoxDecoration(
             border: Border.all(width: .5, color: appSuccess.shade100),
             borderRadius: BorderRadius.circular(8)
@@ -42,7 +42,7 @@ class _SavingsAproachingDeadlineState extends State<SavingsAproachingDeadline> {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                         
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 14,
                     ),
@@ -53,7 +53,7 @@ class _SavingsAproachingDeadlineState extends State<SavingsAproachingDeadline> {
 
 
 
-            Divider(height: 14,),
+            const Divider(height: 14,),
 
             Row(
               children: [
@@ -84,7 +84,7 @@ class _SavingsAproachingDeadlineState extends State<SavingsAproachingDeadline> {
               ],
             ),
 
-            SizedBox(height: 5,),
+            const SizedBox(height: 5,),
 
             Row(
               children: [
@@ -127,13 +127,13 @@ class _SavingsAproachingDeadlineState extends State<SavingsAproachingDeadline> {
                         text:  TextSpan(
                           text: (widget.saving.targetDate.difference(DateTime.now()).inDays).toString(),
                     
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.white,
                             
                             fontSize: 16,
                           ),
                     
-                          children: [
+                          children: const [
                             
                             TextSpan(
                               text: ' Days to go',
@@ -179,7 +179,7 @@ class _SavingsAproachingDeadlineState extends State<SavingsAproachingDeadline> {
                             )
                           ),
 
-                          TextSpan(
+                          const TextSpan(
                             text: ' saved',
                   
                             style: TextStyle(

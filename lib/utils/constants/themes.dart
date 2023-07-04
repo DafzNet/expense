@@ -12,6 +12,8 @@ ThemeData defaultTheme(BuildContext context)
 
       useMaterial3: true,
 
+      
+
       //default app bar settings
       appBarTheme: AppBarTheme(
         backgroundColor: bgColor,
