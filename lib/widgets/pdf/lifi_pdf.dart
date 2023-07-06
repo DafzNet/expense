@@ -10,20 +10,35 @@ import 'package:pdf/widgets.dart';
 import '../../models/budget.dart';
 import '../../models/expense_model.dart';
 import '../../models/income_model.dart';
+import '../../utils/currency/currency.dart';
 import '../../utils/month.dart';
 
 class LifiPDF{
 
-  // final lifiLogo = MemoryImage(
-  //   File(lifiIcon).readAsBytesSync()
-  // );
   
   final pdfDoc = Document();
 
-  Future generatePdf(String currency, String period, {List<ExpenseModel>? expenses, List<IncomeModel>? incomes, List<BudgetModel>? budgets, String? name})async{
+  Future generatePdf(
+    String currency, 
+    String period,
+    
+    {
+    required Map<String, double> expByCat,
+    required ctx,
+    required double incomeTotal,
+    required double expTotal,
+    List<ExpenseModel>? expenses, 
+    List<IncomeModel>? incomes, 
+    List<BudgetModel>? budgets, 
+    String? name, 
+    File? logo})async{
     pdfDoc.addPage(
       MultiPage(
-        
+
+
+        margin: EdgeInsets.all(15),
+        maxPages: 50,
+
         pageFormat: PdfPageFormat.a4,
         build: (context){
           return [
@@ -77,7 +92,7 @@ class LifiPDF{
                     'Financial Statement For the Period of $period',
 
                     style: TextStyle(
-                      fontSize: 30,
+                      fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: PdfColors.black
                     )
@@ -226,7 +241,171 @@ class LifiPDF{
                       })
                   ]
                 )
-              ]
+              ],
+
+
+
+/////////////////////////////////////////////
+///////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////
+
+                      Divider(
+                        thickness: 30,
+                        color: PdfColors.orange100,
+                        height: 50,
+                      ),
+
+
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                 Text(
+                                  'Number of Income(s): '
+                                ),
+
+                                Text(
+                                  incomes!.length.toString(),
+
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold
+                                  ),
+                                )
+                              ],
+                            ),
+
+                            SizedBox(
+                              height: 8,
+                            ),
+
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Total Income (Revenue): '
+                                ),
+
+                                Text(
+                                  Currency(ctx).wrapCurrencySymbol(incomeTotal.toString()),
+
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold
+                                  ),
+                                )
+                              ],
+                            ),
+
+                            SizedBox(
+                              height: 8,
+                            ),
+
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children:[
+                                Text(
+                                  'Expenses Categories '
+                                ),
+                              ],
+                            ),
+
+                            SizedBox(height: 5,),
+
+
+                            Row(
+                              children:[
+                                SizedBox(width: 20,),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: List.generate(expByCat.length, (index){
+                                      return Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            expByCat.keys.elementAt(index)
+                                          ),
+                                
+                                          Text(
+                                            Currency(ctx).wrapCurrencySymbol(expByCat.values.elementAt(index).toString())
+                                          )
+                                        ],
+                                      );
+                                    })
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                            
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                SizedBox(width: 100,),
+
+                                SizedBox(
+                                  width: 100,
+                                  child: Divider(
+                                    color: PdfColors.black,
+                                  ))
+                              ],
+                            ),
+
+
+
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Total Expenses: '
+                                ),
+
+                                Text(
+                                  Currency(ctx).wrapCurrencySymbol(expTotal.toString()),
+
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold
+                                  ),
+                                )
+                              ],
+                            ),
+
+                            Divider(height: 20,),
+
+
+                             Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Balance: '
+                                ),
+
+                                Text(
+                                  Currency(ctx).wrapCurrencySymbol((incomeTotal - expTotal).toString()),
+
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold
+                                  ),
+                                )
+                              ],
+                            ),
+                            
+                          ],
+                        ),
+                      ),
+                      
+                      SizedBox(
+                        height: 30,
+                      )
+
+
           ];
         }
       )
@@ -234,9 +413,31 @@ class LifiPDF{
   }
 
 
-  Future<File> savePdf(String name, String currency, String period, {String? username, List<ExpenseModel>?expenses, List<BudgetModel>?budgets, List<IncomeModel>? incomes})async{
+  Future<File> savePdf(String name, String currency, String period, {
+    File? logo, 
+    String? username, 
+    List<ExpenseModel>?expenses,
 
-    await generatePdf(currency, period, expenses: expenses, incomes: incomes, budgets: budgets, name: username);
+    required Map<String, double> expByCat,
+    required ctx,
+    required double incomeTotal,
+    required double expTotal,
+
+    List<BudgetModel>?budgets, 
+    List<IncomeModel>? incomes})async{
+
+    await generatePdf(
+      currency, 
+      period, 
+      expByCat: expByCat,
+      ctx: ctx,
+      incomeTotal: incomeTotal,
+      expTotal: expTotal,
+      expenses: expenses, 
+      logo: logo, 
+      incomes: incomes, 
+      budgets: budgets, 
+      name: username);
 
     final pdfAsBytes = await pdfDoc.save();
     final dir = await getApplicationSupportDirectory();

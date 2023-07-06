@@ -276,6 +276,8 @@ class _AccountabilityState extends State<Accountability> {
 
     }
 
+    File myLogo = File('assets/icons/still/lifi_logo.png');
+
 
 
     return Scaffold(
@@ -1086,8 +1088,14 @@ class _AccountabilityState extends State<Accountability> {
                                         'lifi.pdf', 
                                         Currency(context).currencySymbol, 
                                         reportPeriod, 
-                                        incomes: incomes, 
-                                        expenses: expenses, 
+                                        incomes: incomes,
+                                        expByCat: expByCat,
+                                        ctx: context,
+                                        incomeTotal: incomeTotal,
+                                        expTotal: expTotal,
+                                        expenses: expenses,
+                                        budgets: budgets,
+                                        logo:myLogo,
                                         username: '${widget.user.firstName} ${widget.user.lastName}');
                                       await lifiPDF.openPDF(myPdf);
                                     },
