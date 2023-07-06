@@ -110,7 +110,7 @@ class _BudgetCardState extends State<BudgetCard> {
                                         Navigator.push(
                                           context,
                                           PageTransition(
-                                            child: BudgetPlanner(
+                                            child: const BudgetPlanner(
                                               create: true,
                                             ),
 

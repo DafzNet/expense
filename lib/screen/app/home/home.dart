@@ -399,7 +399,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: Color.fromARGB(255, 54, 53, 53),
                 ),
 
-                title: Text('Open Planners'),
+                title: const Text('Open Planners'),
               ),
 
 

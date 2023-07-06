@@ -22,7 +22,7 @@ class PlanExpModel {
 
 
   PlanExpModel copyWith({
-    dynamic? id,
+    dynamic id,
     PlannerModel? planner,
     String? name,
     double? price,

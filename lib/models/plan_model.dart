@@ -18,7 +18,7 @@ class PlannerModel {
 
 
   PlannerModel copyWith({
-    dynamic? id,
+    dynamic id,
     String? name,
     BudgetModel? budget,
     String? description,

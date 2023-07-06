@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:expense/utils/currency/currency.dart';
 import 'package:expense/widgets/default_button.dart';
 import 'package:expense/widgets/text_field.dart';

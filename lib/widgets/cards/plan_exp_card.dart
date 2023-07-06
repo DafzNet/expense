@@ -98,7 +98,7 @@ class _PlanCardState extends State<PlanCard> {
                   text: TextSpan(
                     text: 'Scale of Preference: ',
                 
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 13,
                       color: Colors.black
                       //color: appOrange
@@ -108,7 +108,7 @@ class _PlanCardState extends State<PlanCard> {
                       TextSpan(
                         text: widget.plannerExp.scaleOfPref.toString(),
                     
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 16,
                           color: Colors.black
                           //color: appOrange
@@ -124,7 +124,7 @@ class _PlanCardState extends State<PlanCard> {
                   text: TextSpan(
                     text: 'Estimated Satisfaction: ',
                 
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 13,
                       color: Colors.black
                       //color: appOrange
@@ -134,7 +134,7 @@ class _PlanCardState extends State<PlanCard> {
                       TextSpan(
                         text: widget.plannerExp.satisfaction.toString(),
                     
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 16,
                           color: Colors.black
                           //color: appOrange

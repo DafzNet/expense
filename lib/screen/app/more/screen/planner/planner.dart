@@ -1,15 +1,15 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:expense/dbs/budget_db.dart';
 import 'package:expense/models/plan_model.dart';
 import 'package:expense/widgets/cards/planner_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:provider/provider.dart';
 import 'package:sembast/sembast.dart';
 
 import '../../../../../dbs/planner_db.dart';
 import '../../../../../models/budget.dart';
-import '../../../../../providers/planner_provider.dart';
 import '../../../../../utils/constants/colors.dart';
 import '../../../../../utils/month.dart';
 import '../../../../../widgets/default_button.dart';
@@ -74,7 +74,7 @@ class _BudgetPlannerState extends State<BudgetPlanner> {
   bool? _create;
 
   void createPlanner()async{
-      await Future.delayed(Duration(milliseconds: 200),
+      await Future.delayed(const Duration(milliseconds: 200),
       ()async{
         return await addPlanner(context);
       }
@@ -130,7 +130,7 @@ class _BudgetPlannerState extends State<BudgetPlanner> {
                   context: context, 
                   position: const RelativeRect.fromLTRB(200, 70, 30, 0), items: [
                     const PopupMenuItem(
-                      child: Text('A Planner holds a list of items you intend to get (a service or a good). Planners have integrated financial algorithms that suggests what to go for based on your preferences in a situation of limited finances')
+                      child: Text('A Planner holds a list of items you intend to get (a service or a good).This helps a user avoid impulse purchases. Planners have integrated financial algorithms that suggests what to go for based on your preferences in a situation of limited finances')
                     )
                   ]);
               }, icon: const Icon(MdiIcons.helpCircleOutline))
@@ -211,7 +211,6 @@ class _BudgetPlannerState extends State<BudgetPlanner> {
     return showModalBottomSheet(
                   context: context, 
                   builder: (ctx){
-                    int selectedBud = 0;
                     return SizedBox(
                       height: 500,
                       child: ClipRRect(
@@ -223,7 +222,7 @@ class _BudgetPlannerState extends State<BudgetPlanner> {
 
                           child: saving ? Column(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
+                            children: const [
                               Center(child: CircularProgressIndicator())
                             ],
                           ) : SingleChildScrollView(
@@ -305,7 +304,7 @@ class _BudgetPlannerState extends State<BudgetPlanner> {
                                             child: Center(
                                               child: Text(
                                                 budgets[index].name,
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                   fontSize: 14,
                                                   fontWeight: FontWeight.bold
                                                 ),

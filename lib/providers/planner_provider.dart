@@ -1,6 +1,4 @@
 
-import 'package:expense/dbs/settings.dart';
-import 'package:expense/utils/settings/settings.dart';
 import 'package:flutter/foundation.dart';
 
 

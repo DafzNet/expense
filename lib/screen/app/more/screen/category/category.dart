@@ -54,8 +54,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
               IconButton(onPressed: ()async{
                 showMenu(
                   context: context, 
-                  position: RelativeRect.fromLTRB(200, 70, 30, 0), items: [
-                    PopupMenuItem(
+                  position: const RelativeRect.fromLTRB(200, 70, 30, 0), items: [
+                    const PopupMenuItem(
                       child: Text('Categories separate your spendings into groups for easy referencing, reports and comparison. They also link your expenses to their respective budgets')
                     )
                   ]);

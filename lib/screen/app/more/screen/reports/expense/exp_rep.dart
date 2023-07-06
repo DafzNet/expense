@@ -63,13 +63,6 @@ class ExpReportScreenState extends State<ExpReportScreen> {
   getExps(var date, String p)async{
 
     List<ExpenseModel> exps = [];
-    // await expenseDb.retrieveBasedOn(
-    //     Filter.and([
-    //       Filter.equals('month', date.month),
-    //       Filter.equals('year', date.year)
-    //     ])
-    //   );
-
 
     if (p == 'cm' || p == 'pm') {
       exps = await expenseDb.retrieveBasedOn(
@@ -298,7 +291,7 @@ class ExpReportScreenState extends State<ExpReportScreen> {
                                     
                             children: [
                               Text(
-                                Month().currentMonth+' Expense '+reportPeriod,
+                                'Total Expense',
                                     
                                 style: const TextStyle(
                                   fontSize: 16,
