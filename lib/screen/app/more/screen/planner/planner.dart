@@ -149,6 +149,12 @@ class _BudgetPlannerState extends State<BudgetPlanner> {
               }
               
               final planners = snapshot.data;
+              
+              planners?.sort((a,b){
+                return b.date.compareTo(a.date);
+              });
+
+
 
               return planners!.isNotEmpty ?  ListView.builder(
                 itemCount: planners.length,
@@ -348,6 +354,7 @@ class _BudgetPlannerState extends State<BudgetPlanner> {
 
                                     final planner = PlannerModel(
                                       id: DateTime.now().millisecondsSinceEpoch,
+                                      date: DateTime.now(),
                                       name: titleController.text,
                                       budget: budget,
                                       description: desController.text

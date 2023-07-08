@@ -72,6 +72,10 @@ class _IncomeScreenState extends State<IncomeScreen> {
               
               final incomesForMonth = snapshot.data;
 
+              incomesForMonth?.sort((a,b){
+                return b.date.compareTo(a.date);
+              });
+
               return incomesForMonth!.isNotEmpty ?  ListView.builder(
                 itemCount: incomesForMonth.length,
 

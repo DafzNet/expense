@@ -128,7 +128,8 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
                                         });
 
                                         CategoryModel category = CategoryModel(
-                                          id: DateTime.now().millisecondsSinceEpoch, 
+                                          id: DateTime.now().millisecondsSinceEpoch,
+                                          date: DateTime.now(),
                                           name: titleController.text,
                                           hidden: false,
                                           description: noteController.text,

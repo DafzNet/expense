@@ -636,7 +636,7 @@ class _AccountabilityState extends State<Accountability> {
                           width: MediaQuery.of(context).size.width-30,
                           child: Text(
                             'Income and expense statement for the period of ${dateR == 'cm'? Month().currentMonth +' '+ DateTime.now().year.toString():
-                                dateR == 'pa'?Month().getMonth(reportDate.month)+' '+reportDate.year.toString():
+                                dateR == 'pa'? '${Month().getMonth(reportDate.month)} ${reportDate.year.toString()}':
                                   dateR == 'ya'?'${Month().getMonth(reportDate.month)} ${reportDate.year} till date':reportPeriod}',
                                             
                             style: TextStyle(
@@ -1087,7 +1087,9 @@ class _AccountabilityState extends State<Accountability> {
                                       File myPdf = await lifiPDF.savePdf(
                                         'lifi.pdf', 
                                         Currency(context).currencySymbol, 
-                                        reportPeriod, 
+                                        dateR == 'cm'? Month().currentMonth +' '+ DateTime.now().year.toString():
+                                          dateR == 'pa'?'${Month().getMonth(reportDate.month)} ${reportDate.year.toString()}':
+                                            dateR == 'ya'?'${Month().getMonth(reportDate.month)} ${reportDate.year} till date':reportPeriod,
                                         incomes: incomes,
                                         expByCat: expByCat,
                                         ctx: context,

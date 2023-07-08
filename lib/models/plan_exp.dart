@@ -7,6 +7,7 @@ class PlanExpModel {
   dynamic id;
   PlannerModel planner;
   String name;
+  DateTime? date;
   double price;
   int scaleOfPref;
   int satisfaction;
@@ -15,6 +16,7 @@ class PlanExpModel {
     required this.id,
     required this.planner,
     required this.name,
+    this.date,
     required this.price,
     required this.scaleOfPref,
     required this.satisfaction,
@@ -22,9 +24,10 @@ class PlanExpModel {
 
 
   PlanExpModel copyWith({
-    dynamic id,
+    dynamic? id,
     PlannerModel? planner,
     String? name,
+    DateTime? date,
     double? price,
     int? scaleOfPref,
     int? satisfaction,
@@ -33,6 +36,7 @@ class PlanExpModel {
       id: id ?? this.id,
       planner: planner ?? this.planner,
       name: name ?? this.name,
+      date: date ?? this.date,
       price: price ?? this.price,
       scaleOfPref: scaleOfPref ?? this.scaleOfPref,
       satisfaction: satisfaction ?? this.satisfaction,
@@ -44,6 +48,7 @@ class PlanExpModel {
       'id': id,
       'planner': planner.toMap(),
       'name': name,
+      'date': date?.millisecondsSinceEpoch,
       'price': price,
       'scaleOfPref': scaleOfPref,
       'satisfaction': satisfaction,
@@ -55,6 +60,7 @@ class PlanExpModel {
       id: map['id'] as dynamic,
       planner: PlannerModel.fromMap(map['planner'] as Map<String,dynamic>),
       name: map['name'] as String,
+      date: map['date'] != null ? DateTime.fromMillisecondsSinceEpoch(map['date'] as int) : DateTime.now(),
       price: map['price'] as double,
       scaleOfPref: map['scaleOfPref'] as int,
       satisfaction: map['satisfaction'] as int,
@@ -67,7 +73,7 @@ class PlanExpModel {
 
   @override
   String toString() {
-    return 'PlanExpModel(id: $id, planner: $planner, name: $name, price: $price, scaleOfPref: $scaleOfPref, satisfaction: $satisfaction)';
+    return 'PlanExpModel(id: $id, planner: $planner, name: $name, date: $date, price: $price, scaleOfPref: $scaleOfPref, satisfaction: $satisfaction)';
   }
 
   @override
@@ -84,6 +90,7 @@ class PlanExpModel {
     return id.hashCode ^
       planner.hashCode ^
       name.hashCode ^
+      date.hashCode ^
       price.hashCode ^
       scaleOfPref.hashCode ^
       satisfaction.hashCode;

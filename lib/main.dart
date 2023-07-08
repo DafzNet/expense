@@ -5,10 +5,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'firebase/auth/auth.dart';
 import 'providers/expense_provider.dart';
 import 'providers/planner_provider.dart';
+import 'screen/onboarding/onboardingscreen.dart';
 import 'utils/constants/themes.dart';
 import 'wrapper.dart';
 
@@ -63,8 +65,31 @@ void main() async{
     );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+
+  bool? onboardedBefore; 
+    
+  void getStarted() async{
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    onboardedBefore =  pref.getBool('boarded');
+
+    setState(() {
+      
+    });
+  }
+
+  @override
+  void initState() {
+    getStarted();
+    super.initState();
+  }
 
   // This widget is the root of your application.
   @override
@@ -73,7 +98,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'LiFi',
       theme: defaultTheme(context),
-      home: const Wrapper(),
+      home: onboardedBefore != true ? const OnboardingScreen() : const Wrapper(),
     );
   }
 }

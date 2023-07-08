@@ -8,26 +8,31 @@ class PlannerModel {
   String? name;
   BudgetModel? budget;
   String? description;
+  DateTime date;
+
   PlannerModel({
     required this.id,
     this.name,
     this.budget,
     this.description,
+    required this.date,
   });
 
 
 
   PlannerModel copyWith({
-    dynamic id,
+    dynamic? id,
     String? name,
     BudgetModel? budget,
     String? description,
+    DateTime? date,
   }) {
     return PlannerModel(
       id: id ?? this.id,
       name: name ?? this.name,
       budget: budget ?? this.budget,
       description: description ?? this.description,
+      date: date ?? this.date,
     );
   }
 
@@ -37,6 +42,7 @@ class PlannerModel {
       'name': name,
       'budget': budget?.toMap(),
       'description': description,
+      'date': date.millisecondsSinceEpoch,
     };
   }
 
@@ -46,6 +52,7 @@ class PlannerModel {
       name: map['name'] != null ? map['name'] as String : null,
       budget: map['budget'] != null ? BudgetModel.fromMap(map['budget'] as Map<String,dynamic>) : null,
       description: map['description'] != null ? map['description'] as String : null,
+      date: DateTime.fromMillisecondsSinceEpoch((map['date']??DateTime.now().millisecondsSinceEpoch) as int),
     );
   }
 
@@ -55,7 +62,7 @@ class PlannerModel {
 
   @override
   String toString() {
-    return 'PlannerModel(id: $id, name: $name, budget: $budget, description: $description)';
+    return 'PlannerModel(id: $id, name: $name, budget: $budget, description: $description, date: $date)';
   }
 
   @override
@@ -63,7 +70,11 @@ class PlannerModel {
     if (identical(this, other)) return true;
   
     return 
-      other.id == id;
+      other.id == id &&
+      other.name == name &&
+      other.budget == budget &&
+      other.description == description &&
+      other.date == date;
   }
 
   @override
@@ -71,6 +82,7 @@ class PlannerModel {
     return id.hashCode ^
       name.hashCode ^
       budget.hashCode ^
-      description.hashCode;
+      description.hashCode ^
+      date.hashCode;
   }
 }

@@ -200,6 +200,9 @@ class _PlannerDetailState extends State<PlannerDetail> {
               }
               
               final planners = snapshot.data;
+              planners?.sort((a,b){
+                return b.date!.compareTo(a.date!);
+              });
 
               return planners!.isNotEmpty ?  ListView.builder(
                 itemCount: planners.length,

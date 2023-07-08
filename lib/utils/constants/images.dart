@@ -9,3 +9,8 @@ const String archiveIcon = 'assets/icons/still/archive.png';
 const String feedbackIcon = 'assets/icons/still/feedback.png';
 const String subscribeIcon = 'assets/icons/still/subscribe.png';
 const String lifiIcon = 'assets/icons/still/lifi.png';
+
+
+const String boardOne = 'assets/icons/anim/onboarder1.gif';
+const String boardTwo = 'assets/icons/anim/onboarder2.gif';
+const String boardThree = 'assets/icons/anim/onboarder3.gif';

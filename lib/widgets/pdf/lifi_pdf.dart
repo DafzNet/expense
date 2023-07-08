@@ -35,6 +35,19 @@ class LifiPDF{
     pdfDoc.addPage(
       MultiPage(
 
+        theme: ThemeData(
+          softWrap: true,
+          overflow: TextOverflow.span,
+          defaultTextStyle: TextStyle(
+            font: Font.times(),
+            fontSize: 14
+          ),
+
+          tableCell:  TextStyle(
+            font: Font.times(),
+            fontSize: 11
+          ),
+        ),
 
         margin: EdgeInsets.all(15),
         maxPages: 50,
@@ -193,6 +206,17 @@ class LifiPDF{
                                         budgets[index].startDate!.year == budgets[index].endDate!.year?
                                           '${DateFormat.MMMd().format(budgets[index].startDate!)} - ${DateFormat.yMMMd().format(budgets[index].endDate!)}':
                                             '${DateFormat.yMMMd().format(budgets[index].startDate!)} - ${DateFormat.yMMMd().format(budgets[index].endDate!)}', 
+                                  ),
+
+                            Text(
+                                    (budgets[index].amount - (budgets[index].amount-budgets[index].balance)) == 0 ?
+                                        'Exact' :
+                                            (budgets[index].amount - (budgets[index].amount-budgets[index].balance)) > 0? 'Saved' : 'Overspent',
+                                    style: TextStyle(
+                                      color: (budgets[index].amount - (budgets[index].amount-budgets[index].balance)) == 0 ?
+                                        PdfColors.black :
+                                            (budgets[index].amount - (budgets[index].amount-budgets[index].balance)) > 0? PdfColors.green : PdfColors.red
+                                    ),
                                   )
                           ]
                         );
@@ -250,14 +274,16 @@ class LifiPDF{
 //////////////////////////////////////////////////////////////
 
                       Divider(
-                        thickness: 30,
+                        thickness: 10,
                         color: PdfColors.orange100,
-                        height: 50,
+                        height: 20,
                       ),
 
 
+
+
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10 ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [

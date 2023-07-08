@@ -81,6 +81,11 @@ class _VaultScreenState extends State<VaultScreen> {
               }
               
               final vaults = snapshot.data;
+              vaults?.sort((a,b){
+                return b.dateCreated.compareTo(a.dateCreated);
+              });
+
+
 
               return vaults!.isNotEmpty ?  ListView.builder(
                 itemCount: vaults.length,

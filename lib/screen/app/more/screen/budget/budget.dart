@@ -65,6 +65,9 @@ class _BudgetScreenState extends State<BudgetScreen> {
               }
               
               final budgetForMonth = snapshot.data;
+              budgetForMonth?.sort((a,b){
+                return b.startDate!.compareTo(a.startDate!);
+              });
 
               return budgetForMonth!.isNotEmpty ?  ListView.builder(
                 itemCount: budgetForMonth.length,

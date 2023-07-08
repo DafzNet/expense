@@ -235,7 +235,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                                         
                                         context,
                                         heading: 'Select category',
-                                        options: categories.isNotEmpty? categories : [CategoryModel(id: 1, name: 'No category added yet', description: '')],
+                                        options: categories.isNotEmpty? categories : [CategoryModel(id: 1, date: DateTime.now(), name: 'No category added yet', description: '')],
 
                                         onTap: categories.isNotEmpty? getCat : null,
                                       );

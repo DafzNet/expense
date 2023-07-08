@@ -5,27 +5,31 @@ class CategoryModel {
   dynamic id;
   String name;
   bool hidden;
+  DateTime date;
   String description;
   
   CategoryModel({
     required this.id,
     required this.name,
     this.hidden = false,
+    required this.date,
     required this.description,
   });
 
   
 
   CategoryModel copyWith({
-    dynamic id,
+    dynamic? id,
     String? name,
     bool? hidden,
+    DateTime? date,
     String? description,
   }) {
     return CategoryModel(
       id: id ?? this.id,
       name: name ?? this.name,
       hidden: hidden ?? this.hidden,
+      date: date ?? this.date,
       description: description ?? this.description,
     );
   }
@@ -35,6 +39,7 @@ class CategoryModel {
       'id': id,
       'name': name,
       'hidden': hidden,
+      'date': date.millisecondsSinceEpoch,
       'description': description,
     };
   }
@@ -44,6 +49,7 @@ class CategoryModel {
       id: map['id'] as dynamic,
       name: map['name'] as String,
       hidden: map['hidden'] as bool,
+      date: DateTime.fromMillisecondsSinceEpoch((map['date']??DateTime.now().microsecondsSinceEpoch) as int),
       description: map['description'] as String,
     );
   }
@@ -54,7 +60,7 @@ class CategoryModel {
 
   @override
   String toString() {
-    return 'CategoryModel(id: $id, name: $name, hidden: $hidden, description: $description)';
+    return 'CategoryModel(id: $id, name: $name, hidden: $hidden, date: $date, description: $description)';
   }
 
   @override
@@ -62,7 +68,7 @@ class CategoryModel {
     if (identical(this, other)) return true;
   
     return 
-      other.id == id ||
+      other.id == id &&
       other.name == name;
   }
 
@@ -71,6 +77,7 @@ class CategoryModel {
     return id.hashCode ^
       name.hashCode ^
       hidden.hashCode ^
+      date.hashCode ^
       description.hashCode;
   }
 }

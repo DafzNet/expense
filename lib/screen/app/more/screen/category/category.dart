@@ -79,6 +79,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
               
               final categories = snapshot.data;
 
+              categories?.sort((a,b){
+                return b.date.compareTo(a.date);
+              });
+
               return categories!.isNotEmpty ?  ListView.builder(
                 itemCount: categories.length,
 
