@@ -30,6 +30,8 @@ class _HomeSummaryState extends State<HomeSummary> {
 
   Map<String, double> daysOfExps = {'Sunday':0, 'Monday':0, 'Tuesday':0, 'Wednesday':0, 'Thursday':0, 'Friday':0, 'Saturday':0};
 
+  double _height = 100;
+
   List<ExpenseModel> expensesAllTime = [];
   double totalExpAllTime = 0;
 
@@ -65,6 +67,25 @@ class _HomeSummaryState extends State<HomeSummary> {
         lowestSpenderDay = element;
         lowestSpenderDayAmount = daysOfExps[element]!;
       }
+    }
+
+    double maxSpendingDayPercent = 0;
+
+    for (var amt in daysOfExps.values) {
+      if(((amt/totalExpAllTime)*100)>maxSpendingDayPercent){
+        maxSpendingDayPercent = (amt/totalExpAllTime)*100;
+      }      
+    }
+
+     if (maxSpendingDayPercent <= 30) {
+      _height = 4.2; 
+    }
+    else if (maxSpendingDayPercent > 30 && maxSpendingDayPercent <= 50) {
+      _height = 3.2; 
+    } else if(maxSpendingDayPercent > 50 && maxSpendingDayPercent <= 70) {
+      _height = 2.2;
+    }else{
+      _height = 1.8;
     }
 
     setState(() {
@@ -156,7 +177,7 @@ class _HomeSummaryState extends State<HomeSummary> {
                         ),
                       ),
                       SizedBox(
-                        height:  ((daysOfExps[days.elementAt(i)]!/totalExpAllTime)*100)*1.5,
+                        height: ((daysOfExps[days.elementAt(i)]!/totalExpAllTime)*100)*_height,
                         width: 8,
                         child: Container(
                           color: appDanger,
