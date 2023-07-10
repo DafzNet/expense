@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:expense/utils/constants/colors.dart';
 import 'package:intl/intl.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
@@ -49,7 +48,7 @@ class LifiPDF{
           ),
         ),
 
-        margin: EdgeInsets.all(15),
+        margin: const EdgeInsets.all(15),
         maxPages: 50,
 
         pageFormat: PdfPageFormat.a4,
@@ -57,8 +56,8 @@ class LifiPDF{
           return [
 
             Container(
-              padding: EdgeInsets.all(6),
-              decoration: BoxDecoration(
+              padding: const EdgeInsets.all(6),
+              decoration: const BoxDecoration(
                 color: PdfColors.orange
               ),
 
@@ -119,7 +118,7 @@ class LifiPDF{
               [
               
                 Container(
-                  padding: EdgeInsets.symmetric(vertical: 3, horizontal: 10),
+                  padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 10),
                   color: PdfColors.orange200,
                   child: Text('Incomes')
                 ),
@@ -127,13 +126,13 @@ class LifiPDF{
                 Table(
                   children: [
                     TableRow(
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: PdfColors.orange100
                       ),
                       children: [
                         Text('S/N'),
                         Text('Title'),
-                        Text('Amount ${currency}'),
+                        Text('Amount $currency'),
                         Text('Source'),
                         Text('Vault'),
                         Text('Date'),
@@ -161,22 +160,22 @@ class LifiPDF{
               [
                 SizedBox(height: 6),
                 Container(
-                  padding: EdgeInsets.symmetric(vertical: 3, horizontal: 10),
+                  padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 10),
                   color: PdfColors.orange200,
                   child: Text('Budgets')
                 ),
                 Table(
                   children: [
                     TableRow(
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: PdfColors.orange100
                       ),
                       children: [
                         Text('S/N'),
                         Text('Title'),
-                        Text('Budgeted Amount ${currency}'),
-                        Text('Amount Spent ${currency}'),
-                        Text('Variance ${currency}'),
+                        Text('Budgeted Amount $currency'),
+                        Text('Amount Spent $currency'),
+                        Text('Variance $currency'),
                         Text('Category'),
                         Text('Period'),
                         Text('Remark'),
@@ -231,20 +230,20 @@ class LifiPDF{
               [
                 SizedBox(height: 6),
                 Container(
-                  padding: EdgeInsets.symmetric(vertical: 3, horizontal: 10),
+                  padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 10),
                   color: PdfColors.orange200,
                   child: Text('Expenses')
                 ),
                 Table(
                   children: [
                     TableRow(
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: PdfColors.orange100
                       ),
                       children: [
                         Text('S/N'),
                         Text('Title'),
-                        Text('Amount ${currency}'),
+                        Text('Amount $currency'),
                         Text('Income'),
                         Text('Category'),
                         Text('Date'),

@@ -373,31 +373,29 @@ class _MoreScreenState extends State<MoreScreen> {
                                 ],)
                             ),
       
-                            // const Divider(),
+                            const Divider(),
                       
-                            // TextButton(
-                            //   onPressed: (){},
-                            //   style: TextButton.styleFrom(
-                            //     shape: const RoundedRectangleBorder(),
-                            //     padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5)
-                            //   ),
-                            //   child: Row(
-                            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            //     children: [
-                            //       Row(
-                            //         children: const [
-                            //           ImageIcon(
-                            //             AssetImage(
-                            //               archiveIcon,
-                            //             )
-                            //           ),
-                            //           SizedBox(width: 10,),
-                            //           Text('Archive', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
-                            //         ],
-                            //       ),
-                            //       const Icon(MdiIcons.chevronRight)
-                            //     ],)
-                            // ),
+                            TextButton(
+                              onPressed: (){},
+                              style: TextButton.styleFrom(
+                                shape: const RoundedRectangleBorder(),
+                                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5)
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: const [
+                                      Icon(
+                                        MdiIcons.backupRestore
+                                      ),
+                                      SizedBox(width: 10,),
+                                      Text('Backup and Sync', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
+                                    ],
+                                  ),
+                                  const Icon(MdiIcons.chevronRight)
+                                ],)
+                            ),
       
                             const Divider(),
                       

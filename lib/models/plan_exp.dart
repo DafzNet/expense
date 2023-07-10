@@ -24,7 +24,7 @@ class PlanExpModel {
 
 
   PlanExpModel copyWith({
-    dynamic? id,
+    dynamic id,
     PlannerModel? planner,
     String? name,
     DateTime? date,

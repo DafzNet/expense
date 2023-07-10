@@ -12,7 +12,6 @@ import '../../../../../../dbs/expense.dart';
 import '../../../../../../utils/constants/colors.dart';
 import 'package:fl_chart/fl_chart.dart';
 
-import '../../../../../../utils/month.dart';
 import '../../../../expense/expense_detail.dart';
 
 
@@ -167,6 +166,8 @@ class ExpReportScreenState extends State<ExpReportScreen> {
         catTotal += element.amount;
       }
 
+
+
     expenseCatTotal[cat] = catTotal;
     
      expCatsList.add(
@@ -189,6 +190,13 @@ class ExpReportScreenState extends State<ExpReportScreen> {
     }
 
     _categoryAmount = expenseCatTotal[expensesCats.first]!;
+
+
+    for (var element in expensesByCat.keys) {
+      expensesByCat[element]?.sort((a,b){
+                return b.date.compareTo(a.date);
+              });
+    }
 
     setState(() {
       
@@ -290,10 +298,10 @@ class ExpReportScreenState extends State<ExpReportScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                                     
                             children: [
-                              Text(
+                              const Text(
                                 'Total Expense',
                                     
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 16,
                                   color: Colors.white
                                 ),

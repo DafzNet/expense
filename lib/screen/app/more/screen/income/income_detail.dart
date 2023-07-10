@@ -3,6 +3,7 @@
 
 import 'package:expense/models/income_model.dart';
 import 'package:expense/screen/app/expense/add_expense.dart';
+import 'package:expense/screen/app/more/screen/income/transfer.dart';
 import 'package:expense/widgets/default_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -48,6 +49,23 @@ class _IncomeDetailScreenState extends State<IncomeDetailScreen> {
             title: Text(widget.income.name!),
 
             actions: [
+
+                IconButton(
+                  onPressed: (){
+                    Navigator.push(
+                      context,
+                      PageTransition(
+                        child: IncomeTransfer(widget.income),
+                        type: PageTransitionType.rightToLeft
+                      )
+                    );
+                  }, 
+                  icon: Icon(
+                    MdiIcons.share,
+                    size: 28,
+                  )
+                  
+                ),
 
                 IconButton(
                   onPressed: (){

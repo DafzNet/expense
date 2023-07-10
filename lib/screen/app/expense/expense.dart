@@ -150,7 +150,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                       Expanded(
                         child: StreamBuilder<List<ExpenseModel>>(
                           stream: expenseDb.onExpenses(_db!),
-                          initialData: [
+                          initialData: const [
                             
                           ],
                           builder: (context, snapshot){

@@ -1,11 +1,7 @@
 
-import 'package:expense/dbs/budget_db.dart';
-import 'package:expense/models/budget.dart';
 import 'package:expense/utils/constants/images.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:sembast/sembast.dart';
-import '../../../../../widgets/cards/budget_card.dart';
 
 class AboutScreen extends StatefulWidget {
   const AboutScreen({super.key});
@@ -50,20 +46,20 @@ class _AboutScreenState extends State<AboutScreen> {
                   lifiIcon
                 ),
 
-                SizedBox(height: 5,),
+                const SizedBox(height: 5,),
 
-                Text('Version: 1.0'),
+                const Text('Version: 1.0'),
 
-                SizedBox(height: 15,),
+                const SizedBox(height: 15,),
 
 
                 RichText(
-                  text: TextSpan(
+                  text: const TextSpan(
                     style: TextStyle(
                       color: Colors.black,
                       height: 1.5
                     ),
-                    text: 'Introducing LiFi, the ultimate tool for managing your personal finances and achieving your financial goals. With a range of powerful features and a commitment to financial education, our app empowers you to take control of your money like never before.',
+                    text: 'Introducing LiFi, the ultimate tool for managing your personal finances and achieving your financial goals. With a range of powerful features and a commitment to financial education, LiFi empowers you to take control of your money like never before.',
           
                     children: [
                       TextSpan(
@@ -229,7 +225,7 @@ class _AboutScreenState extends State<AboutScreen> {
                   )
                 ),
 
-                SizedBox(height: 20,)
+                const SizedBox(height: 20,)
               ]
             ),
           ),

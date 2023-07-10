@@ -1,7 +1,5 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import '../../../models/expense_model.dart';
 
 class FirebaseExpenseDb{
@@ -10,8 +8,6 @@ class FirebaseExpenseDb{
   FirebaseExpenseDb({this.uid});
 
   final fsExpenseDb = FirebaseFirestore.instance;
-  
-
 
   ///Takee a list of expenses and aadd them to firestore 
   Future<void> addExpenses(List<ExpenseModel> expenses)async{
@@ -41,12 +37,16 @@ class FirebaseExpenseDb{
 
   }
 
-
   ///retturns the corresponding expense
-  Future<ExpenseModel> update(ExpenseModel expense)async{
+  Future update(ExpenseModel expense)async{
     final CollectionReference expenseCollection = fsExpenseDb.collection('expense');
     await expenseCollection.doc(uid).collection(uid).doc(expense.id.toString()).update(expense.toMap());
-    return expense;
+  }
+
+
+  Future delete(ExpenseModel expense)async{
+    final CollectionReference expenseCollection = fsExpenseDb.collection('expense');
+    await expenseCollection.doc(uid).collection(uid).doc(expense.id.toString()).delete();
   }
 
 }

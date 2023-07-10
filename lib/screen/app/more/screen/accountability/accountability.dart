@@ -46,6 +46,7 @@ class _AccountabilityState extends State<Accountability> {
   bool reload = false;
 
   static String reportPeriod = "Current Month";
+  // ignore: prefer_typing_uninitialized_variables
   var reportDate;
   String dateR = 'cm';
 
@@ -635,11 +636,11 @@ class _AccountabilityState extends State<Accountability> {
                         SizedBox(
                           width: MediaQuery.of(context).size.width-30,
                           child: Text(
-                            'Income and expense statement for the period of ${dateR == 'cm'? Month().currentMonth +' '+ DateTime.now().year.toString():
+                            'Income and expense statement for the period of ${dateR == 'cm'? '${Month().currentMonth} ${DateTime.now().year}':
                                 dateR == 'pa'? '${Month().getMonth(reportDate.month)} ${reportDate.year.toString()}':
                                   dateR == 'ya'?'${Month().getMonth(reportDate.month)} ${reportDate.year} till date':reportPeriod}',
                                             
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w400,
                               color: Colors.black
@@ -965,12 +966,12 @@ class _AccountabilityState extends State<Accountability> {
                               ],
                             ),
 
-                            SizedBox(height: 5,),
+                            const SizedBox(height: 5,),
 
 
                             Row(
                               children:[
-                                SizedBox(width: 20,),
+                                const SizedBox(width: 20,),
                                 Expanded(
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -1027,7 +1028,7 @@ class _AccountabilityState extends State<Accountability> {
                               ],
                             ),
 
-                            Divider(height: 20,),
+                            const Divider(height: 20,),
 
 
                              Row(
@@ -1081,13 +1082,13 @@ class _AccountabilityState extends State<Accountability> {
                                   100, (MediaQuery.of(context).size.height/5)*4, 10, 10), 
                                 items: [
                                  PopupMenuItem(
-                                    child: Text('To PDF'),
+                                    child: const Text('To PDF'),
 
                                     onTap: ()async{
                                       File myPdf = await lifiPDF.savePdf(
                                         'lifi.pdf', 
                                         Currency(context).currencySymbol, 
-                                        dateR == 'cm'? Month().currentMonth +' '+ DateTime.now().year.toString():
+                                        dateR == 'cm'? '${Month().currentMonth} ${DateTime.now().year}':
                                           dateR == 'pa'?'${Month().getMonth(reportDate.month)} ${reportDate.year.toString()}':
                                             dateR == 'ya'?'${Month().getMonth(reportDate.month)} ${reportDate.year} till date':reportPeriod,
                                         incomes: incomes,
@@ -1103,8 +1104,8 @@ class _AccountabilityState extends State<Accountability> {
                                     },
                                   ),
 
-                                 PopupMenuItem(
-                                    child: Text('To PDF'),
+                                 const PopupMenuItem(
+                                    child: Text('To CSV'),
                                   ),
 
 
