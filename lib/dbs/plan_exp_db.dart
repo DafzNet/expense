@@ -8,6 +8,7 @@ import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_io.dart';
 
 import '../models/plan_exp.dart';
+import '../models/version.dart';
 
 
 class PlannerExpDb{
@@ -32,6 +33,7 @@ class PlannerExpDb{
     var db = await factory.openDatabase(join(appDocumentDir.path, 'planner_exp.db'));
 
     await store.add(db, plan.toMap());
+    await updateDbVersion(plannerExpDbVersion: 1);
 
     await db.close();
   }
@@ -61,8 +63,9 @@ class PlannerExpDb{
     var db = await factory.openDatabase(join(appDocumentDir.path, 'planner_exp.db'));
 
     List<Map<String, dynamic>>? _plans = plans.map((e) => e.toMap()).toList();
-
     await store.addAll(db, _plans);
+
+    await updateDbVersion(plannerExpDbVersion: 1);
 
     await db.close();
   }
@@ -95,6 +98,7 @@ class PlannerExpDb{
     var db = await factory.openDatabase(join(appDocumentDir.path, 'planner_exp.db'));
 
     await store.update(db, plan.toMap(), finder: Finder(filter: Filter.equals('id', plan.id)));
+    await updateDbVersion(plannerExpDbVersion: 1);
     await db.close();
   }
 
@@ -108,6 +112,7 @@ class PlannerExpDb{
     var db = await factory.openDatabase(join(appDocumentDir.path, 'planner_exp.db' ));
 
     await store.delete(db, finder: Finder(filter: Filter.equals('id', plan.id)));
+    await updateDbVersion(plannerExpDbVersion: 1);
     await db.close();
   }
 

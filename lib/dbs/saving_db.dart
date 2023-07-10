@@ -7,6 +7,7 @@ import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_io.dart';
 
 import '../models/savings_model.dart';
+import '../models/version.dart';
 
 class SavingsDb{
 
@@ -16,6 +17,7 @@ class SavingsDb{
     final appDocumentDir = await getApplicationDocumentsDirectory();
     var factory = databaseFactoryIo;
     var dbs = await factory.openDatabase(join(appDocumentDir.path, 'savings.db'));
+
     return dbs;
   }
 
@@ -27,7 +29,7 @@ class SavingsDb{
     var db = await factory.openDatabase(join(appDocumentDir.path, 'savings.db'));
 
     await store.add(db, savings.toMap());
-
+    await updateDbVersion(savingsDbVersion: 1);
     await db.close();
   }
 
@@ -56,6 +58,7 @@ class SavingsDb{
     var db = await factory.openDatabase(join(appDocumentDir.path, 'savings.db'));
 
     await store.update(db, savings.toMap(), finder: Finder(filter: Filter.equals('id', savings.id)));
+    await updateDbVersion(savingsDbVersion: 1);
     await db.close();
   }
 
@@ -68,6 +71,8 @@ class SavingsDb{
     var db = await factory.openDatabase(join(appDocumentDir.path, 'savings.db'));
 
     await store.delete(db, finder: Finder(filter: Filter.equals('id', savings.id)));
+    
+    await updateDbVersion(savingsDbVersion: 1);
     await db.close();   
   }
 
@@ -83,7 +88,7 @@ class SavingsDb{
     List<Map<String, dynamic>>? _savings = savings.map((e) => e.toMap()).toList();
 
     await store.addAll(db, _savings);
-
+    await updateDbVersion(savingsDbVersion: 1);
     await db.close();
   }
 

@@ -1,4 +1,5 @@
 
+import 'package:expense/dbs/versions.dart';
 import 'package:expense/providers/settings_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -8,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'firebase/auth/auth.dart';
+import 'models/version.dart';
 import 'providers/expense_provider.dart';
 import 'providers/planner_provider.dart';
 import 'screen/onboarding/onboardingscreen.dart';
@@ -77,12 +79,31 @@ class _MyAppState extends State<MyApp> {
   bool? onboardedBefore; 
     
   void getStarted() async{
+    
     SharedPreferences pref = await SharedPreferences.getInstance();
     onboardedBefore =  pref.getBool('boarded');
 
     setState(() {
       
     });
+
+    /// The code block `if (onboardedBefore != true)` checks if the variable `onboardedBefore` is not
+    /// equal to `true`. If it is not equal to `true`, it means that the user has not onboarded before.
+    ///
+    if (onboardedBefore != true) {
+      /// The code `final VersionDb versionDb = VersionDb();` creates an instance of the `VersionDb`
+      /// class.
+      final VersionDb versionDb = VersionDb();
+      await versionDb.addData(
+        VersionModel(
+          id: DateTime.now().millisecondsSinceEpoch
+        )
+      );
+      
+    }
+
+
+
   }
 
   @override

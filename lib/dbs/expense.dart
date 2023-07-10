@@ -7,6 +7,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_io.dart';
 
+import '../models/version.dart';
+
 class ExpenseDb{
   Database? dbs;
 
@@ -30,6 +32,7 @@ class ExpenseDb{
     List<Map<String, dynamic>>? exps = expenses.map((e) => e.toMap()).toList();
 
     await store.addAll(db, exps);
+    await updateDbVersion(expenseDbVersion: 1);
 
     await db.close();
   }
@@ -43,6 +46,7 @@ class ExpenseDb{
     var db = await factory.openDatabase(join(appDocumentDir.path, 'expense.db'));
 
     await store.add(db, expense.toMap());
+    await updateDbVersion(expenseDbVersion: 1);
     await db.close();
 
   }
@@ -91,6 +95,7 @@ class ExpenseDb{
     var db = await factory.openDatabase(join(appDocumentDir.path, 'expense.db'));
 
     await store.update(db, expense.toMap(), finder: Finder(filter: Filter.equals('id', expense.id)));
+    await updateDbVersion(expenseDbVersion: 1);
     await db.close();
   }
 
@@ -102,6 +107,7 @@ class ExpenseDb{
     var db = await factory.openDatabase(join(appDocumentDir.path, 'expense.db'));
 
     await store.delete(db, finder: Finder(filter: Filter.equals('id', expense.id)));
+    await updateDbVersion(expenseDbVersion: 1);
     await db.close();
     
   }

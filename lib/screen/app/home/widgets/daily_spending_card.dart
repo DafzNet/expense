@@ -85,7 +85,7 @@ class _HomeSummaryState extends State<HomeSummary> {
     } else if(maxSpendingDayPercent > 50 && maxSpendingDayPercent <= 70) {
       _height = 2.2;
     }else{
-      _height = 1.8;
+      _height = 1.6;
     }
 
     setState(() {

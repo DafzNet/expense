@@ -7,6 +7,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_io.dart';
 
+import '../models/version.dart';
+
 
 class SettingsDb{
   Database? dbs;
@@ -28,6 +30,7 @@ class SettingsDb{
     var db = await factory.openDatabase(join(appDocumentDir.path, 'setting.db'));
     await store.drop(db);
     await store.add(db, setting.toMap());
+    await updateDbVersion(settingsDbVersion: 1);
     await db.close();
   }
 
@@ -58,6 +61,7 @@ class SettingsDb{
     var db = await factory.openDatabase(join(appDocumentDir.path, 'setting.db'));
 
     await store.update(db, setting.toMap(), finder: Finder(filter: Filter.equals('id', setting.id)));
+    await updateDbVersion(settingsDbVersion: 1);
     //await db.close();
   }
 

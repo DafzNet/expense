@@ -8,6 +8,7 @@ import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_io.dart';
 
 import '../models/income_model.dart';
+import '../models/version.dart';
 import '../utils/month.dart';
 
 class IncomeDb{
@@ -30,6 +31,7 @@ class IncomeDb{
     var db = await factory.openDatabase(join(appDocumentDir.path, 'income.db'));
 
     await store.add(db, income.toMap());
+    await updateDbVersion(incomeDbVersion: 1);
 
     await db.close();
   }
@@ -60,6 +62,7 @@ class IncomeDb{
     var db = await factory.openDatabase(join(appDocumentDir.path, 'income.db'));
 
     await store.update(db, income.toMap(), finder: Finder(filter: Filter.equals('id', income.id)));
+    await updateDbVersion(incomeDbVersion: 1);
     await db.close();
   }
 
@@ -71,6 +74,7 @@ class IncomeDb{
     var db = await factory.openDatabase(join(appDocumentDir.path, 'income.db'));
 
     await store.delete(db, finder: Finder(filter: Filter.equals('id', income.id)));
+    await updateDbVersion(incomeDbVersion: 1);
     await db.close();
   }
 
@@ -85,6 +89,7 @@ class IncomeDb{
     List<Map<String, dynamic>>? _incomes = incomes.map((e) => e.toMap()).toList();
 
     await store.addAll(db, _incomes);
+    await updateDbVersion(incomeDbVersion: 1);
 
     await db.close();
   }
@@ -117,28 +122,6 @@ class IncomeDb{
     var db = await factory.openDatabase(join(appDocumentDir.path, 'income.db'));
     await store.drop(db);
   }
-  
-
-  // var IncomeTransformer = StreamTransformer<
-  //     List<RecordSnapshot<int, Map<String, Object?>>>,
-  //     List<IncomeModel>>.fromHandlers(handleData: (snapshotList, sink) {
-  //       List<IncomeModel> cats = snapshotList.map((e) => IncomeModel.fromMap(e.value as Map<String, dynamic>)).toList();
-  //   sink.add(cats);
-  // });
-
-  // var noteTransformer = StreamTransformer<
-  //     RecordSnapshot<int, Map<String, Object?>>?,
-  //     DbNote?>.fromHandlers(handleData: (snapshot, sink) {
-  //   sink.add(snapshot == null ? null : snapshotToNote(snapshot));
-  // });
-
-  /// Listen for changes on any note
-  // Stream<List<ExpenseModel>> onExpenses() {
-  //   return notesStore
-  //       .query(finder: Finder(sortOrders: [SortOrder('date', false)]))
-  //       .onSnapshots(db!)
-  //       .transform(notesTransformer);
-  // }
 
 
   Stream<List<IncomeModel>> onIncome(Database db){

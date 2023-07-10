@@ -8,6 +8,7 @@ import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_io.dart';
 
 import '../models/category_model.dart';
+import '../models/version.dart';
 
 class CategoryDb{
   Database? dbs;
@@ -31,6 +32,7 @@ class CategoryDb{
     var db = await factory.openDatabase(join(appDocumentDir.path, 'category.db'));
 
     await store.add(db, category.toMap());
+    await updateDbVersion(categoryDbVersion: 1);
 
     await db.close();
   }
@@ -65,6 +67,8 @@ class CategoryDb{
 
     await store.addAll(db, _cats);
 
+    await updateDbVersion(categoryDbVersion: 1);
+
     await db.close();
   }
 
@@ -95,6 +99,7 @@ class CategoryDb{
     var db = await factory.openDatabase(join(appDocumentDir.path, 'category.db'));
 
     await store.update(db, category.toMap(), finder: Finder(filter: Filter.equals('id', category.id)));
+    await updateDbVersion(categoryDbVersion: 1);
     await db.close();
   }
 
@@ -106,6 +111,7 @@ class CategoryDb{
     var db = await factory.openDatabase(join(appDocumentDir.path, 'category.db'));
 
     await store.delete(db, finder: Finder(filter: Filter.equals('id', category.id)));
+    await updateDbVersion(categoryDbVersion: 1);
     await db.close();
   }
 

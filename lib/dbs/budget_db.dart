@@ -8,13 +8,12 @@ import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_io.dart';
 
 import '../models/budget.dart';
+import '../models/version.dart';
 
 class BudgetDb{
   Database? dbs;
 
   BudgetDb();
-
-
 
   Future<Database?> openDb() async {
     final appDocumentDir = await getApplicationDocumentsDirectory();
@@ -31,6 +30,8 @@ class BudgetDb{
     var db = await factory.openDatabase(join(appDocumentDir.path, 'budget.db'));
 
     await store.add(db, budget.toMap());
+
+    await updateDbVersion(budgetDbVersion: 1);
 
     await db.close();
   }
@@ -62,6 +63,7 @@ class BudgetDb{
     List<Map<String, dynamic>>? _budgets = budgets.map((e) => e.toMap()).toList();
 
     await store.addAll(db, _budgets);
+    await updateDbVersion(budgetDbVersion: 1);
 
     await db.close();
   }
@@ -94,6 +96,7 @@ class BudgetDb{
     var db = await factory.openDatabase(join(appDocumentDir.path, 'budget.db'));
 
     await store.update(db, budget.toMap(), finder: Finder(filter: Filter.equals('id', budget.id)));
+    await updateDbVersion(budgetDbVersion: 1);
     await db.close();
   }
 
@@ -107,6 +110,7 @@ class BudgetDb{
     var db = await factory.openDatabase(join(appDocumentDir.path, 'budget.db'));
 
     await store.delete(db, finder: Finder(filter: Filter.equals('id', budget.id)));
+    await updateDbVersion(budgetDbVersion: 1);
     await db.close();
   }
 

@@ -9,14 +9,23 @@ class FirebaseBudgetDb{
 
   final CollectionReference budgetCollection = FirebaseFirestore.instance.collection('budget');
 
-  ///Takee a list of incomes and aadd them to firestore 
+  
+  /// The function `addBudgets` takes a list of `BudgetModel` objects and adds each budget to a database
+  /// asynchronously.
+  /// 
+  /// Args:
+  ///   budgets (List<BudgetModel>): A list of BudgetModel objects.
   Future addBudgets(List<BudgetModel> budgets)async{
     for (var budget in budgets){
       await addBudget(budget);
     }
   }
 
-  ///Takee an expense and aadd them to firestore 
+  
+  /// The function `addBudget` adds a budget to a Firestore collection.
+  /// 
+  /// Args:
+  ///   budget (BudgetModel): The budget object that you want to add to the database.
   Future addBudget(BudgetModel budget)async{
       await budgetCollection.doc(uid).collection(uid).doc(budget.id.toString()).set(budget.toMap()).onError((error, stackTrace) => null);
   }

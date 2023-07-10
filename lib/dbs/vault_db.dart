@@ -7,6 +7,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_io.dart';
 
+import '../models/version.dart';
+
 class VaultDb{
   Database? dbs;
 
@@ -27,7 +29,7 @@ class VaultDb{
     var db = await factory.openDatabase(join(appDocumentDir.path, 'vault.db'));
 
     await store.add(db, vault.toMap());
-
+    await updateDbVersion(vaultDbVersion: 1);
     await db.close();
   }
 
@@ -58,7 +60,7 @@ class VaultDb{
     List<Map<String, dynamic>>? _vaults = vaults.map((e) => e.toMap()).toList();
 
     await store.addAll(db, _vaults);
-
+    await updateDbVersion(vaultDbVersion: 1);
     await db.close();
   }
 
@@ -90,6 +92,7 @@ class VaultDb{
     var db = await factory.openDatabase(join(appDocumentDir.path, 'vault.db'));
 
     await store.update(db, vault.toMap(), finder: Finder(filter: Filter.equals('id', vault.id)));
+    await updateDbVersion(vaultDbVersion: 1);
     await db.close();
   }
 
@@ -103,6 +106,7 @@ class VaultDb{
     var db = await factory.openDatabase(join(appDocumentDir.path, 'vault.db'));
 
     await store.delete(db, finder: Finder(filter: Filter.equals('id', vault.id)));
+    await updateDbVersion(vaultDbVersion: 1);
     await db.close();
   }
 
