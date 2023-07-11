@@ -12,6 +12,7 @@ import 'package:expense/utils/constants/images.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:sembast/sembast.dart';
@@ -20,6 +21,7 @@ import '../../../dbs/income_db.dart';
 import '../../../dbs/saving_db.dart';
 import '../../../firebase/db/user.dart';
 import '../../../models/income_model.dart';
+import '../../../utils/adManager/ad_mob.dart';
 import '../../../utils/capitalize.dart';
 import '../../../utils/constants/colors.dart';
 import '../../../utils/month.dart';
@@ -47,8 +49,13 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
+///////Google ads
+ BannerAd? _bannerAd;
 
 
+////////////////////////////////////////////////////
+//////////////////////////////////////////////////
+/////////////////////////////////////////////////
   LightUser? _currentUser;
 
     void myUser(uid)async{
@@ -140,6 +147,24 @@ class _HomeScreenState extends State<HomeScreen> {
     getIncomesFinishing();
     getBudgetsFinishing();
     getSavingsFinishing();
+
+
+    BannerAd(
+    adUnitId: AdHelper.bannerAdUnitId,
+    request: AdRequest(),
+    size: AdSize.banner,
+    listener: BannerAdListener(
+      onAdLoaded: (ad) {
+        setState(() {
+          _bannerAd = ad as BannerAd;
+        });
+      },
+      onAdFailedToLoad: (ad, err) {
+        print('Failed to load a banner ad: ${err.message}');
+        ad.dispose();
+      },
+    ),
+  ).load();
 
     super.initState();
   }
@@ -375,6 +400,14 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
 
               const SizedBox(height: 15,),
+
+              if(_bannerAd != null)
+              ...[
+                SizedBox(
+                  height: 30,
+                  child: AdWidget(ad: _bannerAd!),
+                )
+              ],
 
 
               ListTile(

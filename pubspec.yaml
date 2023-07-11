@@ -38,6 +38,7 @@ dependencies:
   open_file: ^3.3.2
   dots_indicator: ^3.0.0
   flutter_native_splash: ^2.2.19
+  google_mobile_ads: ^3.0.0
 
 dev_dependencies:
   flutter_test:
