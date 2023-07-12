@@ -4,11 +4,13 @@
 import 'package:expense/screen/app/expense/expense.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import '../../utils/constants/colors.dart';
 import '../firebase/db/user.dart';
 import '../models/user_model.dart';
+import '../utils/adManager/ad_mob.dart';
 import 'app/home/home.dart';
 import 'app/more/more.dart';
 import 'app/saving/saving.dart';
@@ -63,10 +65,38 @@ class _AppBaseNavigationState extends State<AppBaseNavigation> {
     }
 
 
+
+    List<BannerAd> _bannerAd = [];
+
+
+
     @override
   void initState() {
     myUser(widget.user.uid);
     _currentPage = HomeScreen(user: widget.user);
+
+
+    BannerAd(
+    adUnitId: AdHelper.bannerAdUnitId,
+    request: AdRequest(),
+    size: AdSize.banner,
+    listener: BannerAdListener(
+      onAdLoaded: (ad) {
+        setState(() {
+          for (var i = 0; i < 4; i++) {
+            _bannerAd.add(ad as BannerAd);
+          }
+        });
+      },
+      onAdFailedToLoad: (ad, err) {
+        print('Failed to load a banner ad: ${err.message}');
+        ad.dispose();
+      },
+    ),
+  ).load();
+
+
+
     super.initState();
   }
 
@@ -78,7 +108,19 @@ class _AppBaseNavigationState extends State<AppBaseNavigation> {
 
     return Scaffold(
 
-      body: _currentPage,
+      body: Column(
+        children: [
+          Expanded(child: _currentPage!),
+
+          if(_bannerAd.isNotEmpty)
+            ...[
+              SizedBox(
+                height: 50,
+                child: AdWidget(ad: _bannerAd[_currentIndex]),
+              )
+            ]
+        ],
+      ),
 
 
       bottomNavigationBar: BottomNavigationBar(
@@ -122,10 +164,7 @@ class _AppBaseNavigationState extends State<AppBaseNavigation> {
       
             label: 'Expense'
           ),
-      
-          
-      
-      
+            
           BottomNavigationBarItem(
             icon: Icon(
               MdiIcons.bullseye
@@ -137,7 +176,6 @@ class _AppBaseNavigationState extends State<AppBaseNavigation> {
             
             label: 'Savings'
           ),
-      
       
           /////Profile
           BottomNavigationBarItem(

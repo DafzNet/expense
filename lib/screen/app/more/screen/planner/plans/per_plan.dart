@@ -27,6 +27,10 @@ class PlannerDetail extends StatefulWidget {
 
 class _PlannerDetailState extends State<PlannerDetail> {
 
+  int? rankValue;
+  String rankText = 'Rank By';
+
+
   final plannerExpDb = PlannerExpDb();
   Database? db;
 
@@ -63,6 +67,44 @@ class _PlannerDetailState extends State<PlannerDetail> {
             
             title: Text(widget.plannerModel.name!),
             actions: [
+              DropdownButton(
+                hint: Text(
+                  rankText,
+
+                  style: const TextStyle(
+                        fontSize: 12
+                      ),
+                ),
+                items: [
+                  DropdownMenuItem(
+                    value: 'Weighted Averages',
+                    child: Text(
+                      'Weighted Average',
+
+                      style: TextStyle(
+                        fontSize: 12
+                      ),
+                    )
+                  ),
+
+                  DropdownMenuItem(
+                    value: 'Marginal Utility',
+                    child: Text(
+                      'Marginal Utility',
+
+                      style: TextStyle(
+                        fontSize: 12
+                      ),
+                    )
+                  ),
+                ], 
+                onChanged: (n){
+                  rankText = n!;
+                  setState(() {
+                    
+                  });
+                }),
+
               IconButton(
                 onPressed: ()async{
                   await showModalBottomSheet(
@@ -191,40 +233,46 @@ class _PlannerDetailState extends State<PlannerDetail> {
         ],
       body: db != null ? Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: StreamBuilder<List<PlanExpModel>>(
-            initialData: const [],
-            stream: plannerExpDb.onPlanners(db!, plannerModel: widget.plannerModel),
-            builder: (context, snapshot){
-              if(snapshot.hasError){
-                return Column();
-              }
+          child: Column(
+            children: [
+              Expanded(
+                child: StreamBuilder<List<PlanExpModel>>(
+                  initialData: const [],
+                  stream: plannerExpDb.onPlanners(db!, plannerModel: widget.plannerModel),
+                  builder: (context, snapshot){
+                    if(snapshot.hasError){
+                      return Column();
+                    }
+                    
+                    final planners = snapshot.data;
+                    planners?.sort((a,b){
+                      return b.date!.compareTo(a.date!);
+                    });
               
-              final planners = snapshot.data;
-              planners?.sort((a,b){
-                return b.date!.compareTo(a.date!);
-              });
-
-              return planners!.isNotEmpty ?  ListView.builder(
-                itemCount: planners.length,
-
-                itemBuilder: (context, index){
-                  return PlanCard(
-                    index: index+1,
-                    plannerExp: planners[index],
-                    ctx: context
-                  );
-                }
-              )
-              :
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Center(
-                    child: Text('No items added to ${widget.plannerModel.name} yet'),
-                  )
-                ],
-              );
-            }
+                    return planners!.isNotEmpty ?  ListView.builder(
+                      itemCount: planners.length,
+              
+                      itemBuilder: (context, index){
+                        return PlanCard(
+                          index: index+1,
+                          plannerExp: planners[index],
+                          ctx: context
+                        );
+                      }
+                    )
+                    :
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Center(
+                          child: Text('No items added to ${widget.plannerModel.name} yet'),
+                        )
+                      ],
+                    );
+                  }
+                ),
+              ),
+            ],
           )
         ) 
         

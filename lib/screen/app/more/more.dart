@@ -19,6 +19,7 @@ import '../../../utils/capitalize.dart';
 import '../../../utils/constants/colors.dart';
 import '../../../utils/constants/images.dart';
 import 'screen/about/about.dart';
+import 'screen/backup/backup.dart';
 import 'screen/purchase.dart';
 import 'screen/setting/setting.dart';
 import 'screen/vaults/vault.dart';
@@ -377,7 +378,15 @@ class _MoreScreenState extends State<MoreScreen> {
                             const Divider(),
                       
                             TextButton(
-                              onPressed: (){},
+                              onPressed: (){
+                                Navigator.push(
+                                  context,
+                                  PageTransition(
+                                    child: const Backup(), //PieChartSample2(), //
+                                    type: PageTransitionType.fade
+                                  )
+                                );
+                              },
                               style: TextButton.styleFrom(
                                 shape: const RoundedRectangleBorder(),
                                 padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5)

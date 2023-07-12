@@ -404,7 +404,7 @@ class _HomeScreenState extends State<HomeScreen> {
               if(_bannerAd != null)
               ...[
                 SizedBox(
-                  height: 30,
+                  height: 50,
                   child: AdWidget(ad: _bannerAd!),
                 )
               ],

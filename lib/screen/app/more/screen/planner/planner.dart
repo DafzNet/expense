@@ -363,7 +363,7 @@ class _BudgetPlannerState extends State<BudgetPlanner> {
 
                                     await plannerDb.addData(planner);
 
-                                    Navigator.pop(context);
+                                    Navigator.pop(ctx);
 
                                     }
 
