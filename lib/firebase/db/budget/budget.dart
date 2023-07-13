@@ -27,7 +27,12 @@ class FirebaseBudgetDb{
   /// Args:
   ///   budget (BudgetModel): The budget object that you want to add to the database.
   Future addBudget(BudgetModel budget)async{
-      await budgetCollection.doc(uid).collection(uid).doc(budget.id.toString()).set(budget.toMap()).onError((error, stackTrace) => null);
+      await budgetCollection.doc(uid).collection(uid).doc(budget.id.toString())
+        .get().then((value)async{
+          if (!value.exists){
+            await budgetCollection.doc(uid).collection(uid).doc(budget.id.toString()).set(budget.toMap()).onError((error, stackTrace) => null);
+          }
+        });
   }
 
 

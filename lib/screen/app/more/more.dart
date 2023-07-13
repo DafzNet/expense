@@ -382,7 +382,9 @@ class _MoreScreenState extends State<MoreScreen> {
                                 Navigator.push(
                                   context,
                                   PageTransition(
-                                    child: const Backup(), //PieChartSample2(), //
+                                    child: Backup(
+                                      user: widget.user,
+                                    ), //PieChartSample2(), //
                                     type: PageTransitionType.fade
                                   )
                                 );

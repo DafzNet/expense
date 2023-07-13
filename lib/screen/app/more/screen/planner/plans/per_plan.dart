@@ -75,7 +75,7 @@ class _PlannerDetailState extends State<PlannerDetail> {
                         fontSize: 12
                       ),
                 ),
-                items: [
+                items: const [
                   DropdownMenuItem(
                     value: 'Weighted Averages',
                     child: Text(

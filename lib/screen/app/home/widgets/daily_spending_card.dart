@@ -1,5 +1,6 @@
 
 
+import 'package:expense/dbs/versions.dart';
 import 'package:expense/models/income_model.dart';
 import 'package:expense/utils/constants/colors.dart';
 import 'package:expense/utils/currency/currency.dart';
@@ -9,6 +10,7 @@ import 'package:intl/intl.dart';
 import '../../../../dbs/expense.dart';
 import '../../../../dbs/income_db.dart';
 import '../../../../models/expense_model.dart';
+import '../../../../models/version.dart';
 
 class HomeSummary extends StatefulWidget {
   
@@ -117,9 +119,6 @@ class _HomeSummaryState extends State<HomeSummary> {
     getAllTimeIncomes();
     super.initState();
   }
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -366,27 +365,37 @@ class _HomeSummaryState extends State<HomeSummary> {
                   borderRadius: BorderRadius.circular(8)
                 ),
                 child: Center(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                         'Balance:',
-
-                         style: TextStyle(
-                          color: Color.fromARGB(255, 194, 249, 148),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 8
-                         ),
-                      ),
-                      Text(
-                         Currency(context).wrapCurrencySymbol((incomeTotal-totalExpAllTime).toString()),
-
-                         style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold
-                         ),
-                      ),
-                    ],
+                  child: GestureDetector(
+                    onTap: ()async{
+                      final versionDb = VersionDb();
+                      await versionDb.addData(
+                        VersionModel(
+                          id: DateTime.now().millisecondsSinceEpoch
+                        )
+                      );
+                    },
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                           'Balance:',
+                  
+                           style: TextStyle(
+                            color: Color.fromARGB(255, 194, 249, 148),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 8
+                           ),
+                        ),
+                        Text(
+                           Currency(context).wrapCurrencySymbol((incomeTotal-totalExpAllTime).toString()),
+                  
+                           style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold
+                           ),
+                        ),
+                      ],
+                    ),
                   ),
                 )
               ),

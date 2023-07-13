@@ -28,7 +28,7 @@ class VersionDb{
 
 
   ///returns a list of all stored budgets
-  Future<List<VersionModel>> retrieveData()async{
+  Future<VersionModel> retrieveData()async{
     final appDocumentDir = await getApplicationDocumentsDirectory();
     var store = intMapStoreFactory.store();
     var factory = databaseFactoryIo;
@@ -39,7 +39,7 @@ class VersionDb{
      var data = await store.records(keys).get(db);
      await db.close();
 
-     return data.map((e) => VersionModel.fromMap(e as Map<String, dynamic>)).toList();
+     return data.map((e) => VersionModel.fromMap(e as Map<String, dynamic>)).toList().first;
   }
 
 

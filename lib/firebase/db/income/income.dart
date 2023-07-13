@@ -19,7 +19,12 @@ class FirebaseIncomeDb{
 
   ///Takee an expense and aadd them to firestore 
   Future addIncome(IncomeModel income)async{
-      await incomeCollection.doc(uid).collection(uid).doc(income.id.toString()).set(income.toMap()).onError((error, stackTrace) => null);
+      await incomeCollection.doc(uid).collection(uid).doc(income.id.toString())
+        .get().then((value)async{
+          if (!value.exists){
+            await incomeCollection.doc(uid).collection(uid).doc(income.id.toString()).set(income.toMap()).onError((error, stackTrace) => null);
+          }
+        });
   }
 
 

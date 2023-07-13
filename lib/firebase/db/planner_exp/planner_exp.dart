@@ -20,7 +20,12 @@ class FirebasePlannerExpDb{
 
   ///Takee an expense and aadd them to firestore 
   Future addPlannerExp(PlanExpModel plan)async{
-      await plannerExpCollection.doc(uid).collection(uid).doc(plan.id.toString()).set(plan.toMap()).onError((error, stackTrace) => null);
+      await plannerExpCollection.doc(uid).collection(uid).doc(plan.id.toString())
+        .get().then((value)async{
+          if (!value.exists){
+            await plannerExpCollection.doc(uid).collection(uid).doc(plan.id.toString()).set(plan.toMap()).onError((error, stackTrace) => null);
+          }
+        });
   }
 
 

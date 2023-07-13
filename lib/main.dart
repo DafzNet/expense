@@ -1,4 +1,6 @@
 
+// ignore_for_file: unnecessary_null_comparison
+
 import 'package:expense/dbs/versions.dart';
 import 'package:expense/providers/settings_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -81,6 +83,8 @@ class _MyAppState extends State<MyApp> {
   bool? onboardedBefore; 
     
   void getStarted() async{
+
+    final VersionDb versionDb = VersionDb();
     
     SharedPreferences pref = await SharedPreferences.getInstance();
     onboardedBefore =  pref.getBool('boarded');
@@ -95,7 +99,6 @@ class _MyAppState extends State<MyApp> {
     if (onboardedBefore != true) {
       /// The code `final VersionDb versionDb = VersionDb();` creates an instance of the `VersionDb`
       /// class.
-      final VersionDb versionDb = VersionDb();
       await versionDb.addData(
         VersionModel(
           id: DateTime.now().millisecondsSinceEpoch

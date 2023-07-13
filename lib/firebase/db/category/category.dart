@@ -19,7 +19,12 @@ class FirebaseCategoryDb{
 
   ///Takee an expense and aadd them to firestore 
   Future addcategory(CategoryModel category)async{
-      await categoryCollection.doc(uid).collection(uid).doc(category.id.toString()).set(category.toMap()).onError((error, stackTrace) => null);
+      await categoryCollection.doc(uid).collection(uid).doc(category.id.toString())
+        .get().then((value)async{
+          if (!value.exists){
+            await categoryCollection.doc(uid).collection(uid).doc(category.id.toString()).set(category.toMap()).onError((error, stackTrace) => null);
+          }
+        });
   }
 
 

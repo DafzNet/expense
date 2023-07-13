@@ -33,7 +33,7 @@ class VersionModel {
 
 
   VersionModel copyWith({
-    dynamic? id,
+    dynamic id,
     int? expenseDbVersion,
     int? incomeDbVersion,
     int? budgetDbVersion,
@@ -147,7 +147,7 @@ Future updateDbVersion(
 
   final VersionDb versionDb = VersionDb();
   final existing = await versionDb.retrieveData();
-  VersionModel currentVersion = existing.first;
+  VersionModel? currentVersion = existing;
 
   VersionModel? updatedVersion;
 

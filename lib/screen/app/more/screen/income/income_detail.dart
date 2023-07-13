@@ -60,7 +60,7 @@ class _IncomeDetailScreenState extends State<IncomeDetailScreen> {
                       )
                     );
                   }, 
-                  icon: Icon(
+                  icon: const Icon(
                     MdiIcons.share,
                     size: 28,
                   )

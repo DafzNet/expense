@@ -18,7 +18,14 @@ class FirebaseVaultDb{
 
   ///Takee an expense and aadd them to firestore 
   Future addVault(VaultModel vault)async{
-      await vaultCollection.doc(uid).collection(uid).doc(vault.id.toString()).set(vault.toMap()).onError((error, stackTrace) => null);
+      await vaultCollection.doc(uid).collection(uid).doc(vault.id.toString())
+        .get().then((value)async{
+          if (!value.exists){
+            await vaultCollection.doc(uid).collection(uid).doc(vault.id.toString())
+              .set(vault.toMap()).onError((error, stackTrace) => null);
+          }
+        });
+    
   }
 
 

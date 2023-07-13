@@ -151,7 +151,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     BannerAd(
     adUnitId: AdHelper.bannerAdUnitId,
-    request: AdRequest(),
+    request: const AdRequest(),
     size: AdSize.banner,
     listener: BannerAdListener(
       onAdLoaded: (ad) {
@@ -160,7 +160,6 @@ class _HomeScreenState extends State<HomeScreen> {
         });
       },
       onAdFailedToLoad: (ad, err) {
-        print('Failed to load a banner ad: ${err.message}');
         ad.dispose();
       },
     ),

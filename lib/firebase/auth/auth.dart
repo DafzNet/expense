@@ -1,8 +1,10 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
+import 'package:expense/firebase/db/vesion/version.dart';
 import 'package:expense/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../../models/version.dart';
 import '../db/user.dart';
 
 class FireAuth{
@@ -21,6 +23,13 @@ class FireAuth{
 
     ///Create user on firestore
     FirebaseUserDb userDb = FirebaseUserDb(uid: newUser.uid);
+    
+    //Create user remote db versions
+    await FirebaseVersionDb(uid: newUser.uid).createVersion(
+      VersionModel(
+          id: DateTime.now().millisecondsSinceEpoch
+        )
+    );
 
     LightUser lightUser = LightUser(
       id: newUser.uid, 

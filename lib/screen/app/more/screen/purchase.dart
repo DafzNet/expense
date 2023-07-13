@@ -28,7 +28,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
               statusBarIconBrightness: Brightness.dark
             ),
             
-            title: Text('Subscribe'),
+            title: const Text('Subscribe'),
         
           ),
         ], 

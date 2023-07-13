@@ -20,7 +20,12 @@ class FirebaseSavingsDb{
 
   ///Takee an expense and aadd them to firestore 
   Future addSaving(TargetSavingModel saving)async{
-      await savingsCollection.doc(uid).collection(uid).doc(saving.id.toString()).set(saving.toMap()).onError((error, stackTrace) => null);
+      await savingsCollection.doc(uid).collection(uid).doc(saving.id.toString())
+        .get().then((value)async{
+          if (!value.exists){
+             await savingsCollection.doc(uid).collection(uid).doc(saving.id.toString()).set(saving.toMap()).onError((error, stackTrace) => null);
+          }
+        });
   }
 
 

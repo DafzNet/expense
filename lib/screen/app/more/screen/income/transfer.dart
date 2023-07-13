@@ -47,7 +47,7 @@ class _IncomeTransferState extends State<IncomeTransfer> {
               statusBarIconBrightness: Brightness.dark
             ),
             
-            title: Text('Withdrawal'),
+            title: const Text('Withdrawal'),
         
           ),
         ],
@@ -114,7 +114,7 @@ class _IncomeTransferState extends State<IncomeTransfer> {
 
               const SizedBox(height: 55,),
 
-              DefaultButton()
+              const DefaultButton()
             ],
           ),
         )

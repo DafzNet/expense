@@ -20,7 +20,12 @@ class FirebasePlannerDb{
 
   ///Takee an expense and aadd them to firestore 
   Future addPlanner(PlannerModel planner)async{
-      await plannerCollection.doc(uid).collection(uid).doc(planner.id.toString()).set(planner.toMap()).onError((error, stackTrace) => null);
+      await plannerCollection.doc(uid).collection(uid).doc(planner.id.toString())
+        .get().then((value)async{
+          if (!value.exists){
+             await plannerCollection.doc(uid).collection(uid).doc(planner.id.toString()).set(planner.toMap()).onError((error, stackTrace) => null);
+          }
+        });
   }
 
 

@@ -1,5 +1,5 @@
 
-// ignore_for_file: prefer_const_constructors, no_leading_underscores_for_local_identifiers
+// ignore_for_file: prefer_const_constructors, no_leading_underscores_for_local_identifiers, prefer_final_fields
 
 import 'package:expense/screen/app/expense/expense.dart';
 import 'package:firebase_auth/firebase_auth.dart';

@@ -20,7 +20,12 @@ class FirebaseExpenseDb{
   ///Takee an expense and aadd them to firestore 
   Future<ExpenseModel> addExpense(ExpenseModel expense)async{
     final CollectionReference expenseCollection = fsExpenseDb.collection('expense');
-      await expenseCollection.doc(uid).collection(uid).doc(expense.id.toString()).set(expense.toMap()).onError((error, stackTrace) => null);
+      await expenseCollection.doc(uid).collection(uid).doc(expense.id.toString())
+        .get().then((value)async{
+          if (!value.exists){
+            await expenseCollection.doc(uid).collection(uid).doc(expense.id.toString()).set(expense.toMap()).onError((error, stackTrace) => null);
+          }
+        });
       return expense;
   }
 
