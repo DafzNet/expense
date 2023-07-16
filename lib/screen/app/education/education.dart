@@ -32,6 +32,17 @@ class _FexpertsState extends State<Fexperts> {
 
           title: Text('Fexperts'),
 
+          actions: [
+            IconButton(
+              onPressed: (){
+                
+              }, 
+              icon: Icon(
+                Icons.search
+              )
+            )
+          ],
+
           bottom:  TabBar(
             padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
             indicatorSize: TabBarIndicatorSize.tab,
