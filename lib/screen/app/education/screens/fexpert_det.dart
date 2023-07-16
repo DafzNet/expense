@@ -38,25 +38,8 @@ class _FexpertDetailScreenState extends State<FexpertDetailScreen> {
               if(widget.fexpert.image != null)...
                 [
                   Hero(
-                  tag: widget.fexpert.id, 
+                  tag: '${widget.fexpert.id}img',
                   child: Image.asset(widget.fexpert.image!) 
-                  ),
-                ]else...[
-                  Hero(
-                  tag: widget.fexpert.id, 
-                  child: Center(
-                    child: SizedBox(
-                      height: MediaQuery.of(context).size.width-20,
-                      width: MediaQuery.of(context).size.width-20,
-                      child: Expanded(
-                        child: Icon(
-                          MdiIcons.imageAlbum,
-                          color: appSuccess,
-                          size: MediaQuery.of(context).size.width-20,
-                        ),
-                      ),
-                    ),
-                  ) 
                   ),
                 ],
 

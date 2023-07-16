@@ -160,7 +160,11 @@ class FexpertCard extends StatelessWidget {
 
                       if(fexpert.image != null)...
                        [
-                        
+                          Hero(
+                          tag: '${fexpert.id}img', 
+                          child: Image.asset(fexpert.image!) 
+                          ),
+                
                        ]
 
 
