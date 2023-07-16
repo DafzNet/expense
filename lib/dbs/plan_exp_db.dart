@@ -62,12 +62,34 @@ class PlannerExpDb{
 
     var db = await factory.openDatabase(join(appDocumentDir.path, 'planner_exp.db'));
 
-    List<Map<String, dynamic>>? _plans = plans.map((e) => e.toMap()).toList();
+    List<Map<String, dynamic>>? _plans = [];
+
+    for (var plan in plans) {
+      bool existing =await exists(plan: plan);
+      if (!existing) {
+        _plans.add(plan.toMap());
+      }
+    }
+
     await store.addAll(db, _plans);
 
-    await updateDbVersion(plannerExpDbVersion: 1);
-
     await db.close();
+  }
+
+
+
+  Future<bool> exists({PlanExpModel? plan})async{
+
+    final appDocumentDir = await getApplicationDocumentsDirectory();
+    var store = intMapStoreFactory.store();
+    var factory = databaseFactoryIo;
+
+    var db = await factory.openDatabase(join(appDocumentDir.path, 'planner_exp.db'));
+
+    var key = await store.findKey(db, finder: Finder(
+      filter: Filter.equals('id', plan?.id)
+    ));
+    return key != null ? true : false;
   }
 
 

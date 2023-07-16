@@ -11,6 +11,7 @@ import '../../utils/constants/colors.dart';
 import '../firebase/db/user.dart';
 import '../models/user_model.dart';
 import '../utils/adManager/ad_mob.dart';
+import 'app/education/education.dart';
 import 'app/home/home.dart';
 import 'app/more/more.dart';
 import 'app/saving/saving.dart';
@@ -50,6 +51,9 @@ class _AppBaseNavigationState extends State<AppBaseNavigation> {
       ),
       ExpenseScreen(),
       SavingsScreen(),
+      Fexperts(
+        user: _currentUser!,
+      ),
       MoreScreen(
         user: _currentUser!,
       ),
@@ -89,7 +93,6 @@ class _AppBaseNavigationState extends State<AppBaseNavigation> {
         });
       },
       onAdFailedToLoad: (ad, err) {
-        print('Failed to load a banner ad: ${err.message}');
         ad.dispose();
       },
     ),
@@ -176,6 +179,21 @@ class _AppBaseNavigationState extends State<AppBaseNavigation> {
             
             label: 'Savings'
           ),
+
+
+
+          BottomNavigationBarItem(
+            icon: Icon(
+              MdiIcons.schoolOutline
+            ),
+      
+            activeIcon:  Icon(
+              MdiIcons.school
+            ),
+            
+            label: 'Savings'
+          ),
+      
       
           /////Profile
           BottomNavigationBarItem(

@@ -57,11 +57,32 @@ class VaultDb{
 
     var db = await factory.openDatabase(join(appDocumentDir.path, 'vault.db'));
 
-    List<Map<String, dynamic>>? _vaults = vaults.map((e) => e.toMap()).toList();
+    List<Map<String, dynamic>>? _vaults = [];
+
+    for (var vault in vaults) {
+      bool existing =await exists(vault: vault);
+      if (!existing) {
+        _vaults.add(vault.toMap());
+      }
+    }
 
     await store.addAll(db, _vaults);
-    await updateDbVersion(vaultDbVersion: 1);
     await db.close();
+  }
+
+
+  Future<bool> exists({VaultModel? vault})async{
+
+    final appDocumentDir = await getApplicationDocumentsDirectory();
+    var store = intMapStoreFactory.store();
+    var factory = databaseFactoryIo;
+
+    var db = await factory.openDatabase(join(appDocumentDir.path, 'vault.db'));
+
+    var key = await store.findKey(db, finder: Finder(
+      filter: Filter.equals('id', vault?.id)
+    ));
+    return key != null ? true : false;
   }
 
 

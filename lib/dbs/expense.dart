@@ -29,10 +29,17 @@ class ExpenseDb{
 
     var db = await factory.openDatabase(join(appDocumentDir.path, 'expense.db'));
 
-    List<Map<String, dynamic>>? exps = expenses.map((e) => e.toMap()).toList();
+    List<Map<String, dynamic>>? exps = [];
+
+    for (var expense in expenses) {
+      bool existing =await exists(expense: expense);
+      if (!existing) {
+        exps.add(expense.toMap());
+      }
+    }
+
 
     await store.addAll(db, exps);
-    await updateDbVersion(expenseDbVersion: 1);
 
     await db.close();
   }
@@ -66,6 +73,21 @@ class ExpenseDb{
     await db.close();
 
     return data.map((e) => ExpenseModel.fromMap(e as Map<String, dynamic>)).toList();
+  }
+
+
+  Future<bool> exists({ExpenseModel? expense})async{
+
+    final appDocumentDir = await getApplicationDocumentsDirectory();
+    var store = intMapStoreFactory.store();
+    var factory = databaseFactoryIo;
+
+    var db = await factory.openDatabase(join(appDocumentDir.path, 'expense.db'));
+
+    var key = await store.findKey(db, finder: Finder(
+      filter: Filter.equals('id', expense?.id)
+    ));
+    return key != null ? true : false;
   }
 
 

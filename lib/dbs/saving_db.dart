@@ -78,18 +78,39 @@ class SavingsDb{
 
 
 
-  Future addIncomes(List<TargetSavingModel> savings)async{
+  Future addSavings(List<TargetSavingModel> savings)async{
     final appDocumentDir = await getApplicationDocumentsDirectory();
     var store = intMapStoreFactory.store();
     var factory = databaseFactoryIo;
 
     var db = await factory.openDatabase(join(appDocumentDir.path, 'savings.db'));
 
-    List<Map<String, dynamic>>? _savings = savings.map((e) => e.toMap()).toList();
+    List<Map<String, dynamic>>? _savings = [];
+
+    for (var saving in savings) {
+      bool existing =await exists(saving: saving);
+      if (!existing) {
+        _savings.add(saving.toMap());
+      }
+    }
 
     await store.addAll(db, _savings);
-    await updateDbVersion(savingsDbVersion: 1);
     await db.close();
+  }
+
+
+  Future<bool> exists({TargetSavingModel? saving})async{
+
+    final appDocumentDir = await getApplicationDocumentsDirectory();
+    var store = intMapStoreFactory.store();
+    var factory = databaseFactoryIo;
+
+    var db = await factory.openDatabase(join(appDocumentDir.path, 'savings.db'));
+
+    var key = await store.findKey(db, finder: Finder(
+      filter: Filter.equals('id', saving?.id)
+    ));
+    return key != null ? true : false;
   }
 
 

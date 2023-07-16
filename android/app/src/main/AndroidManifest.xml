@@ -1,5 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.light.cashflowpad">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
    <application
         android:label="LiFi"
         android:name="${applicationName}"

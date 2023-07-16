@@ -2,6 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../../models/savings_model.dart';
+import '../../../models/version.dart';
 
 
 class FirebaseSavingsDb{
@@ -26,6 +27,7 @@ class FirebaseSavingsDb{
              await savingsCollection.doc(uid).collection(uid).doc(saving.id.toString()).set(saving.toMap()).onError((error, stackTrace) => null);
           }
         });
+        await updateFirebaseDbVersion(uid, savingsDbVersion: 1);
   }
 
 
@@ -46,5 +48,6 @@ class FirebaseSavingsDb{
 
   Future delete(TargetSavingModel saving)async{
     await savingsCollection.doc(uid).collection(uid).doc(saving.id.toString()).delete();
+    await updateFirebaseDbVersion(uid, savingsDbVersion: 1);
   }
 }

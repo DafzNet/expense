@@ -63,14 +63,36 @@ class CategoryDb{
 
     var db = await factory.openDatabase(join(appDocumentDir.path, 'category.db'));
 
-    List<Map<String, dynamic>>? _cats = categories.map((e) => e.toMap()).toList();
+    List<Map<String, dynamic>>? _cats = [];
+
+    for (var cat in categories) {
+      bool existing =await exists(cat: cat);
+      if (!existing) {
+        _cats.add(cat.toMap());
+      }
+    }
 
     await store.addAll(db, _cats);
 
-    await updateDbVersion(categoryDbVersion: 1);
 
     await db.close();
   }
+
+
+    Future<bool> exists({CategoryModel? cat})async{
+
+    final appDocumentDir = await getApplicationDocumentsDirectory();
+    var store = intMapStoreFactory.store();
+    var factory = databaseFactoryIo;
+
+    var db = await factory.openDatabase(join(appDocumentDir.path, 'category.db'));
+
+    var key = await store.findKey(db, finder: Finder(
+      filter: Filter.equals('id', cat?.id)
+    ));
+    return key != null ? true : false;
+  }
+
 
 
 

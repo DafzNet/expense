@@ -1,9 +1,11 @@
 
 
+import 'package:expense/providers/subscribe.dart';
 import 'package:expense/utils/constants/images.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../utils/constants/colors.dart';
 import '../../../../widgets/default_button.dart';
@@ -33,72 +35,130 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
           ),
         ], 
         
-        body: Padding(
+        body: Provider.of<SubscriptionProvider>(context).premiumUser?
+         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+
+              Center(
+                child: Image.asset(
+                  lifiIcon,
+              
+                  
+                ),
+              ),
+
               Text(
-                'Get full access to all features'
+                'You\'re Subscribed',
+
+                style: TextStyle(
+                  fontSize: 18,
+                  color: appSuccess
+                ),
               ),
 
               SizedBox(height: 30,),
 
-              PurchaseTile(
+              DefaultButton(
+                text: 'Unsubscribe',
+
+                onTap: () async{
+                  Provider.of<SubscriptionProvider>(context, listen: false).getSubscriptionStatus();
+                  setState(() {
+                    
+                  });
+                },
+              )
+
+
+            ]
+          )
+         )
+
+        :
+         Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Get full access to all features'
+              ),
+
+              const SizedBox(height: 30,),
+
+              const PurchaseTile(
                 title: 'Remove Ads',
                 icon: MdiIcons.advertisementsOff,
               ),
 
-              SizedBox(height: 15,),
+              const SizedBox(height: 15,),
 
-              PurchaseTile(
+              const PurchaseTile(
                 title: 'Unlimited Categories',
                 image: categoryIcon,
               ),
 
-              SizedBox(height: 15,),
+              const SizedBox(height: 15,),
 
-              PurchaseTile(
+              const PurchaseTile(
                 title: 'Unlimited Budgets',
                 image: budgetIcon,
               ),
 
-              SizedBox(height: 15,),
+              const SizedBox(height: 15,),
 
-              PurchaseTile(
-                title: 'Export your infornation (PDF, CSV)',
-                icon: MdiIcons.filePdfBox,
-              ),
-
-              SizedBox(height: 15,),
-
-              PurchaseTile(
-                title: 'Access to Full Reports',
-                image: reportIcon,
-              ),
-
-              SizedBox(height: 15,),
-
-              PurchaseTile(
+              const PurchaseTile(
                 title: 'Unlimited Planners',
                 icon: MdiIcons.menuOpen,
               ),
 
-              SizedBox(height: 15,),
+              const SizedBox(height: 15,),
 
-              PurchaseTile(
+              const PurchaseTile(
+                title: 'Export your infornation (PDF, CSV)',
+                icon: MdiIcons.filePdfBox,
+              ),
+
+              const SizedBox(height: 15,),
+
+              const PurchaseTile(
+                title: 'Access to Full Reports',
+                image: reportIcon,
+              ),
+
+              const SizedBox(height: 15,),
+
+              const PurchaseTile(
+                title: 'Multiple devices support',
+                icon: MdiIcons.menuOpen,
+              ),
+
+              
+
+              const SizedBox(height: 15,),
+
+              const PurchaseTile(
                 title: 'Backup and Restore',
                 icon: MdiIcons.backupRestore,
               ),
 
-              SizedBox(height: 65,),
-
+              const SizedBox(height: 35,),
 
               DefaultButton(
                 text: 'Subscribe',
-              )
 
+                onTap: () async{
+                  Provider.of<SubscriptionProvider>(context, listen: false).getSubscriptionStatus();
+                  setState(() {
+                    
+                  });
+                },
+              ),
 
+              const SizedBox(height: 35,),
 
 
               

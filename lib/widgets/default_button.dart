@@ -8,7 +8,7 @@ import '../../utils/constants/colors.dart';
 
 class DefaultButton extends StatelessWidget {
   final VoidCallback? onTap;
-  final IconData? icon;
+  final Widget? icon;
   final String text;
 
   final bool textOnly;
@@ -33,10 +33,7 @@ class DefaultButton extends StatelessWidget {
     return !textOnly ? TextButton.icon(
       onPressed: active?onTap??(){}:null, 
       
-      icon: Icon(
-        icon??MdiIcons.minus,
-        color: appOrange,
-        ),
+      icon: icon??Container(),
       
       
       label: Text(

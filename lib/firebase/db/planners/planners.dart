@@ -2,6 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../../models/plan_model.dart';
+import '../../../models/version.dart';
 
 
 class FirebasePlannerDb{
@@ -26,6 +27,7 @@ class FirebasePlannerDb{
              await plannerCollection.doc(uid).collection(uid).doc(planner.id.toString()).set(planner.toMap()).onError((error, stackTrace) => null);
           }
         });
+      await updateFirebaseDbVersion(uid, plannerDbVersion: 1);
   }
 
 
@@ -46,5 +48,6 @@ class FirebasePlannerDb{
 
   Future delete(PlannerModel planner)async{
     await plannerCollection.doc(uid).collection(uid).doc(planner.id.toString()).delete();
+    await updateFirebaseDbVersion(uid, plannerDbVersion: 1);
   }
 }

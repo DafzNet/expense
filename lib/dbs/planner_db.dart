@@ -58,15 +58,34 @@ class PlannerDb{
 
     var db = await factory.openDatabase(join(appDocumentDir.path, 'planner.db'));
 
-    List<Map<String, dynamic>>? _planners = planners.map((e) => e.toMap()).toList();
+    List<Map<String, dynamic>>? _planners = [];
+
+    for (var planner in planners) {
+      bool existing =await exists(planner: planner);
+      if (!existing) {
+        _planners.add(planner.toMap());
+      }
+    }
 
     await store.addAll(db, _planners);
-    await updateDbVersion(plannerDbVersion: 1);
 
     await db.close();
   }
 
 
+  Future<bool> exists({PlannerModel? planner})async{
+
+    final appDocumentDir = await getApplicationDocumentsDirectory();
+    var store = intMapStoreFactory.store();
+    var factory = databaseFactoryIo;
+
+    var db = await factory.openDatabase(join(appDocumentDir.path, 'planner.db'));
+
+    var key = await store.findKey(db, finder: Finder(
+      filter: Filter.equals('id', planner?.id)
+    ));
+    return key != null ? true : false;
+  }
 
   Future<List<PlannerModel>> retrieveBasedOn(Filter filter)async{
     final appDocumentDir = await getApplicationDocumentsDirectory();

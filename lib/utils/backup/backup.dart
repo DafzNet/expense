@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'package:expense/dbs/budget_db.dart';
 import 'package:expense/dbs/category_db.dart';
 import 'package:expense/dbs/expense.dart';
@@ -212,10 +214,159 @@ class BackupAndSync{
       firebaseVersion = firebaseVersion.copyWith(
         plannerExpDbVersion: localVersion.plannerExpDbVersion
       );
+
+      await firebaseVersionDb.update(firebaseVersion);
     }
 
     return true;
     }
   
-  
+
+/////////////////////////////////////////////////////Sync
+  Future sync({bool force = false})async{
+
+    final firebaseVersionDb = FirebaseVersionDb(uid: uid);
+
+    ///////////////////////////////////////////////////////////////
+    ///All remote dbs
+    final fbexpenseDb = FirebaseExpenseDb(uid: uid);
+    final fbincomeDb = FirebaseIncomeDb(uid: uid);
+    final fbsavingsDb = FirebaseSavingsDb(uid: uid);
+    final fbbudgetDb = FirebaseBudgetDb(uid: uid);
+    final fbcategoryDb = FirebaseCategoryDb(uid: uid);
+    final fbvaultDb = FirebaseVaultDb(uid: uid);
+    final fbplannerDb = FirebasePlannerDb(uid: uid);
+    final fbplannerExpDb = FirebasePlannerExpDb(uid: uid);
+
+
+    await firebaseVersionDb.createVersion(
+       VersionModel(
+          id: DateTime.now().millisecondsSinceEpoch
+        )
+    );
+
+    VersionModel firebaseVersion = await firebaseVersionDb.getVersion;
+    VersionModel? localVersion = await versionDb.retrieveData();
+
+    //compare both version to know what to backup
+    
+    //compare expenses
+    //if local version is greater, then, check the exps not in remote version and add them
+      if (force || localVersion.expenseDbVersion < firebaseVersion.expenseDbVersion){
+        final expenses = await fbexpenseDb.getExpenses();
+
+      if (expenses.isNotEmpty) {
+        await expenseDb.addExpenses(expenses);
+      }
+
+      localVersion = localVersion.copyWith(
+        expenseDbVersion: firebaseVersion.expenseDbVersion
+      );
+    }
+
+    ////////////////////////////////////////////
+    ///backup income
+    if (force || localVersion.incomeDbVersion < firebaseVersion.incomeDbVersion){
+      final incomes = await fbincomeDb.getIncomes();
+      await incomeDb.addIncomes(incomes);
+
+      localVersion = localVersion.copyWith(
+        incomeDbVersion: firebaseVersion.incomeDbVersion
+      );
+    }
+
+    ////////////////////////////////////////////////////////////////
+    ///savings
+    if (force || localVersion.savingsDbVersion < firebaseVersion.savingsDbVersion){
+      final savings = await fbsavingsDb.getSavings();
+
+      if (savings.isNotEmpty) {
+        await savingsDb.addSavings(savings);
+      }
+
+      localVersion = localVersion.copyWith(
+        savingsDbVersion: firebaseVersion.savingsDbVersion
+      );
+    }
+
+    ///////////////////////////////////////////////////////////////////////
+    ///budgets
+    if (force || localVersion.budgetDbVersion < firebaseVersion.budgetDbVersion){
+        final budgets = await fbbudgetDb.getBudgets();
+
+      if (budgets.isNotEmpty) {
+        await budgetDb.addBudgets(budgets);
+      }
+
+      localVersion = localVersion.copyWith(
+        budgetDbVersion: firebaseVersion.budgetDbVersion
+      );
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////
+    ///Categories
+    if (force || localVersion.categoryDbVersion < firebaseVersion.categoryDbVersion){
+        final cats = await fbcategoryDb.getCategory();
+
+      if (cats.isNotEmpty) {
+        await categoryDb.addCategories(cats);
+      }
+
+      localVersion = localVersion.copyWith(
+        categoryDbVersion: firebaseVersion.categoryDbVersion
+      );
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////
+    ///Vaults
+    if (force || localVersion.vaultDbVersion < firebaseVersion.vaultDbVersion){
+        final vaults = await fbvaultDb.getVaults();
+
+      if (vaults.isNotEmpty) {
+        await vaultDb.addVaults(vaults);
+      }
+
+      localVersion = localVersion.copyWith(
+        vaultDbVersion: firebaseVersion.vaultDbVersion
+      );
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////
+    ///Planners
+    if (force || localVersion.plannerDbVersion < firebaseVersion.plannerDbVersion){
+        final planners = await fbplannerDb.getPlanners();
+
+      if (planners.isNotEmpty) {
+        await plannerDb.addPlanners(planners);
+      }
+
+      localVersion = localVersion.copyWith(
+        plannerDbVersion: firebaseVersion.plannerDbVersion
+      );
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////
+    ///planner Exps
+    if (force || localVersion.plannerExpDbVersion < firebaseVersion.plannerExpDbVersion){
+        final plansExps = await fbplannerExpDb.getPlannerExps();
+
+      if (plansExps.isNotEmpty) {
+        await plannerExpDb.addPlanExps(plansExps);
+      }
+
+      localVersion = localVersion.copyWith(
+        plannerExpDbVersion: firebaseVersion.plannerExpDbVersion
+      );
+
+      
+    }
+
+    await versionDb.addData(localVersion);
+
+    return true;
+    }
   }

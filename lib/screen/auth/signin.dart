@@ -1,15 +1,14 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:expense/models/expense_model.dart';
 import 'package:expense/screen/auth/signup.dart';
 import 'package:expense/screen/base_nav.dart';
 import 'package:expense/widgets/loading.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
-import '../../dbs/expense.dart';
+import '../../dbs/versions.dart';
 import '../../firebase/auth/auth.dart';
-import '../../firebase/db/expense/fs_expense.dart';
+import '../../models/version.dart';
 import '../../widgets/text_field.dart';
 
 
@@ -131,14 +130,14 @@ class _SignInScreenState extends State<SignInScreen> {
                                     password: passwordController.text, 
                                    );
 
-
-                                  final FirebaseExpenseDb fsExp = FirebaseExpenseDb(uid: user.uid);
-                                  final ExpenseDb expenseDb = ExpenseDb();
-
-
-                                  List<ExpenseModel> exps = await fsExp.getExpenses();
-
-                                  await expenseDb.addExpenses(exps);
+                                  //////////////////////
+                                  ///Create user local db versioning
+                                  ///first timers
+                                  await VersionDb().addData(
+                                    VersionModel(
+                                      id: DateTime.now().millisecondsSinceEpoch
+                                    )
+                                  );
 
                                   Navigator.pushReplacement(
                                     context,

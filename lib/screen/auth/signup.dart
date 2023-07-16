@@ -6,7 +6,9 @@ import 'package:expense/widgets/loading.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import '../../dbs/versions.dart';
 import '../../firebase/auth/auth.dart';
+import '../../models/version.dart';
 import '../../widgets/text_field.dart';
 
 
@@ -166,6 +168,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     email: emailController.text, 
                                     password: passwordController.text, 
                                     name: userNameController.text
+                                  );
+
+                                   //////////////////////
+                                  ///Create user local db versioning
+                                  ///first timers
+                                  await VersionDb().addData(
+                                    VersionModel(
+                                      id: DateTime.now().millisecondsSinceEpoch
+                                    )
                                   );
 
                                   Navigator.pushReplacement(

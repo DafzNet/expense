@@ -2,6 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../../models/plan_exp.dart';
+import '../../../models/version.dart';
 
 
 class FirebasePlannerExpDb{
@@ -26,6 +27,7 @@ class FirebasePlannerExpDb{
             await plannerExpCollection.doc(uid).collection(uid).doc(plan.id.toString()).set(plan.toMap()).onError((error, stackTrace) => null);
           }
         });
+      await updateFirebaseDbVersion(uid, plannerExpDbVersion: 1);
   }
 
 
@@ -46,5 +48,6 @@ class FirebasePlannerExpDb{
 
   Future delete(PlanExpModel plan)async{
     await plannerExpCollection.doc(uid).collection(uid).doc(plan.id.toString()).delete();
+    await updateFirebaseDbVersion(uid, plannerExpDbVersion: 1);
   }
 }

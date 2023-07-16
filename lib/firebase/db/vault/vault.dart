@@ -2,6 +2,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expense/models/vault.dart';
 
+import '../../../models/version.dart';
+
 class FirebaseVaultDb{
   dynamic uid;
 
@@ -25,6 +27,7 @@ class FirebaseVaultDb{
               .set(vault.toMap()).onError((error, stackTrace) => null);
           }
         });
+      await updateFirebaseDbVersion(uid, vaultDbVersion: 1);
     
   }
 
@@ -46,5 +49,6 @@ class FirebaseVaultDb{
 
   Future delete(VaultModel vault)async{
     await vaultCollection.doc(uid).collection(uid).doc(vault.id.toString()).delete();
+    await updateFirebaseDbVersion(uid, vaultDbVersion: 1);
   }
 }

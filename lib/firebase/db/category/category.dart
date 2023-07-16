@@ -2,6 +2,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expense/models/category_model.dart';
 
+import '../../../models/version.dart';
+
 
 class FirebaseCategoryDb{
   dynamic uid;
@@ -25,6 +27,8 @@ class FirebaseCategoryDb{
             await categoryCollection.doc(uid).collection(uid).doc(category.id.toString()).set(category.toMap()).onError((error, stackTrace) => null);
           }
         });
+
+      await updateFirebaseDbVersion(uid, categoryDbVersion: 1);
   }
 
 
@@ -45,5 +49,6 @@ class FirebaseCategoryDb{
 
   Future delete(CategoryModel category)async{
     await categoryCollection.doc(uid).collection(uid).doc(category.id.toString()).delete();
+    await updateFirebaseDbVersion(uid, categoryDbVersion: 1);
   }
 }

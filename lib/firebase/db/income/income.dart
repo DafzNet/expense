@@ -2,6 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../../models/income_model.dart';
+import '../../../models/version.dart';
 
 class FirebaseIncomeDb{
   dynamic uid;
@@ -25,6 +26,7 @@ class FirebaseIncomeDb{
             await incomeCollection.doc(uid).collection(uid).doc(income.id.toString()).set(income.toMap()).onError((error, stackTrace) => null);
           }
         });
+        await updateFirebaseDbVersion(uid, incomeDbVersion: 1);
   }
 
 
@@ -45,5 +47,6 @@ class FirebaseIncomeDb{
 
   Future delete(IncomeModel income)async{
     await incomeCollection.doc(uid).collection(uid).doc(income.id.toString()).delete();
+    await updateFirebaseDbVersion(uid, incomeDbVersion: 1);
   }
 }

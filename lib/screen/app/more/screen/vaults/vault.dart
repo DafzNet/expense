@@ -73,7 +73,7 @@ class _VaultScreenState extends State<VaultScreen> {
         body: db != null ? Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
           child: StreamBuilder<List<VaultModel>>(
-            initialData: const[],
+            initialData: const [],
             stream: vaultDb.onVaults(db!),
             builder: (context, snapshot){
               if(snapshot.hasError){

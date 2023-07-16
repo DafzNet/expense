@@ -2,6 +2,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expense/models/budget.dart';
 
+import '../../../models/version.dart';
+
 class FirebaseBudgetDb{
   dynamic uid;
 
@@ -33,6 +35,7 @@ class FirebaseBudgetDb{
             await budgetCollection.doc(uid).collection(uid).doc(budget.id.toString()).set(budget.toMap()).onError((error, stackTrace) => null);
           }
         });
+      await updateFirebaseDbVersion(uid, budgetDbVersion: 1);
   }
 
 
@@ -53,5 +56,6 @@ class FirebaseBudgetDb{
 
   Future delete(BudgetModel budget)async{
     await budgetCollection.doc(uid).collection(uid).doc(budget.id.toString()).delete();
+    await updateFirebaseDbVersion(uid, budgetDbVersion: 1);
   }
 }

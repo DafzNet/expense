@@ -1,6 +1,14 @@
+import 'package:expense/dbs/budget_db.dart';
+import 'package:expense/dbs/category_db.dart';
+import 'package:expense/dbs/income_db.dart';
+import 'package:expense/dbs/plan_exp_db.dart';
+import 'package:expense/dbs/planner_db.dart';
+import 'package:expense/dbs/saving_db.dart';
+import 'package:expense/dbs/settings.dart';
+import 'package:expense/dbs/vault_db.dart';
+import 'package:expense/dbs/versions.dart';
 import 'package:expense/firebase/auth/auth.dart';
 import 'package:expense/firebase/db/expense/fs_expense.dart';
-import 'package:expense/models/expense_model.dart';
 import 'package:expense/screen/app/more/screen/accountability/accountability.dart';
 import 'package:expense/screen/app/more/screen/budget/budget.dart';
 import 'package:expense/screen/app/more/screen/category/category.dart';
@@ -561,13 +569,17 @@ class _MoreScreenState extends State<MoreScreen> {
                                     loading = true;
                                   });
 
-                                  List allexps = await expDB.retrieveData();
-                                  List<ExpenseModel> exps = allexps.map((e)=>ExpenseModel.fromMap(e)).toList();
+                                  await ExpenseDb().wipe();
+                                  await IncomeDb().wipe();
+                                  await BudgetDb().wipe();
+                                  await CategoryDb().wipe();
+                                  await VaultDb().wipe();
+                                  await PlannerDb().wipe();
+                                  await PlannerExpDb().wipe();
+                                  await SavingsDb().wipe();
+                                  await SettingsDb().wipe();
+                                  await VersionDb().wipe();
 
-                                  await expDB.wipe();
-
-                                  await fsExpDb!.addExpenses(exps);
-      
                                   await FireAuth().signout();
       
                                   setState(() {

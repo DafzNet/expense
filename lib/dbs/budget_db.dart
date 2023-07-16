@@ -60,12 +60,35 @@ class BudgetDb{
 
     var db = await factory.openDatabase(join(appDocumentDir.path, 'budget.db'));
 
-    List<Map<String, dynamic>>? _budgets = budgets.map((e) => e.toMap()).toList();
+    List<Map<String, dynamic>>? _budgets = [];
+
+    
+    for (var budget in budgets) {
+      bool existing =await exists(budget: budget);
+      if (!existing) {
+        _budgets.add(budget.toMap());
+      }
+    }
+
 
     await store.addAll(db, _budgets);
-    await updateDbVersion(budgetDbVersion: 1);
 
     await db.close();
+  }
+
+
+  Future<bool> exists({BudgetModel? budget})async{
+
+    final appDocumentDir = await getApplicationDocumentsDirectory();
+    var store = intMapStoreFactory.store();
+    var factory = databaseFactoryIo;
+
+    var db = await factory.openDatabase(join(appDocumentDir.path, 'budget.db'));
+
+    var key = await store.findKey(db, finder: Finder(
+      filter: Filter.equals('id', budget?.id)
+    ));
+    return key != null ? true : false;
   }
 
 

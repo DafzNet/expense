@@ -86,12 +86,33 @@ class IncomeDb{
 
     var db = await factory.openDatabase(join(appDocumentDir.path, 'income.db'));
 
-    List<Map<String, dynamic>>? _incomes = incomes.map((e) => e.toMap()).toList();
+    List<Map<String, dynamic>>? _incomes = [];
+
+    for (var income in incomes) {
+      bool existing =await exists(income: income);
+      if (!existing) {
+        _incomes.add(income.toMap());
+      }
+    }
 
     await store.addAll(db, _incomes);
-    await updateDbVersion(incomeDbVersion: 1);
 
     await db.close();
+  }
+
+
+  Future<bool> exists({IncomeModel? income})async{
+
+    final appDocumentDir = await getApplicationDocumentsDirectory();
+    var store = intMapStoreFactory.store();
+    var factory = databaseFactoryIo;
+
+    var db = await factory.openDatabase(join(appDocumentDir.path, 'income.db'));
+
+    var key = await store.findKey(db, finder: Finder(
+      filter: Filter.equals('id', income?.id)
+    ));
+    return key != null ? true : false;
   }
 
 

@@ -9,13 +9,6 @@ class FirebaseVersionDb{
 
   final CollectionReference versionCollection = FirebaseFirestore.instance.collection('db_version');
 
-  ///Takee a list of incomes and aadd them to firestore 
-  // Future createVersions(List<VaultModel> vaults)async{
-  //   for (var vault in vaults){
-  //     await addVault(vault);
-  //   }
-  // }
-
   ///Takee an expense and add them to firestore 
   Future createVersion(VersionModel version)async{
       await versionCollection
@@ -24,7 +17,8 @@ class FirebaseVersionDb{
           if (!versionDoc.exists) {
             await versionCollection.doc(uid).set(version.toMap()).onError((error, stackTrace) => null);
           }
-        }); 
+        }
+      ); 
   }
 
 
