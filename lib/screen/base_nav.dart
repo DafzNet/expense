@@ -68,11 +68,7 @@ class _AppBaseNavigationState extends State<AppBaseNavigation> {
 
     }
 
-
-
     List<BannerAd> _bannerAd = [];
-
-
 
     @override
   void initState() {
@@ -87,7 +83,7 @@ class _AppBaseNavigationState extends State<AppBaseNavigation> {
     listener: BannerAdListener(
       onAdLoaded: (ad) {
         setState(() {
-          for (var i = 0; i < 4; i++) {
+          for (var i = 0; i < 5; i++) {
             _bannerAd.add(ad as BannerAd);
           }
         });
