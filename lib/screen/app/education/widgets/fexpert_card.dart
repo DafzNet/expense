@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
 
+import '../../../../utils/constants/images.dart';
 import '../screens/fexpert_det.dart';
 
 class FexpertCard extends StatelessWidget {
@@ -32,7 +33,17 @@ class FexpertCard extends StatelessWidget {
                   height: 30,
                   width: 30,
 
-                  child: ClipOval(child: Container(color: appOrange,)),
+                  child: ClipOval(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        border: Border.all(
+                          width: 1,
+                          color: appOrange
+                        )
+                      ),
+                      child: Image.asset(lifiIcon),
+                    )),
                 ),
               ],
             ),

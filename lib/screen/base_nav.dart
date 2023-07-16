@@ -129,8 +129,8 @@ class _AppBaseNavigationState extends State<AppBaseNavigation> {
       bottomNavigationBar: BottomNavigationBar(
         unselectedItemColor: Color.fromARGB(197, 39, 39, 39),
         selectedItemColor: Colors.black,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
+        showSelectedLabels: true,
+        showUnselectedLabels: true,
         elevation: 0,
         type: BottomNavigationBarType.fixed,
 
@@ -191,7 +191,7 @@ class _AppBaseNavigationState extends State<AppBaseNavigation> {
               MdiIcons.school
             ),
             
-            label: 'Savings'
+            label: 'Fexperts'
           ),
       
       
@@ -214,7 +214,7 @@ class _AppBaseNavigationState extends State<AppBaseNavigation> {
               ),
             ),
 
-            label: 'Profile'
+            label: 'More'
           ),
       
       
