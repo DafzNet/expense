@@ -133,10 +133,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   const SnackBar(content: Text('Email cannot be empty'))
                                 );
                               }else if(
-                                userNameController.text.isEmpty
+                                userNameController.text.isEmpty || userNameController.text.trim().split(' ').length < 2
                               ){
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('Name cannot be empty'))
+                                  const SnackBar(content: Text('Full name required, separate names with space'))
                                 );
                               }else if(
                                 passwordController.text.isEmpty
@@ -163,16 +163,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   setState(() {
                                     
                                   });
+
+                                  try{
                 
                                   User user =await fireAuth.createUserWithEmail(
                                     email: emailController.text, 
                                     password: passwordController.text, 
                                     name: userNameController.text
                                   );
+                                  
+                                  
 
-                                   //////////////////////
-                                  ///Create user local db versioning
-                                  ///first timers
                                   await VersionDb().addData(
                                     VersionModel(
                                       id: DateTime.now().millisecondsSinceEpoch
@@ -185,6 +186,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                       child: AppBaseNavigation(user: user), 
                                       type: PageTransitionType.fade)
                                   );
+                                  
+                                  
+                                  }
+                                  catch(e){
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text('Something went wrong, check your email and try again'))
+                                );
+                                  }
+
+                                   //////////////////////
+                                  ///Create user local db versioning
+                                  ///first timers
+                                  
                                     
                   
                                     _loading = false;

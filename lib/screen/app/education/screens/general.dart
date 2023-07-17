@@ -4,6 +4,8 @@ import 'package:expense/models/user_model.dart';
 import 'package:expense/screen/app/education/widgets/fexpert_card.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../firebase/db/fexpert/fexpert.dart';
+
 class GeneralFexpert extends StatefulWidget {
 
   final LightUser user;
@@ -21,8 +23,13 @@ class _GeneralFexpertState extends State<GeneralFexpert> {
   FexpertDb fexpertDb = FexpertDb();
   List<FexpertModel> fexperts = [];
 
+  FirebaseFexpertDb firebaseFexpertDb = FirebaseFexpertDb();
+
   void gFexperts()async{
-    fexperts = await fexpertDb.retrieveData();
+    fexperts = await firebaseFexpertDb.fetch();
+    fexperts.addAll(
+      await fexpertDb.retrieveData()
+    );
 
     fexperts.sort(
       (a,b){

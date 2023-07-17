@@ -22,7 +22,7 @@ dependencies:
   page_transition: ^2.0.9
   percent_indicator: ^4.2.3
   sembast: ^3.4.4
-  image_picker: ^0.8.7+5
+  image_picker: ^1.0.1
   path: ^1.8.2
   path_provider: ^2.0.15
   intl: ^0.18.1
@@ -39,6 +39,12 @@ dependencies:
   dots_indicator: ^3.0.0
   flutter_native_splash: ^2.2.19
   google_mobile_ads: ^3.0.0
+  firebase_storage: ^11.2.5
+  cached_network_image: ^3.2.3
+  excel: ^2.1.0
+  share_plus: ^7.0.2
+  google_sign_in: ^6.1.4
+  image_cropper: ^4.0.1
 
 dev_dependencies:
   flutter_test:

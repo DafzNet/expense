@@ -1,9 +1,13 @@
+import 'dart:io';
+
+import 'package:expense/firebase/db/fexpert/fexpert.dart';
 import 'package:expense/models/fexpertmodel.dart';
 import 'package:expense/models/user_model.dart';
 import 'package:expense/utils/constants/colors.dart';
 import 'package:expense/widgets/default_button.dart';
 import 'package:expense/widgets/snack_bar.dart';
 import 'package:expense/widgets/text_field.dart';
+import 'package:expense/widgets/upload/selector.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -20,6 +24,15 @@ class AddFexpert extends StatefulWidget {
 }
 
 class _AddFexpertState extends State<AddFexpert> {
+
+
+  final imagePicker = ImagePickerCropper();
+  File? image;
+
+
+  FirebaseFexpertDb firebaseFexpertDb = FirebaseFexpertDb();
+
+
 
   final topicController = TextEditingController();
   final bodyController = TextEditingController();
@@ -39,7 +52,7 @@ class _AddFexpertState extends State<AddFexpert> {
     if (topicController.text.isNotEmpty && bodyController.text.isNotEmpty && selectTags.isNotEmpty) {
       FexpertDb fexpertDb = FexpertDb();
 
-      await fexpertDb.addData(
+      await firebaseFexpertDb.addFexpert(
         FexpertModel(
           id: DateTime.now().millisecondsSinceEpoch, 
           poster: widget.user, 
@@ -120,27 +133,39 @@ class _AddFexpertState extends State<AddFexpert> {
 
 
                 GestureDetector(
-                  onTap: () {
-                    
+                  onTap: () async{
+                    image = await imagePicker.imgFromGallery(crop: false);
+
+                    setState(() {
+                      
+                    });
                   },
-                  child: Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      border: Border.all(width: .4,),
-                      borderRadius: BorderRadius.circular(6)
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          MdiIcons.imageOutline,
-                          color: appSuccess,
+                  child: Column(
+                    children: [
+                      Text(
+                        image != null? image!.path:''
+                      ),
+
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          border: Border.all(width: .4,),
+                          borderRadius: BorderRadius.circular(6)
                         ),
-                        Text(
-                          '  Attach image to post'
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              MdiIcons.imageOutline,
+                              color: appSuccess,
+                            ),
+                            Text(
+                              '  Attach image to post'
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
 
