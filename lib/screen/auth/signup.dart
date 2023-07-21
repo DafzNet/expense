@@ -167,12 +167,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   try{
                 
                                   User user =await fireAuth.createUserWithEmail(
-                                    email: emailController.text, 
-                                    password: passwordController.text, 
-                                    name: userNameController.text
+                                    email: emailController.text.trim(), 
+                                    password: passwordController.text.trim(), 
+                                    name: userNameController.text.trim()
                                   );
-                                  
-                                  
 
                                   await VersionDb().addData(
                                     VersionModel(

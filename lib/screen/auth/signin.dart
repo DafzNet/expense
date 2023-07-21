@@ -126,8 +126,8 @@ class _SignInScreenState extends State<SignInScreen> {
                                   });
                 
                                   User user = await fireAuth.signinUserWithEmail(
-                                    email: emailController.text, 
-                                    password: passwordController.text, 
+                                    email: emailController.text.trim(), 
+                                    password: passwordController.text.trim(), 
                                    );
 
                                   //////////////////////

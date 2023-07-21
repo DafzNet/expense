@@ -66,40 +66,42 @@ class _BudgetCardState extends State<BudgetCard> {
                       Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Row(
-                                children: [
-                                  const Icon(
-                                    MdiIcons.circle,
-                                    size: 10,
-                                  ),
-        
-                                  const SizedBox(width: 10,),
-        
-                                  Text(
-                                    widget.budget.name,
-        
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-        
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold
+                              Expanded(
+                                child: Row(
+                                  children: [
+                                    const Icon(
+                                      MdiIcons.circle,
+                                      size: 10,
                                     ),
-                                  ),
-
-                                  Text(
-                                    widget.budget.category!=null ?
-                                      widget.budget.category!.name.length <=20 ? ' - ${widget.budget.category!.name}' : ' - ${widget.budget.category!.name.substring(0, 10)}...'
-                                    :'',
-        
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-        
-                                    style: const TextStyle(
-                                      fontSize: 16,
+                                      
+                                    const SizedBox(width: 10,),
+                                      
+                                    Text(
+                                      widget.budget.name,
+                                      
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      
+                                      style: const TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold
+                                      ),
                                     ),
-                                  ),
-                                ],
+                              
+                                    Text(
+                                      widget.budget.category!=null ?
+                                        widget.budget.category!.name.length <=20 ? ' - ${widget.budget.category!.name}' : ' - ${widget.budget.category!.name.substring(0, 10)}...'
+                                      :'',
+                                      
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
         
                               Row(
