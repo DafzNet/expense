@@ -7,25 +7,34 @@ class LightUser {
   String? firstName;
   String? lastName;
   String? email;
+  String? dp;
+  String? motif;
+
 
   LightUser({
     required this.id,
     required this.firstName,
     required this.lastName,
     required this.email,
+    this.dp,
+    this.motif,
   });
 
   LightUser copyWith({
-    dynamic id,
+    dynamic? id,
     String? firstName,
     String? lastName,
     String? email,
+    String? dp,
+    String? motif,
   }) {
     return LightUser(
       id: id ?? this.id,
       firstName: firstName ?? this.firstName,
       lastName: lastName ?? this.lastName,
       email: email ?? this.email,
+      dp: dp ?? this.dp,
+      motif: motif ?? this.motif,
     );
   }
 
@@ -35,6 +44,8 @@ class LightUser {
       'firstName': firstName,
       'lastName': lastName,
       'email': email,
+      'dp': dp,
+      'motif': motif,
     };
   }
 
@@ -44,6 +55,8 @@ class LightUser {
       firstName: map['firstName'] != null ? map['firstName'] as String : null,
       lastName: map['lastName'] != null ? map['lastName'] as String : null,
       email: map['email'] != null ? map['email'] as String : null,
+      dp: map['dp'] != null ? map['dp']??'' as String : null,
+      motif: map['motif'] != null ? map['motif']??'' as String : null,
     );
   }
 
@@ -53,7 +66,7 @@ class LightUser {
 
   @override
   String toString() {
-    return 'LightUser(id: $id, firstName: $firstName, lastName: $lastName, email: $email)';
+    return 'LightUser(id: $id, firstName: $firstName, lastName: $lastName, email: $email, dp: $dp, motif: $motif)';
   }
 
   @override
@@ -61,10 +74,7 @@ class LightUser {
     if (identical(this, other)) return true;
   
     return 
-      other.id == id &&
-      other.firstName == firstName &&
-      other.lastName == lastName &&
-      other.email == email;
+      other.id == id;
   }
 
   @override
@@ -72,6 +82,8 @@ class LightUser {
     return id.hashCode ^
       firstName.hashCode ^
       lastName.hashCode ^
-      email.hashCode;
+      email.hashCode ^
+      dp.hashCode ^
+      motif.hashCode;
   }
 }

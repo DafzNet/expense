@@ -30,20 +30,22 @@ class _FexpertsState extends State<Fexperts> {
       child: Scaffold(
         appBar: AppBar(
 
-          title: Text('Fexperts'),
+          title: const Text('Fexperts'),
 
           actions: [
             IconButton(
               onPressed: (){
                 
               }, 
-              icon: Icon(
+              icon: const Icon(
                 Icons.search
               )
             )
           ],
 
+          
           bottom:  TabBar(
+            isScrollable: true,
             padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
             indicatorSize: TabBarIndicatorSize.tab,
             labelColor: Colors.white,

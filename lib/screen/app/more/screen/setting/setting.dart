@@ -298,187 +298,187 @@ class _SettingScreenState extends State<SettingScreen> {
                 ],
               ),
         
-              Divider(
-                height: 30,
-              ),
+              // Divider(
+              //   height: 30,
+              // ),
         
-              Row(
+              // Row(
                 
-                children: [
-                  Text(
-                    'Accountability Settings',
+              //   children: [
+              //     Text(
+              //       'Accountability Settings',
             
-                    style: TextStyle(
-                      fontSize: 16
-                    ),
-                  ),
+              //       style: TextStyle(
+              //         fontSize: 16
+              //       ),
+              //     ),
         
-                  Icon(
-                    MdiIcons.star,
-                    size: 18,
-                    color: appOrange,
-                  )
-                ],
-              ),
+              //     Icon(
+              //       MdiIcons.star,
+              //       size: 18,
+              //       color: appOrange,
+              //     )
+              //   ],
+              // ),
         
-              Row(
+              // Row(
                 
-                children: const [
-                  Text(
-                    'What to include in financial statement when generating pdf',
+              //   children: const [
+              //     Text(
+              //       'What to include in financial statement when generating pdf',
             
-                    style: TextStyle(
-                      fontSize: 12
-                    ),
-                  ),
-                ],
-              ),
+              //       style: TextStyle(
+              //         fontSize: 12
+              //       ),
+              //     ),
+              //   ],
+              // ),
         
         
-              Row(
-                children: [
-                  Expanded(
-                    child: CheckboxListTile(
-                      title: Text('Income'),
-                      value: true, 
-                      onChanged: (e){})),
+              // Row(
+              //   children: [
+              //     Expanded(
+              //       child: CheckboxListTile(
+              //         title: Text('Income'),
+              //         value: true, 
+              //         onChanged: (e){})),
         
-                  Expanded(
-                    child: CheckboxListTile(
-                      title: Text('Expenses'),
-                      value: true, onChanged: (e){})),
-                ],
-              ),
+              //     Expanded(
+              //       child: CheckboxListTile(
+              //         title: Text('Expenses'),
+              //         value: true, onChanged: (e){})),
+              //   ],
+              // ),
         
-              Row(
-                children: [
-                  Expanded(
-                    child: CheckboxListTile(
-                      title: Text('Budget'),
-                      value: true, 
-                      onChanged: (e){})),
+              // Row(
+              //   children: [
+              //     Expanded(
+              //       child: CheckboxListTile(
+              //         title: Text('Budget'),
+              //         value: true, 
+              //         onChanged: (e){})),
         
-                  Expanded(
-                    child: CheckboxListTile(
-                      title: Text('Savings'),
-                      value: true, onChanged: (e){})),
-                ],
-              ),
+              //     Expanded(
+              //       child: CheckboxListTile(
+              //         title: Text('Savings'),
+              //         value: true, onChanged: (e){})),
+              //   ],
+              // ),
         
-              Row(
-                children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width/2-12,
-                    child: CheckboxListTile(
-                      title: Text('Reports'),
-                      value: true, 
-                      onChanged: (e){}),
-                  ),
+              // Row(
+              //   children: [
+              //     SizedBox(
+              //       width: MediaQuery.of(context).size.width/2-12,
+              //       child: CheckboxListTile(
+              //         title: Text('Reports'),
+              //         value: true, 
+              //         onChanged: (e){}),
+              //     ),
         
                  
-                ],
-              ),
+              //   ],
+              // ),
 
 
-                            Divider(
-                height: 30,
-              ),
+              //  Divider(
+              //   height: 30,
+              // ),
         
-              Row(
+              // Row(
                 
-                children: [
-                  Text(
-                    'Planners',
+              //   children: [
+              //     Text(
+              //       'Planners',
             
-                    style: TextStyle(
-                      fontSize: 16
-                    ),
-                  ),
+              //       style: TextStyle(
+              //         fontSize: 16
+              //       ),
+              //     ),
         
-                  Icon(
-                    MdiIcons.star,
-                    size: 18,
-                    color: appOrange,
-                  )
-                ],
-              ),
+              //     Icon(
+              //       MdiIcons.star,
+              //       size: 18,
+              //       color: appOrange,
+              //     )
+              //   ],
+              // ),
         
-              Row(
+              // Row(
                 
-                children: const [
-                  Text(
-                    'Choose default planner model',
+              //   children: const [
+              //     Text(
+              //       'Choose default planner model',
             
-                    style: TextStyle(
-                      fontSize: 12
-                    ),
-                  ),
-                ],
-              ),
+              //       style: TextStyle(
+              //         fontSize: 12
+              //       ),
+              //     ),
+              //   ],
+              // ),
 
 
-              Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: Row(
-                  children: [
-                    Radio(
-                      value: 9, 
-                      groupValue: 9, 
-                      onChanged: (h){}),
+              // Padding(
+              //   padding: const EdgeInsets.all(4.0),
+              //   child: Row(
+              //     children: [
+              //       Radio(
+              //         value: 9, 
+              //         groupValue: 9, 
+              //         onChanged: (h){}),
 
-                    Text(
-                      'Weighted Averages',
+              //       Text(
+              //         'Weighted Averages',
                           
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              //         style: TextStyle(
+              //           fontSize: 14,
+              //           fontWeight: FontWeight.bold
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
 
-              Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: Row(
-                  children: [
-                    Radio(
-                      value: 9, 
-                      groupValue: 9, 
-                      onChanged: (h){}),
+              // Padding(
+              //   padding: const EdgeInsets.all(4.0),
+              //   child: Row(
+              //     children: [
+              //       Radio(
+              //         value: 9, 
+              //         groupValue: 9, 
+              //         onChanged: (h){}),
 
-                    Text(
-                      'Weighted Averages',
+              //       Text(
+              //         'Weighted Averages',
                           
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              //         style: TextStyle(
+              //           fontSize: 14,
+              //           fontWeight: FontWeight.bold
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
 
-              Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: Row(
-                  children: [
-                    Radio(
-                      value: 9, 
-                      groupValue: 9, 
-                      onChanged: (h){}),
+              // Padding(
+              //   padding: const EdgeInsets.all(4.0),
+              //   child: Row(
+              //     children: [
+              //       Radio(
+              //         value: 9, 
+              //         groupValue: 9, 
+              //         onChanged: (h){}),
 
-                    Text(
-                      'Weighted Averages',
+              //       Text(
+              //         'Weighted Averages',
                           
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              //         style: TextStyle(
+              //           fontSize: 14,
+              //           fontWeight: FontWeight.bold
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
         
         
               Divider(

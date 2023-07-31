@@ -150,6 +150,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                       Expanded(
                         child: StreamBuilder<List<ExpenseModel>>(
                           stream: expenseDb.onExpenses(_db!),
+                          // ignore: prefer_const_literals_to_create_immutables
                           initialData: [
                             
                           ],

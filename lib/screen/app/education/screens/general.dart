@@ -51,7 +51,12 @@ class _GeneralFexpertState extends State<GeneralFexpert> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView.builder(
+      body: fexperts.isEmpty? Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Center(child: Text('No Fexperts yet')),
+        ],
+      ): ListView.builder(
         itemCount: fexperts.length,
         itemBuilder: (context, index){
           return FexpertCard(currentUser: widget.user, fexpert: fexperts[index]);

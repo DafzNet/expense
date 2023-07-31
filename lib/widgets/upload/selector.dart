@@ -3,6 +3,7 @@
 
 import 'dart:io';
 
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -11,6 +12,8 @@ import '../../utils/constants/colors.dart';
 
 
 class ImagePickerCropper{
+  
+  final FirebaseStorage _storage = FirebaseStorage.instance;
 
   final ImagePicker _picker = ImagePicker();
   File? _photo;
@@ -70,21 +73,20 @@ class ImagePickerCropper{
       }
   }
 
-  // Future<String> uploadFile(String uid, {String dest='users/'}) async {
-  //   if (_photo == null) return '';
-  //   final fileName = basename(_photo!.path);
-  //   final destination = dest;
+  Future<String> uploadFile(String uid, {String dest='users/'}) async {
+    if (_photo == null) return '';
+    final destination = dest;
 
-  //   try {
-  //     final ref = _storage.ref(destination).child(uid);
-  //     await ref.putFile(_photo!);
+    try {
+      final ref = _storage.ref(destination).child(uid);
+      await ref.putFile(_photo!);
 
-  //   final String downloadLink = await ref.getDownloadURL();
+    final String downloadLink = await ref.getDownloadURL();
 
-  //   return downloadLink;
+    return downloadLink;
 
-  //   } catch (e) {
-  //     return '';
-  //   }
-  // }
+    } catch (e) {
+      return '';
+    }
+  }
 }

@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:expense/dbs/budget_db.dart';
 import 'package:expense/dbs/category_db.dart';
 import 'package:expense/dbs/income_db.dart';
@@ -14,6 +17,7 @@ import 'package:expense/screen/app/more/screen/budget/budget.dart';
 import 'package:expense/screen/app/more/screen/category/category.dart';
 import 'package:expense/screen/app/more/screen/income/income.dart';
 import 'package:expense/screen/app/more/screen/planner/planner.dart';
+import 'package:expense/screen/app/more/screen/purchase.dart';
 import 'package:expense/screen/app/more/screen/reports/reports.dart';
 import 'package:expense/widgets/loading.dart';
 import 'package:flutter/material.dart';
@@ -22,13 +26,14 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:page_transition/page_transition.dart';
 
 import '../../../dbs/expense.dart';
+import '../../../firebase/db/user.dart';
 import '../../../models/user_model.dart';
 import '../../../utils/capitalize.dart';
 import '../../../utils/constants/colors.dart';
 import '../../../utils/constants/images.dart';
+import '../../../widgets/upload/selector.dart';
 import 'screen/about/about.dart';
 import 'screen/backup/backup.dart';
-import 'screen/purchase.dart';
 import 'screen/setting/setting.dart';
 import 'screen/vaults/vault.dart';
 
@@ -46,7 +51,8 @@ class MoreScreen extends StatefulWidget {
 
 class _MoreScreenState extends State<MoreScreen> {
 
-  
+  ImagePickerCropper imagePickerCropper = ImagePickerCropper();
+  File? image;
   final ExpenseDb expDB = ExpenseDb();
   FirebaseExpenseDb? fsExpDb;
 
@@ -92,65 +98,170 @@ class _MoreScreenState extends State<MoreScreen> {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      // Container(
-                      //   padding: EdgeInsets.all(8),
-                      //   decoration: BoxDecoration(
-                      //     border: Border.all(width: .2),
-                      //     borderRadius: BorderRadius.circular(8)
-                      //   ),
-                      //   child: Column(
-                      //     children: [
-                      //       Row(
-                      //     children: [
-                      //       SizedBox(
-                      //         height: 60,
-                      //         width: 60,
-                      //         child: ClipOval(
-                      //           child: Container(
-                      //             color: appOrange,
-                            
-                      //             child: Center(
-                      //               child: Text(
-                      //                 '${widget.user.firstName!.substring(0,1).toUpperCase()}${widget.user.lastName!.substring(0,1).toUpperCase()}',
+
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: Row(
+                          children: [
+                            Stack(
+                                children: [
+                                  SizedBox(
+                                    height: 70,
+                                    width: 70,
+                                    child: ClipOval(
+                                      child: widget.user.dp != null && widget.user.dp!.isNotEmpty?
+                                          CachedNetworkImage(
+                                            imageUrl: widget.user.dp!,
+                                          ):
+                                          Container(
+                                        color: appOrange,
+                                  
+                                        child: Center(
+                                          child: Text(
+                                            '${widget.user.firstName!.substring(0,1).toUpperCase()}${widget.user.lastName!.substring(0,1).toUpperCase()}',
+                                                            
+                                            style: const TextStyle(
+                                              fontSize: 30,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w900,
+                                              shadows: [
+                                                Shadow(
+                                                  blurRadius: 10,
+                                                  offset: Offset(1, 1)
+                                                )
+                                              ]
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    ),
+                                  ),
+                      
+                                  Positioned(
+                                      right: 5,
+                                      bottom: 0,
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          showModalBottomSheet(
+                                            context: context, 
+                                            builder: (context){
+                                              return ClipRRect(
+                                                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                                                child: Container(
+                                                  color: Colors.white,
+                                                  height: 100,
+                      
+                                                  child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                    children: [
+                                                      ClipOval(
+                                                        child: Container(
+                                                          decoration: BoxDecoration(
+                                                              color: appOrange.shade100
+                                                            ),
+                                                            padding: EdgeInsets.all(20),
+                                                          child: IconButton(
+                                                            onPressed: ()async{
+                                                              Navigator.pop(context);
+                                                              FirebaseUserDb firebaseUserDb = FirebaseUserDb(uid: widget.user.id);
+                                                              image = await imagePickerCropper.imgFromCamera(crop: false);
+                                                              
+                                                              String downloadLink = await imagePickerCropper.uploadFile(widget.user.id);
+                      
+                                                              LightUser updatedUser = widget.user.copyWith(
+                                                                dp: downloadLink
+                                                              );
+                      
+                                                              await firebaseUserDb.updateUser(updatedUser);
+                      
+                                                            }, 
+                                                            icon: Icon(
+                                                              MdiIcons.camera
+                                                            )
+                                                          ),
+                                                        ),
+                                                      ),
+                      
+                                                      ClipOval(
+                                                        child: Container(
+                                                          decoration: BoxDecoration(
+                                                            color: appOrange.shade100
+                                                          ),
+                                                          padding: EdgeInsets.all(20),
+                                                          child: IconButton(
+                                                            onPressed: ()async{
+                                                              Navigator.pop(context);
+                                                              FirebaseUserDb firebaseUserDb = FirebaseUserDb(uid: widget.user.id);
+                                                              image = await imagePickerCropper.imgFromGallery(quality: 70, crop: false);
+                                                              
+                                                              String downloadLink = await imagePickerCropper.uploadFile(widget.user.id);
+                      
+                                                              LightUser updatedUser = widget.user.copyWith(
+                                                                dp: downloadLink
+                                                              );
+                      
+                                                              await firebaseUserDb.updateUser(updatedUser);
+                                                            },
                                                       
-                      //                 style: const TextStyle(
-                      //                   fontSize: 30,
-                      //                   color: Colors.white,
-                      //                   fontWeight: FontWeight.w900,
-                      //                   shadows: [
-                      //                     Shadow(
-                      //                       blurRadius: 10,
-                      //                       offset: Offset(1, 1)
-                      //                     )
-                      //                   ]
-                      //                 ),
-                      //               ),
-                      //             ),
-                      //           )
-                      //         ),
-                      //       ),
-                      //     ],
-                      //   ),
-                                      
-                      //   const SizedBox(
-                      //     height: 10,
-                      //   ),
-                                      
-                      //   Row(
-                      //     children: [
-                      //       Text(
-                      //         '${capitalize(widget.user.firstName!)} ${capitalize(widget.user.lastName!)}',
-                                      
-                      //         style: const TextStyle(
-                      //           fontSize: 20,
-                      //           fontWeight: FontWeight.w600
-                      //         ),
-                      //       ),
-                      //     ],
-                      //   ),
-                      //     ],
-                      //   ),
-                      // ),
+                                                            icon: const Icon(
+                                                              MdiIcons.imageAlbum
+                                                            )
+                                                          ),
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                  
+                                                ),
+                                              );
+                                            }
+                                          );
+                                        },
+                                        child: ClipOval(
+                                          child: Container(
+                                            color: Colors.white,
+                                            padding: EdgeInsets.all(2.5),
+                                            child: Icon(
+                                                MdiIcons.cameraOutline,
+                                                size: 14,
+                                              ),
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                      
+                                ],
+                              ),
+
+                              SizedBox(width: 10,),
+
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Text(
+                                      '${capitalize(widget.user.firstName!)} ${capitalize(widget.user.lastName!)}',
+                                              
+                                      style: const TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w600
+                                      ),
+                                    ),
+
+                                    Text(
+                                      widget.user.email!,
+                              
+                                      style: TextStyle(
+                                        fontSize: 14
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              )
+                          ],
+                        ),
+                      ),
               
                       const SizedBox(
                         height: 8,
@@ -441,7 +552,7 @@ class _MoreScreenState extends State<MoreScreen> {
                                 Navigator.push(
                                   context,
                                   PageTransition(
-                                    child: const PurchaseScreen(), //PieChartSample2(), //
+                                    child: PurchaseScreen(), //PieChartSample2(), //
                                     type: PageTransitionType.fade
                                   )
                                 );
@@ -456,13 +567,15 @@ class _MoreScreenState extends State<MoreScreen> {
                                   Row(
                                     children: const [
                                       Icon(
-                                        Icons.account_circle_outlined
+                                        Icons.ad_units_outlined
                                       ),
                                       SizedBox(width: 10,),
-                                      Text('Profile', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
+                                      Text('Subscribe', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
                                     ],
                                   ),
-                                  const Icon(MdiIcons.chevronRight)
+                                  const Icon(
+                                    MdiIcons.chevronRight
+                                  )
                                 ],)
                             ),
 

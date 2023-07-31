@@ -1,6 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
+
 import 'package:expense/models/user_model.dart';
 
 class FexpertModel {
@@ -12,6 +14,8 @@ class FexpertModel {
   String? image;
   String tags;
   bool allow;
+  List<String>? search;
+  List<String>? tagSearch;
 
   FexpertModel({
     required this.id,
@@ -22,6 +26,8 @@ class FexpertModel {
     this.image,
     required this.tags,
     this.allow = true,
+    this.search,
+    this.tagSearch,
   });
 
 
@@ -34,6 +40,8 @@ class FexpertModel {
     String? image,
     String? tags,
     bool? allow,
+    List<String>? search,
+    List<String>? tagSearch,
   }) {
     return FexpertModel(
       id: id ?? this.id,
@@ -44,6 +52,8 @@ class FexpertModel {
       image: image ?? this.image,
       tags: tags ?? this.tags,
       allow: allow ?? this.allow,
+      search: search ?? this.search,
+      tagSearch: tagSearch ?? this.tagSearch,
     );
   }
 
@@ -57,6 +67,8 @@ class FexpertModel {
       'image': image,
       'tags': tags,
       'allow': allow,
+      'search': search,
+      'tagSearch': tagSearch,
     };
   }
 
@@ -70,6 +82,8 @@ class FexpertModel {
       image: map['image'] != null ? map['image'] as String : null,
       tags: map['tags'] as String,
       allow: map['allow'] as bool,
+      search: map['search'] != null ? List<String>.from((map['search']??[] as List<String>)) : null,
+      tagSearch: map['tagSearch'] != null ? List<String>.from((map['tagSearch']??[] as List<String>)) : null,
     );
   }
 
@@ -79,7 +93,7 @@ class FexpertModel {
 
   @override
   String toString() {
-    return 'FexpertModel(id: $id, poster: $poster, topic: $topic, date: $date, body: $body, image: $image, tags: $tags, allow: $allow)';
+    return 'FexpertModel(id: $id, poster: $poster, topic: $topic, date: $date, body: $body, image: $image, tags: $tags, allow: $allow, search: $search, tagSearch: $tagSearch)';
   }
 
   @override
@@ -87,14 +101,7 @@ class FexpertModel {
     if (identical(this, other)) return true;
   
     return 
-      other.id == id &&
-      other.poster == poster &&
-      other.topic == topic &&
-      other.date == date &&
-      other.body == body &&
-      other.image == image &&
-      other.tags == tags &&
-      other.allow == allow;
+      other.id == id;
   }
 
   @override
@@ -106,73 +113,8 @@ class FexpertModel {
       body.hashCode ^
       image.hashCode ^
       tags.hashCode ^
-      allow.hashCode;
+      allow.hashCode ^
+      search.hashCode ^
+      tagSearch.hashCode;
   }
 }
-
-
-class FexpertSubTopic {
-  String topic;
-  String body;
-  
-  FexpertSubTopic({
-    required this.topic,
-    required this.body,
-  });
-
-  FexpertSubTopic copyWith({
-    String? topic,
-    String? body,
-  }) {
-    return FexpertSubTopic(
-      topic: topic ?? this.topic,
-      body: body ?? this.body,
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'topic': topic,
-      'body': body,
-    };
-  }
-
-  factory FexpertSubTopic.fromMap(Map<String, dynamic> map) {
-    return FexpertSubTopic(
-      topic: map['topic'] as String,
-      body: map['body'] as String,
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory FexpertSubTopic.fromJson(String source) => FexpertSubTopic.fromMap(json.decode(source) as Map<String, dynamic>);
-
-  @override
-  String toString() => 'FexpertSubTopic(topic: $topic, body: $body)';
-
-  @override
-  bool operator ==(covariant FexpertSubTopic other) {
-    if (identical(this, other)) return true;
-  
-    return 
-      other.topic == topic &&
-      other.body == body;
-  }
-
-  @override
-  int get hashCode => topic.hashCode ^ body.hashCode;
-}
-
-
-
-enum FexpertTag{
-  budgeting,
-  investment,
-  debt,
-  others
-}
-
-
-
-

@@ -57,7 +57,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
         body: db != null ? Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
           child: StreamBuilder<List<BudgetModel>>(
-            initialData: const[],
+            initialData:[],
             stream: budgetDb.onBudgets(db!),
             builder: (context, snapshot){
               if(snapshot.hasError){

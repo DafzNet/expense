@@ -13,11 +13,13 @@ class PlanCard extends StatefulWidget {
   final int? index;
   final BuildContext ctx;
   final PlanExpModel plannerExp;
+  final VoidCallback? onDel;
 
   const PlanCard({
     this.index,
     required this.plannerExp,
     required this.ctx,
+    this.onDel,
     super.key});
 
   @override
@@ -165,6 +167,10 @@ class _PlanCardState extends State<PlanCard> {
                       PlannerExpDb plannerExpDb = PlannerExpDb();
 
                       await plannerExpDb.deleteData(widget.plannerExp);
+
+                      if (widget.onDel != null) {
+                        widget.onDel!();
+                      }
                       
                     },
                     child: Icon(

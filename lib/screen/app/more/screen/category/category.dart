@@ -70,7 +70,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
         body: db != null ? Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
           child: StreamBuilder<List<CategoryModel>>(
-            initialData: const[],
+            initialData: [],
             stream: categoryDb.onCategories(db!),
             builder: (context, snapshot){
               if(snapshot.hasError){

@@ -141,7 +141,7 @@ class _BudgetPlannerState extends State<BudgetPlanner> {
       body: db != null ? Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
           child: StreamBuilder<List<PlannerModel>>(
-            initialData: const [],
+            initialData: [],
             stream: plannerDb.onPlanners(db!),
             builder: (context, snapshot){
               if(snapshot.hasError){

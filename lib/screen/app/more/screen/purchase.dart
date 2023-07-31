@@ -59,7 +59,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                 ),
               ),
 
-              SizedBox(height: 30,),
+              const SizedBox(height: 30,),
 
               DefaultButton(
                 text: 'Unsubscribe',

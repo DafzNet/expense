@@ -70,11 +70,7 @@ class PlannerModel {
     if (identical(this, other)) return true;
   
     return 
-      other.id == id &&
-      other.name == name &&
-      other.budget == budget &&
-      other.description == description &&
-      other.date == date;
+      other.id == id;
   }
 
   @override

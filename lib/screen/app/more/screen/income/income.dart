@@ -63,7 +63,7 @@ class _IncomeScreenState extends State<IncomeScreen> {
         body: db != null ? Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
           child: StreamBuilder<List<IncomeModel>>(
-            initialData: const [],
+            initialData: [],
             stream: incomeDb.onIncome(db!),
             builder: (context, snapshot){
               if(snapshot.hasError){

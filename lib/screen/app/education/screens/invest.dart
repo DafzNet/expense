@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:sembast/sembast.dart';
 
 import '../../../../dbs/fexpert.dart';
+import '../../../../firebase/db/fexpert/fexpert.dart';
 import '../../../../models/fexpertmodel.dart';
 import '../widgets/fexpert_card.dart';
 
@@ -18,8 +19,11 @@ class _InvestmentFexpertState extends State<InvestmentFexpert> {
   FexpertDb fexpertDb = FexpertDb();
   List<FexpertModel> fexperts = [];
 
+  FirebaseFexpertDb firebaseFexpertDb = FirebaseFexpertDb();
+
   void gFexperts()async{
-    fexperts = await fexpertDb.retrieveBasedOn(
+    fexperts = await firebaseFexpertDb.fetch(by: ['investment']);
+    fexperts.addAll(await fexpertDb.retrieveBasedOn(
       Filter.custom((record){
         final d = record.value as Map<String, dynamic>;
         final fex = FexpertModel.fromMap(d);
@@ -32,7 +36,7 @@ class _InvestmentFexpertState extends State<InvestmentFexpert> {
         return false;
 
       })
-    );
+    ));
 
     fexperts.sort(
       (a,b){
@@ -54,7 +58,12 @@ class _InvestmentFexpertState extends State<InvestmentFexpert> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView.builder(
+      body:fexperts.isEmpty? Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Center(child: Text('No Fexperts yet')),
+        ],
+      ): ListView.builder(
         itemCount: fexperts.length,
         itemBuilder: (context, index){
           return FexpertCard(currentUser: widget.user, fexpert: fexperts[index]);

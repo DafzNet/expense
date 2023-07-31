@@ -1,6 +1,7 @@
 
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:expense/models/budget.dart';
 import 'package:expense/models/savings_model.dart';
 import 'package:expense/models/user_model.dart';
@@ -61,7 +62,6 @@ class _HomeScreenState extends State<HomeScreen> {
     void myUser(uid)async{
       FirebaseUserDb firebaseUserDb = FirebaseUserDb(uid:uid);
       _currentUser = await firebaseUserDb.getUserData();
-
       setState(() {
         
       });
@@ -133,13 +133,6 @@ class _HomeScreenState extends State<HomeScreen> {
         
       });
     }
-
-
-
-
-
-
-
 
   @override
   void initState() {
@@ -221,7 +214,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           height: 60,
                           width: 60,
                           child: ClipOval(
-                            child: Container(
+                            child: _currentUser!.dp != null && _currentUser!.dp!.isNotEmpty?
+                            CachedNetworkImage(
+                              imageUrl: widget.user2!.dp!,
+                            ):
+                             Container(
                               color: appOrange,
 
                               child: Center(

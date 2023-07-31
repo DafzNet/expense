@@ -26,11 +26,17 @@ class FirebaseFexpertDb{
   }
 
 
-  Future<List<FexpertModel>> fetch()async{
+  Future<List<FexpertModel>> fetch({List? by})async{
     List<FexpertModel> fs = [];
 
-    if (lastFetched != null) {
-      final fexperts = await fexpertCollection.orderBy('date')
+
+    if(by != null){
+      if (lastFetched != null) {
+      final fexperts = await fexpertCollection.where(
+          'tagSearch',
+          arrayContainsAny: by
+        )
+      .orderBy('date')
         .startAfter([lastFetched]).limit(15).get();
 
       lastFetched = fexperts.docs[fexperts.size - 1];
@@ -42,7 +48,11 @@ class FirebaseFexpertDb{
 
     }
     else{
-      final fexperts =await fexpertCollection.orderBy('date').limit(15).get();
+      final fexperts =await fexpertCollection.where(
+          'tagSearch',
+          arrayContainsAny: by
+        )
+      .orderBy('date').limit(15).get();
       
       lastFetched = fexperts.docs[fexperts.size - 1];
 
@@ -50,6 +60,32 @@ class FirebaseFexpertDb{
         final data = e.data() as Map<String, dynamic>;
         return FexpertModel.fromMap(data);
       }).toList();
+    }
+    }else{
+      if (lastFetched != null) {
+      final fexperts = await fexpertCollection
+      .orderBy('date')
+        .startAfter([lastFetched]).limit(15).get();
+
+      lastFetched = fexperts.docs[fexperts.size - 1];
+
+      fs = fexperts.docs.map((e){
+        final data = e.data() as Map<String, dynamic>;
+        return FexpertModel.fromMap(data);
+      }).toList();
+
+    }
+    else{
+      final fexperts =await fexpertCollection
+      .orderBy('date').limit(15).get();
+      
+      lastFetched = fexperts.docs[fexperts.size - 1];
+
+      fs = fexperts.docs.map((e){
+        final data = e.data() as Map<String, dynamic>;
+        return FexpertModel.fromMap(data);
+      }).toList();
+    }
     }
 
     return fs;
