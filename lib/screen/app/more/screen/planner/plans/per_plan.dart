@@ -17,6 +17,7 @@ import '../../../../../../models/plan_exp.dart';
 import '../../../../../../models/plan_model.dart';
 import '../../../../../../utils/constants/colors.dart';
 import '../../../../../../utils/month.dart';
+import '../../../../../../utils/rank.dart';
 import '../../../../../../widgets/cards/plan_exp_card.dart';
 
 class PlannerDetail extends StatefulWidget {
@@ -179,6 +180,29 @@ class _PlannerDetailState extends State<PlannerDetail> {
                       ),
                 ),
                 items: const [
+                  DropdownMenuItem(
+                    value: 'Price',
+                    child: Text(
+                      'Price',
+
+                      style: TextStyle(
+                        fontSize: 12
+                      ),
+                    )
+                  ),
+
+                  DropdownMenuItem(
+                    value: 'Satisfaction',
+                    child: Text(
+                      'Satisfaction',
+
+                      style: TextStyle(
+                        fontSize: 12
+                      ),
+                    )
+                  ),
+
+
                   DropdownMenuItem(
                     value: 'Preference',
                     child: Text(
@@ -617,11 +641,28 @@ class _PlannerDetailState extends State<PlannerDetail> {
                       return Column();
                     }
                     
-                    final planners = snapshot.data;
-                    
-                    planners?.sort((a,b){
+                    List<PlanExpModel>? planners = snapshot.data;
+
+                    if (rankText == 'Weighted Averages') {
+                      planners = Ranker(planners!).weightedAverages;
+
+                      
+                    }else if (rankText == 'Preference') {
+                      planners = Ranker(planners!).preferences;
+                    }else if (rankText == 'Cost-Benefit') {
+                      planners = Ranker(planners!).costBenefit;
+                    }else if (rankText == 'Price') {
+                      planners = Ranker(planners!).price;
+                    }else if (rankText == 'Satisfaction') {
+                      planners = Ranker(planners!).satisfaction;
+                    }
+                    else{
+                      planners?.sort((a,b){
                       return b.date!.compareTo(a.date!);
                     });
+                    }
+                    
+                    
 
                     plans.addAll(planners!);
               
@@ -631,10 +672,10 @@ class _PlannerDetailState extends State<PlannerDetail> {
                       itemBuilder: (context, index){
                         return PlanCard(
                           index: index+1,
-                          plannerExp: planners[index],
+                          plannerExp: planners![index],
                           ctx: context,
                           onDel: (){
-                            subNewTotal(planners[index].price);
+                            subNewTotal(planners![index].price);
                           },
                         );
                       }
