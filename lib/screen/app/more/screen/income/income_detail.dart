@@ -50,22 +50,22 @@ class _IncomeDetailScreenState extends State<IncomeDetailScreen> {
 
             actions: [
 
-                IconButton(
-                  onPressed: (){
-                    Navigator.push(
-                      context,
-                      PageTransition(
-                        child: IncomeTransfer(widget.income),
-                        type: PageTransitionType.rightToLeft
-                      )
-                    );
-                  }, 
-                  icon: const Icon(
-                    MdiIcons.share,
-                    size: 28,
-                  )
+                // IconButton(
+                //   onPressed: (){
+                //     Navigator.push(
+                //       context,
+                //       PageTransition(
+                //         child: IncomeTransfer(widget.income),
+                //         type: PageTransitionType.rightToLeft
+                //       )
+                //     );
+                //   }, 
+                //   icon: const Icon(
+                //     MdiIcons.share,
+                //     size: 28,
+                //   )
                   
-                ),
+                // ),
 
                 IconButton(
                   onPressed: (){

@@ -34,6 +34,7 @@ import '../../../utils/constants/images.dart';
 import '../../../widgets/upload/selector.dart';
 import 'screen/about/about.dart';
 import 'screen/backup/backup.dart';
+import 'screen/feedback/feedback.dart';
 import 'screen/setting/setting.dart';
 import 'screen/vaults/vault.dart';
 
@@ -406,6 +407,39 @@ class _MoreScreenState extends State<MoreScreen> {
                                   const Icon(MdiIcons.chevronRight)
                                 ],)
                             ),
+
+                            const Divider(),
+                      
+                            TextButton(
+                              onPressed: (){
+                                 Navigator.push(
+                                  context,
+                                  PageTransition(
+                                    child: const BudgetPlanner(), //PieChartSample2(), //
+                                    type: PageTransitionType.fade
+                                  )
+                                );
+                              },
+                              style: TextButton.styleFrom(
+                                shape: const RoundedRectangleBorder(),
+                                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5)
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: const [
+                                      Icon(
+                                        MdiIcons.menuOpen,
+                                        size: 26,
+                                      ),
+                                      SizedBox(width: 10,),
+                                      Text('Planners', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
+                                    ],
+                                  ),
+                                  const Icon(MdiIcons.chevronRight)
+                                ],)
+                            ),
       
                             const Divider(),
                       
@@ -443,38 +477,7 @@ class _MoreScreenState extends State<MoreScreen> {
                                 ],)
                             ),
 
-                            const Divider(),
-                      
-                            TextButton(
-                              onPressed: (){
-                                 Navigator.push(
-                                  context,
-                                  PageTransition(
-                                    child: const BudgetPlanner(), //PieChartSample2(), //
-                                    type: PageTransitionType.fade
-                                  )
-                                );
-                              },
-                              style: TextButton.styleFrom(
-                                shape: const RoundedRectangleBorder(),
-                                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5)
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    children: const [
-                                      Icon(
-                                        MdiIcons.menuOpen,
-                                        size: 26,
-                                      ),
-                                      SizedBox(width: 10,),
-                                      Text('Planner', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
-                                    ],
-                                  ),
-                                  const Icon(MdiIcons.chevronRight)
-                                ],)
-                            ),
+                            
       
 
                             const Divider(),
@@ -546,6 +549,40 @@ class _MoreScreenState extends State<MoreScreen> {
                             ),
       
                             const Divider(),
+
+                            TextButton(
+                              onPressed: (){
+                                Navigator.push(
+                                  context,
+                                  PageTransition(
+                                    child: FeedbackScreen(user: widget.user,), //PieChartSample2(), //
+                                    type: PageTransitionType.fade
+                                  )
+                                );
+                              },
+                              style: TextButton.styleFrom(
+                                shape: const RoundedRectangleBorder(),
+                                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5)
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: const [
+                                      ImageIcon(
+                                        AssetImage(
+                                         feedbackIcon,
+                                        )
+                                      ),
+                                      SizedBox(width: 10,),
+                                      Text('Feedback', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
+                                    ],
+                                  ),
+                                  const Icon(MdiIcons.chevronRight)
+                                ],)
+                            ),
+                      
+                            const Divider(),
                       
                             TextButton(
                               onPressed: (){
@@ -613,31 +650,7 @@ class _MoreScreenState extends State<MoreScreen> {
                       
                             const Divider(),
                       
-                            // TextButton(
-                            //   onPressed: (){},
-                            //   style: TextButton.styleFrom(
-                            //     shape: const RoundedRectangleBorder(),
-                            //     padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5)
-                            //   ),
-                            //   child: Row(
-                            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            //     children: [
-                            //       Row(
-                            //         children: const [
-                            //           ImageIcon(
-                            //             AssetImage(
-                            //              feedbackIcon,
-                            //             )
-                            //           ),
-                            //           SizedBox(width: 10,),
-                            //           Text('Feedback', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
-                            //         ],
-                            //       ),
-                            //       const Icon(MdiIcons.chevronRight)
-                            //     ],)
-                            // ),
-                      
-                            // const Divider(),
+                            
                       
                             TextButton(
                               onPressed: (){

@@ -84,7 +84,7 @@ class _PlannerDetailState extends State<PlannerDetail> {
 
 
   int? rankValue;
-  String rankText = 'Rank By';
+  String rankText = 'Preference';
 
 
   Set<PlanExpModel> plans = {};
@@ -240,18 +240,6 @@ class _PlannerDetailState extends State<PlannerDetail> {
                     value: 'TOPSIS',
                     child: Text(
                       'TOPSIS',
-
-                      style: TextStyle(
-                        fontSize: 12
-                      ),
-                    )
-                  ),
-
-
-                  DropdownMenuItem(
-                    value: 'AHP',
-                    child: Text(
-                      'AHP',
 
                       style: TextStyle(
                         fontSize: 12
@@ -647,8 +635,10 @@ class _PlannerDetailState extends State<PlannerDetail> {
                       planners = Ranker(planners!).weightedAverages;
 
                       
-                    }else if (rankText == 'Preference') {
+                    }else if (rankText =='Preference') {
                       planners = Ranker(planners!).preferences;
+                    }else if (rankText == 'TOPSIS') {
+                      planners = Ranker(planners!).topsis;
                     }else if (rankText == 'Cost-Benefit') {
                       planners = Ranker(planners!).costBenefit;
                     }else if (rankText == 'Price') {
@@ -657,14 +647,12 @@ class _PlannerDetailState extends State<PlannerDetail> {
                       planners = Ranker(planners!).satisfaction;
                     }
                     else{
-                      planners?.sort((a,b){
-                      return b.date!.compareTo(a.date!);
-                    });
+                      planners = Ranker(planners!).preferences;
                     }
                     
                     
 
-                    plans.addAll(planners!);
+                    plans.addAll(planners);
               
                     return planners.isNotEmpty ?  ListView.builder(
                       itemCount: planners.length,

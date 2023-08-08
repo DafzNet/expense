@@ -24,6 +24,28 @@ class _SignInScreenState extends State<SignInScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
+  final GoogleSignIn googleSignIn = GoogleSignIn();
+
+  Future<User?> _handleSignIn() async {
+    try {
+      final GoogleSignInAccount? googleSignInAccount = await googleSignIn.signIn();
+      if (googleSignInAccount != null) {
+        final GoogleSignInAuthentication googleSignInAuth = await googleSignInAccount.authentication;
+        final AuthCredential credential = GoogleAuthProvider.credential(
+          accessToken: googleSignInAuth.accessToken,
+          idToken: googleSignInAuth.idToken,
+        );
+        final UserCredential authResult = await _auth.signInWithCredential(credential);
+        final User? user = authResult.user;
+        return user;
+      }
+    } catch (error) {
+      print("Google Sign-In Error: $error");
+    }
+    return null;
+  }
+
+
   bool _loading = false;
 
 
@@ -183,6 +205,8 @@ class _SignInScreenState extends State<SignInScreen> {
                           )
                         ],
                       ),
+
+                      const SizedBox(height: 20),
                           
                           
                       const SizedBox(height: 80,)

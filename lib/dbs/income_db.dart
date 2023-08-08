@@ -145,11 +145,11 @@ class IncomeDb{
   }
 
 
-  Stream<List<IncomeModel>> onIncome(Database db){
+  Stream<List<IncomeModel>> onIncome(Database db, {Filter? filter}){
     var store = intMapStoreFactory.store();
     var storeQuery = store.query(
       finder: Finder(
-        filter: Filter.and(
+        filter: filter ?? Filter.and(
           [
             Filter.equals('month', Month().currentMonthNumber),
             Filter.equals('year', DateTime.now().year),

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:expense/models/plan_exp.dart';
 
 class Ranker{
@@ -72,7 +74,7 @@ class Ranker{
   }
 
 
-
+////////////////////////////////
   List<PlanExpModel> get costBenefit {
     List<PlanExpModel> newItems = [];
 
@@ -107,10 +109,48 @@ class Ranker{
 
   }
 
+//////////////////////////////////
+  List<PlanExpModel> get topsis{
+    List<PlanExpModel> newItems = [];
+    int pis = 1;
+    int nis = 0;
+
+    for (var plan in items) {
+      double di_positive = sqrt((pow((priceNormalizer(plan)-pis), 2)+pow((prefNormalizer(plan)-pis), 2)+pow((satisfactionNormalizer(plan)-pis), 2)));
+      double di_negative = sqrt((pow((priceNormalizer(plan)-nis), 2)+pow((prefNormalizer(plan)-nis), 2)+pow((satisfactionNormalizer(plan)-nis), 2)));
+
+      double ci = di_negative / (di_positive+di_negative);
+      newItems.add(
+        plan.copyWith(
+          price: ci
+        )
+      );
+    }
+
+    newItems.sort(
+      (a, b){
+        return b.price.compareTo(a.price);
+      }
+    );
+
+    for (var e in items) {
+      for (var i = 0; i<newItems.length; i++) {
+        if (e == newItems[i]) {
+          final a = newItems[i].copyWith(
+            price: e.price
+          );
+
+         newItems.replaceRange(i, i+1, [a]);
+        }
+      }
+    }
+
+    return newItems;
+
+  }
 
 
-
-
+////////////////////////////////
   List<PlanExpModel> get preferences{
     
     items.sort(
@@ -123,18 +163,20 @@ class Ranker{
 
   } 
 
-
+//////////////////////////////
   List<PlanExpModel> get price{
     
     items.sort(
       (a, b){
-        return b.price.compareTo(a.price);
+        return a.price.compareTo(b.price);
       }
     );
 
     return items;
   }  
 
+
+////////////////////////
   List<PlanExpModel> get satisfaction{
     
     items.sort(
@@ -145,6 +187,10 @@ class Ranker{
 
     return items;
 
-  } 
+  }
+
+
+  //////////////////////////////////////////////////////
+   
 
 }

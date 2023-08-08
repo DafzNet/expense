@@ -27,6 +27,7 @@ import '../../../utils/capitalize.dart';
 import '../../../utils/constants/colors.dart';
 import '../../../utils/month.dart';
 import '../expense/add_expense.dart';
+import '../more/screen/about/about.dart';
 import '../more/screen/budget/add_budget.dart';
 import '../more/screen/category/add_cat.dart';
 import '../more/screen/vaults/add_vault.dart';
@@ -211,33 +212,55 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
 
                         SizedBox(
-                          height: 60,
-                          width: 60,
-                          child: ClipOval(
-                            child: _currentUser!.dp != null && _currentUser!.dp!.isNotEmpty?
-                            CachedNetworkImage(
-                              imageUrl: widget.user2!.dp!,
-                            ):
-                             Container(
-                              color: appOrange,
-
-                              child: Center(
-                                child: Text(
-                                  _currentUser!.firstName!.substring(0,1).toUpperCase()+_currentUser!.lastName!.substring(0,1).toUpperCase(),
-                                  style: const TextStyle(
-                                        fontSize: 24,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w900,
-                                        shadows: [
-                                          Shadow(
-                                            blurRadius: 10,
-                                            offset: Offset(1, 1)
-                                          )
-                                        ]
-                                      ),
-                                ),
-                              ),
-                              
+                          height: 30,
+                          width: 30,
+                          child: Container(
+                            padding: EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(100),
+                              border: Border.all(
+                                color: appOrange,
+                                width: .4
+                              )
+                            ),
+                            child: ClipOval(
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    PageTransition(
+                                      child: const AboutScreen(), //PieChartSample2(), //
+                                      type: PageTransitionType.fade
+                                    )
+                                  );
+                                },
+                                child: Image.asset(lifiIcon)
+                              )
+                              // _currentUser!.dp != null && _currentUser!.dp!.isNotEmpty?
+                              // CachedNetworkImage(
+                              //   imageUrl: widget.user2!.dp!,
+                              // ):
+                              //  Container(
+                              //   color: appOrange,
+                          
+                              //   child: Center(
+                              //     child: Text(
+                              //       _currentUser!.firstName!.substring(0,1).toUpperCase()+_currentUser!.lastName!.substring(0,1).toUpperCase(),
+                              //       style: const TextStyle(
+                              //             fontSize: 24,
+                              //             color: Colors.white,
+                              //             fontWeight: FontWeight.w900,
+                              //             shadows: [
+                              //               Shadow(
+                              //                 blurRadius: 10,
+                              //                 offset: Offset(1, 1)
+                              //               )
+                              //             ]
+                              //           ),
+                              //     ),
+                              //   ),
+                                
+                              // ),
                             ),
                           ),
                         )
