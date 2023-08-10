@@ -1,11 +1,15 @@
 
 // ignore_for_file: unnecessary_null_comparison
 
+import 'dart:io';
+
 import 'package:expense/providers/settings_provider.dart';
 import 'package:expense/providers/subscribe.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
@@ -20,6 +24,7 @@ import 'wrapper.dart';
 
 
 import 'package:timezone/data/latest.dart' as tz;
+
 
 void main() async{
 
@@ -67,7 +72,9 @@ void main() async{
       ],
       child: const MyApp(),
     )
-    );
+  );
+
+  FlutterBackgroundService().startService();
 }
 
 class MyApp extends StatefulWidget {

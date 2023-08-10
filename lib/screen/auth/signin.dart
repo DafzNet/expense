@@ -5,6 +5,7 @@ import 'package:expense/screen/base_nav.dart';
 import 'package:expense/widgets/loading.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:page_transition/page_transition.dart';
 import '../../dbs/versions.dart';
 import '../../firebase/auth/auth.dart';
@@ -23,28 +24,6 @@ class SignInScreen extends StatefulWidget {
 class _SignInScreenState extends State<SignInScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-
-  final GoogleSignIn googleSignIn = GoogleSignIn();
-
-  Future<User?> _handleSignIn() async {
-    try {
-      final GoogleSignInAccount? googleSignInAccount = await googleSignIn.signIn();
-      if (googleSignInAccount != null) {
-        final GoogleSignInAuthentication googleSignInAuth = await googleSignInAccount.authentication;
-        final AuthCredential credential = GoogleAuthProvider.credential(
-          accessToken: googleSignInAuth.accessToken,
-          idToken: googleSignInAuth.idToken,
-        );
-        final UserCredential authResult = await _auth.signInWithCredential(credential);
-        final User? user = authResult.user;
-        return user;
-      }
-    } catch (error) {
-      print("Google Sign-In Error: $error");
-    }
-    return null;
-  }
-
 
   bool _loading = false;
 
@@ -93,8 +72,8 @@ class _SignInScreenState extends State<SignInScreen> {
                             style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
-                              letterSpacing: 1.4,
-                              wordSpacing: 1.4
+                              letterSpacing: 1.1,
+                              wordSpacing: 1.2
                             ),
                           )
                         ],
@@ -207,9 +186,94 @@ class _SignInScreenState extends State<SignInScreen> {
                       ),
 
                       const SizedBox(height: 20),
+
+                      TextButton(
+                        onPressed: ()async{
+                          final fireAuth = FireAuth();
+                          User? user = await fireAuth.googleReg();
+
+                          await VersionDb().addData(
+                            VersionModel(
+                              id: DateTime.now().millisecondsSinceEpoch
+                            )
+                          );
+
+                          Navigator.pushReplacement(
+                            context,
+                            PageTransition(
+                            child: AppBaseNavigation(user: user!), 
+                              type: PageTransitionType.fade
+                            )
+                          );
+
+                      }, child: RichText(
+                        text: const TextSpan(
+                          text: 'or continue with  ',
+
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 16
+                          ),
+
+                          children:  [
+                            TextSpan(
+                              text: 'G',
+
+                              style: TextStyle(
+                                color: Colors.blue,
+                                fontSize: 18
+                              ),
+                            ),
+
+                            TextSpan(
+                              text: 'o',
+
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontSize: 18
+                              ),
+                            ),
+
+                            TextSpan(
+                              text: 'o',
+
+                              style: TextStyle(
+                                color: Colors.orange,
+                                fontSize: 18
+                              ),
+                            ),
+
+                            TextSpan(
+                              text: 'g',
+
+                              style: TextStyle(
+                                color: Colors.blue,
+                                fontSize: 18
+                              ),
+                            ),
+
+                            TextSpan(
+                              text: 'l',
+
+                              style: TextStyle(
+                                color: Colors.green,
+                                fontSize: 18
+                              ),
+                            ),
+
+                            TextSpan(
+                              text: 'e',
+
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontSize: 18
+                              ),
+                            ),
+                          ]
+
+                        ))),                          
                           
-                          
-                      const SizedBox(height: 80,)
+                      const SizedBox(height: 80,),
                     ],
                   ),
                 ),

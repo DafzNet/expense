@@ -4,6 +4,7 @@ import 'package:expense/dbs/expense.dart';
 import 'package:expense/screen/app/expense/add_expense.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
@@ -26,10 +27,78 @@ class ExpenseScreen extends StatefulWidget {
 
 class _ExpenseScreenState extends State<ExpenseScreen> {
 
-  final ExpenseDb expenseDb = ExpenseDb();
-  double expenseForMonth = 0;
 
-  Map percentages = {};
+
+  static String reportPeriod = "Current Month";
+  var reportDate;
+  String dateR = 'cm';
+
+  DateTimeRange range = DateTimeRange(start: DateTime.now().subtract(const Duration(days: 7)), end: DateTime.now());
+
+  getExps(var date, String p)async{
+
+    List<ExpenseModel> exps = [];
+
+    if (p == 'cm' || p == 'pm') {
+      exps = await expenseDb.retrieveBasedOn(
+        Filter.and([
+          Filter.equals('month', date.month),
+          Filter.equals('year', date.year)
+        ])
+      );
+    }
+
+    if (p == 'ya') {
+        exps = await expenseDb.retrieveBasedOn(
+        Filter.custom((record){
+          final data = record.value as Map<String, dynamic>;
+          final recordExp = ExpenseModel.fromMap(data);
+
+          return recordExp.date.isAfter(date);
+        })
+      );
+    }
+
+
+    if (p == 'range') {
+
+      exps = await expenseDb.retrieveBasedOn(
+          Filter.custom((record){
+            final data = record.value as Map<String, dynamic>;
+            final recordExp = ExpenseModel.fromMap(data);
+
+            return recordExp.date.isAfter(date.start) && recordExp.date.isBefore(date.end);
+          })
+      );
+    }
+
+    expenseTotal = 0;
+
+    for (var exp in exps) {
+      expenseTotal += exp.amount;
+    }
+
+      expenseList = exps;
+    }
+
+
+  void updateReportPeriod(String newReportPeriod, newReportDate, {String p = 'cm'}) {
+
+    setState(() {
+      reportPeriod = newReportPeriod;
+      reportDate = newReportDate;
+      dateR = p;
+
+      getExps(newReportDate, p);
+    });
+  }
+
+
+
+  final ExpenseDb expenseDb = ExpenseDb();
+  double expenseTotal = 0;
+
+  //Map percentages = {};
 
 
   Database? _db;
@@ -61,6 +130,9 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
       backgroundColor: Colors.black,
       appBar: AppBar(
 
+        actions: [
+        ], 
+
         backgroundColor: Colors.black,
         toolbarHeight: 50,
 
@@ -91,7 +163,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                         ),
                  
                         Text(
-                          Month().currentMonth.toUpperCase(),
+                          expenseList.isNotEmpty? reportPeriod : Month().currentMonth.toUpperCase(),
                           style: TextStyle(
                             fontSize: 18,
                             height: 1.4,
@@ -104,7 +176,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                  ),
            
                 Text(
-                  Currency(context).wrapCurrencySymbol('${Provider.of<ExpenseProvider>(context).totalExpenseAmnt}'),
+                  expenseList.isNotEmpty? Currency(context).wrapCurrencySymbol(expenseTotal.toString()) :Currency(context).wrapCurrencySymbol('${Provider.of<ExpenseProvider>(context).totalExpenseAmnt}'),
                   style: const TextStyle(
                     fontSize: 45,
                     height: 1.4,
@@ -129,26 +201,357 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                   child: Column(
                     children: [
                       const SizedBox(height: 10,),
-                      Row(
-                        children: const [
-                          SizedBox(width: 30,),
-                          Text(
-                            'Expense List',
-                            style: TextStyle(
-                              fontSize: 20,
-                              height: 1.4,
-                              fontWeight: FontWeight.w700,
-                              letterSpacing: 1.5,
-                              color: Colors.black
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children:  [
+                            
+                            const Text(
+                              'Expense List',
+                              style: TextStyle(
+                                fontSize: 20,
+                                height: 1.4,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: 1.5,
+                                color: Colors.black
+                              ),
                             ),
-                          ),
-                        ],
+
+                            GestureDetector(
+                                onTap: () async{
+                                  await showModalBottomSheet(
+                                    context: context, 
+                                    builder: (context){
+                                      return ClipRRect(
+                                        borderRadius: const BorderRadius.only(
+                                          topLeft: Radius.circular(20),
+                                          topRight: Radius.circular(20),
+                                        ),
+                                        child: Container(
+                                          height:300,
+                                          color: Colors.white,
+
+                                          padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
+
+                                          child: Column(
+                                            children: [
+                                              GestureDetector(
+                                                onTap: () {
+                                                  String rPrd = 'Current Month';
+                                                  var rDate =DateTime.now();
+
+                                                  
+                                                 updateReportPeriod(rPrd, rDate, p: 'cm');
+
+                                                  Navigator.pop(context);
+
+                                                },
+                                                child: Container(
+                                                  padding: const EdgeInsets.all(10),
+                                                  decoration: BoxDecoration(
+                                                    border: Border.all(
+                                              
+                                                    ),
+                                              
+                                                    borderRadius: BorderRadius.circular(8)
+                                                  ),
+                                                  child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    children: [
+                                                      Row(
+                                                        children: const [
+                                                          Icon(
+                                                            MdiIcons.calendarTodayOutline,
+                                                            size: 18,
+                                                          ),
+                                                          SizedBox(width: 10,),
+                                                          Text(
+                                                            'Current Month',
+                                                            style: TextStyle(
+                                                              fontSize: 18,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      const Icon(
+                                                        MdiIcons.chevronRightCircleOutline
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+
+                                              const SizedBox(height: 15,),
+
+
+                                              GestureDetector(
+                                                onTap: () {
+                                                  String rPrd = Month().currentMonthNumber == 1 ? '${Month().getMonth(12)}, ${DateTime.now().year-1}' : Month().getMonth(Month().currentMonthNumber-1);
+                                                  var rDate = Month().currentMonthNumber == 1 ? DateTime(DateTime.now().year-1, 12, 1) : DateTime(DateTime.now().year, DateTime.now().month-1, DateTime.now().day);
+
+
+                                                  
+                                                  updateReportPeriod(rPrd, rDate, p: 'pm');
+                                                  
+                                                  Navigator.pop(context);
+
+                                                },
+                                                child: Container(
+                                                  padding: const EdgeInsets.all(10),
+                                                  decoration: BoxDecoration(
+                                                    border: Border.all(
+                                              
+                                                    ),
+                                              
+                                                    borderRadius: BorderRadius.circular(8)
+                                                  ),
+                                                  child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    children: [
+                                                      Row(
+                                                        children: const [
+                                                          Icon(
+                                                            MdiIcons.calendar,
+                                                            size: 18,
+                                                          ),
+                                                          SizedBox(width: 10,),
+                                                          Text(
+                                                            'Previous Month',
+                                                            style: TextStyle(
+                                                              fontSize: 18,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      const Icon(
+                                                        MdiIcons.chevronRightCircleOutline
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+
+
+                                              const SizedBox(height: 15,),
+
+
+                                              GestureDetector(
+                                                onTap: () {
+                                                  String rPrd = 'One Year ago';
+                                                  var rDate = DateTime.now().subtract(const Duration(days: 365));
+
+                                                  
+                                                  updateReportPeriod(rPrd, rDate, p: 'ya');
+
+                                                  Navigator.pop(context);
+
+                                                },
+                                                child: Container(
+                                                  padding: const EdgeInsets.all(10),
+                                                  decoration: BoxDecoration(
+                                                    border: Border.all(
+                                              
+                                                    ),
+                                              
+                                                    borderRadius: BorderRadius.circular(8)
+                                                  ),
+                                                  child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    children: [
+                                                      Row(
+                                                        children: const [
+                                                          Icon(
+                                                            MdiIcons.calendar,
+                                                            size: 18,
+                                                          ),
+                                                          SizedBox(width: 10,),
+                                                          Text(
+                                                            'One Year ago',
+                                                            style: TextStyle(
+                                                              fontSize: 18,
+                                                              
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      const Icon(
+                                                        MdiIcons.chevronRightCircleOutline
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+
+
+                                              const SizedBox(height: 15,),
+
+
+                                              GestureDetector(
+                                                onTap: () async{
+
+                                                  Navigator.pop(context);
+
+                                                  final dateRange = await showDateRangePicker(
+                                                    context: context, 
+                                                    firstDate: DateTime(2023, 1, 1, 0, 0, 0),
+                                                    lastDate: DateTime.now(),
+                                                    initialDateRange: DateTimeRange(start: DateTime(2023, 1, 1), end: DateTime.now()),
+                                                    helpText: 'Decide Report Range',
+                                                    confirmText: 'Confirm',
+                                                    cancelText: 'Cancel',
+                                                    initialEntryMode: DatePickerEntryMode.input
+                                                  
+                                                  );
+
+                                                  if (dateRange != null) {
+                                                    range = dateRange;
+                                                    String newReportDate = '${dateRange.start.year == DateTime.now().year? DateFormat.MMMd().format(dateRange.start): DateFormat.yMMMd().format(dateRange.start)} - ${dateRange.end.year == DateTime.now().year? DateFormat.MMMd().format(dateRange.end): DateFormat.yMMMd().format(dateRange.end)}';
+
+                                                    
+                                                    updateReportPeriod(newReportDate, dateRange, p: 'range');
+                                                  }
+
+                                                  // String rPrd = 'One Year ago';
+                                                  // var rDate = DateTime.now().subtract(Duration(days: 365)).millisecondsSinceEpoch;
+
+                                                  // updateReportPeriod(rPrd, rDate);
+
+                                                  // Navigator.pop(context);
+
+                                                },
+                                                child: Container(
+                                                  padding: const EdgeInsets.all(10),
+                                                  decoration: BoxDecoration(
+                                                    border: Border.all(
+                                              
+                                                    ),
+                                              
+                                                    borderRadius: BorderRadius.circular(8)
+                                                  ),
+                                                  child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    children: [
+                                                      Row(
+                                                        children: const [
+                                                          Icon(
+                                                            MdiIcons.calendar,
+                                                            size: 18,
+                                                          ),
+                                                          SizedBox(width: 10,),
+                                                          Text(
+                                                            'Select Date Range',
+                                                            style: TextStyle(
+                                                              fontSize: 18,
+                                                              
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      const Icon(
+                                                        MdiIcons.chevronRightCircleOutline,
+                                                        
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  );
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color:Colors.white),
+                                    borderRadius: BorderRadius.circular(10)
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        reportPeriod,
+
+                                        style: TextStyle(
+                                        ),
+                                      ),
+                                
+                                      const Icon(
+                                        MdiIcons.chevronDown,
+                                      )
+                                    ],
+                                  ),
+                                ),
+                            )
+                          ],
+                        ),
                       ),
 
                       const SizedBox(height: 10,),
 
                       Expanded(
-                        child: StreamBuilder<List<ExpenseModel>>(
+                        child:expenseList.isNotEmpty?
+
+                        ListView.builder(
+                              itemCount: expenseList.length,
+                              itemBuilder: (context, index){
+                                
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 30),
+                                  child: ExpenseTile(
+                                    slidableKey: index,
+
+                                    onDelete:  ()async{
+                                      showDialog<void>(
+                                        context: context,
+                                        barrierDismissible: false, // user must tap button!
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            //backgroundColor: appOrange,
+                                            title: Text('Delete ${capitalize(expenseList[index].title)}'),
+                                            content:  SingleChildScrollView(
+                                              child: ListBody(
+                                                children: const <Widget>[
+                                                  Text('Deleting this will remove it from the expenses list'),
+
+                                                  
+                                                ],
+                                              ),
+                                            ),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                child: const Text(
+                                                  'Cancel'),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                              TextButton(
+                                                child: const Text('Confirm'),
+                                                onPressed: () async {
+
+                                                  await deleteExpenseProcedure(expenseList[index]);
+                                                  
+                                                  Provider.of<ExpenseProvider>(context, listen: false).subtract(expenseList[index].amount);
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                            ],
+                                          );}
+                                        );
+                                    },
+                                    
+                                    expenseModel: expenseList[index],
+                                    percent:  double.parse(((expenseList[index].amount/expenseTotal)*100).toString()).toStringAsFixed(1),//percentages[expenseList[index].id].toString(),
+                                    index: '${index+1}',
+                                  ),
+                                );
+                              })
+                              :
+
+                         StreamBuilder<List<ExpenseModel>>(
                           stream: expenseDb.onExpenses(_db!),
                           // ignore: prefer_const_literals_to_create_immutables
                           initialData: [
