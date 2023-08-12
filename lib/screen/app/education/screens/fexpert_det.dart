@@ -62,6 +62,15 @@ class _FexpertDetailScreenState extends State<FexpertDetailScreen> {
   }
 
 
+  FocusNode _focus = FocusNode();
+  double _height = 0;
+
+
+
+
+
+
+
   @override
   void initState() {
     likeUnlike();
@@ -76,229 +85,305 @@ class _FexpertDetailScreenState extends State<FexpertDetailScreen> {
         leadingWidth: 40,
       ),
 
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-
-              if(widget.fexpert.image != null)...
-                [
-                  Hero(
-                  tag: '${widget.fexpert.id}img',
-                  child: ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: CachedNetworkImage(
-                            imageUrl: widget.fexpert.image!,
-                          ),
-                        )),
+      body: GestureDetector(
+        onTap: () {
+          _focus.unfocus();
+          setState(() {
+            _height = 0;
+          });         
+        },
+        child: Column(
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                         
-                    SizedBox(height: 5,),
-                ],
-
-              Center(
-                child: Hero(
-                  tag: widget.fexpert.id, 
-                  child: SelectableText(
-                    widget.fexpert.topic,
-              
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold
-                    ),
-                  )),
-              ),
-        
-                ListTile(
-                  contentPadding: const EdgeInsets.only(left: 0, top: 2),
-                  minLeadingWidth: 30,
-                  title: Text(
-                    '${widget.fexpert.poster.firstName} ${widget.fexpert.poster.lastName}'
-                  ),
-                  leading: ClipOval(
-                    child: SizedBox(
-                      height: 30,
-                      width: 30,
-                  
-                      child: widget.fexpert.poster.dp != null && widget.fexpert.poster.dp!.isNotEmpty?
-                       CachedNetworkImage(
-                        imageUrl: widget.fexpert.poster.dp!):
-                       Container(
-                        color: appOrange,
-                        child: Icon(
-                          MdiIcons.account,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-        
-                //SizedBox(height: 10,),
-        
-                SelectableText(
-                    widget.fexpert.body,
-              
-                    style: const TextStyle(
-                      fontSize: 14,
-                      height: 1.4
-                    ),
-                  ),
-
-                  const SizedBox(height: 5,),
-
-                  Row(
-                    children: [
-                      const Text(
-                        'Tags: ',
-
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          height: 1.4
-                        ),
-                      ),
-
-                     
-                      Wrap(
-                        children: widget.fexpert.tags.split(',').map((e) => 
-                        Container(
-                          margin: const EdgeInsets.only(right: 5),
-                          padding: const EdgeInsets.all(3),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              width: .4
-                            ),
-                            borderRadius: BorderRadius.circular(5)
-                          ),
-                          child: Text(e)) 
-                      ).toList(),
-                      )
-                    ],
-                  ),
-
-                  const Divider(),
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-
-
-                      Row(
-                        children: [
-                          const Icon(
-                            MdiIcons.circle,
-                            size: 8,
-                          ),
-                          Text(
-                            DateTime.now().difference(widget.fexpert.date).inDays<1?
-                              DateTime.now().difference(widget.fexpert.date).inHours<1?
-                              ' ${DateTime.now().difference(widget.fexpert.date).inMinutes}m':
-                              ' ${DateTime.now().difference(widget.fexpert.date).inHours}h':
-                                DateTime.now().difference(widget.fexpert.date).inDays<30?
-                                  ' ${DateTime.now().difference(widget.fexpert.date).inDays}d':
-                                      DateFormat.yMMMd().format(widget.fexpert.date),
-                    
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                    
-                            style: const TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.bold
-                            ),
-                          ),
-
-
-                          const SizedBox(width: 30,),
-
-                          GestureDetector(
-                            onTap: () async{
-                              await like();
-                            },
-
-                            child: Icon(
-                              liked? MdiIcons.heart : MdiIcons.heartOutline,
-                              size: 17,
-                              color: liked? Colors.redAccent : Colors.black,
-                            ),
-                          ),
-
-                          SizedBox(width: 7,), 
-
-                          Text(
-                            likes.toString(),
-
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold
-                            ),
-                          )
-                        ],
-                      ),
-
-
-                      Row(
-                        children: [
-                          const Icon(
-                            MdiIcons.share,
-                            size: 24,
-                          ),
-
-                          if(widget.fexpert.poster == widget.user)...
-                           [
-                            const SizedBox(width: 5,),
-                             GestureDetector(
-                              onTap: () async{
-                                try {
-                                  await FexpertDb().deleteData(widget.fexpert);
-                                } catch (e) {
-                                  await FirebaseFexpertDb().delete(widget.fexpert);
-                                }
-                                Navigator.pop(context);
+                      if(widget.fexpert.image != null)...
+                        [
+                          Hero(
+                          tag: '${widget.fexpert.id}img',
+                          child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: CachedNetworkImage(
+                                    imageUrl: widget.fexpert.image!,
+                                  ),
+                                )),
                                 
-                              },
-                               child: Icon(
-                                MdiIcons.deleteOutline,
-                                size: 20,
-                                color: appDanger,
-                                                         ),
-                             ),
-
-                            const SizedBox(width: 7,),
-
-                            GestureDetector(
-                              onTap: () {
-                                 Navigator.push(
-                                  context,
-                                  PageTransition(
-                                    child: AddFexpert(
-                                      user: widget.user,
-                                      fexpertModel: widget.fexpert,
-                                    ),
-
-                                    type: PageTransitionType.bottomToTop
-                                  )
-                                );
-                              },
-                              child: Icon(
-                                MdiIcons.bookEditOutline,
-                                size: 18,
-                                color: appSuccess,
+                            SizedBox(height: 5,),
+                        ],
+                        
+                      Center(
+                        child: Hero(
+                          tag: widget.fexpert.id, 
+                          child: SelectableText(
+                            widget.fexpert.topic,
+                      
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold
+                            ),
+                          )),
+                      ),
+                
+                        ListTile(
+                          contentPadding: const EdgeInsets.only(left: 0, top: 2),
+                          minLeadingWidth: 30,
+                          title: Text(
+                            '${widget.fexpert.poster.firstName} ${widget.fexpert.poster.lastName}'
+                          ),
+                          leading: ClipOval(
+                            child: SizedBox(
+                              height: 30,
+                              width: 30,
+                          
+                              child: widget.fexpert.poster.dp != null && widget.fexpert.poster.dp!.isNotEmpty?
+                               CachedNetworkImage(
+                                imageUrl: widget.fexpert.poster.dp!):
+                               Container(
+                                color: appOrange,
+                                child: Icon(
+                                  MdiIcons.account,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
-                           ],
-                          
-                        ],
-                      )
+                          ),
+                        ),
+                
+                        //SizedBox(height: 10,),
+                
+                        SelectableText(
+                            widget.fexpert.body,
                       
+                            style: const TextStyle(
+                              fontSize: 14,
+                              height: 1.4
+                            ),
+                          ),
+                        
+                          const SizedBox(height: 5,),
+                        
+                          Row(
+                            children: [
+                              const Text(
+                                'Tags: ',
+                        
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  height: 1.4
+                                ),
+                              ),
+                        
+                             
+                              Wrap(
+                                children: widget.fexpert.tags.split(',').map((e) => 
+                                Container(
+                                  margin: const EdgeInsets.only(right: 5),
+                                  padding: const EdgeInsets.all(3),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      width: .4
+                                    ),
+                                    borderRadius: BorderRadius.circular(5)
+                                  ),
+                                  child: Text(e)) 
+                              ).toList(),
+                              )
+                            ],
+                          ),
+                        
+                          const Divider(),
+                        
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                        
+                        
+                              Row(
+                                children: [
+                                  const Icon(
+                                    MdiIcons.circle,
+                                    size: 8,
+                                  ),
+                                  Text(
+                                    DateTime.now().difference(widget.fexpert.date).inDays<1?
+                                      DateTime.now().difference(widget.fexpert.date).inHours<1?
+                                      ' ${DateTime.now().difference(widget.fexpert.date).inMinutes}m':
+                                      ' ${DateTime.now().difference(widget.fexpert.date).inHours}h':
+                                        DateTime.now().difference(widget.fexpert.date).inDays<30?
+                                          ' ${DateTime.now().difference(widget.fexpert.date).inDays}d':
+                                              DateFormat.yMMMd().format(widget.fexpert.date),
+                            
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                            
+                                    style: const TextStyle(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.bold
+                                    ),
+                                  ),
+                        
+                        
+                                  const SizedBox(width: 30,),
+                        
+                                  GestureDetector(
+                                    onTap: () async{
+                                      await like();
+                                    },
+                        
+                                    child: Icon(
+                                      liked? MdiIcons.heart : MdiIcons.heartOutline,
+                                      size: 17,
+                                      color: liked? Colors.redAccent : Colors.black,
+                                    ),
+                                  ),
+                        
+                                  SizedBox(width: 3,), 
+                        
+                                  Text(
+                                    likes.toString(),
+                        
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold
+                                    ),
+                                  ),
+                        
+                        
+                                  SizedBox(width: 20,),
+                        
+                                  GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        
+                                        _height = 70;
+                                      });
+                                      _focus.requestFocus();
+                                    },
+                                    child: Row(
+                                        children: [
+                                          const Icon(
+                                            MdiIcons.chatOutline,
+                                            size: 18,
+                                          ),
+                                    
+                                          const SizedBox(width: 3,), 
+                                    
+                                          Text(
+                                            (3).toString(),
+                                    
+                                            style: const TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                  ),
+                                ],
+                              ),
+                        
+                        
+                              Row(
+                                children: [
+                                  const Icon(
+                                    MdiIcons.share,
+                                    size: 24,
+                                  ),
+                        
+                                  if(widget.fexpert.poster == widget.user)...
+                                   [
+                                    const SizedBox(width: 5,),
+                                     GestureDetector(
+                                      onTap: () async{
+                                        try {
+                                          await FexpertDb().deleteData(widget.fexpert);
+                                        } catch (e) {
+                                          await FirebaseFexpertDb().delete(widget.fexpert);
+                                        }
+                                        Navigator.pop(context);
+                                        
+                                      },
+                                       child: Icon(
+                                        MdiIcons.deleteOutline,
+                                        size: 20,
+                                        color: appDanger,
+                                                                 ),
+                                     ),
+                        
+                                    const SizedBox(width: 7,),
+                        
+                                    GestureDetector(
+                                      onTap: () {
+                                         Navigator.push(
+                                          context,
+                                          PageTransition(
+                                            child: AddFexpert(
+                                              user: widget.user,
+                                              fexpertModel: widget.fexpert,
+                                            ),
+                        
+                                            type: PageTransitionType.bottomToTop
+                                          )
+                                        );
+                                      },
+                                      child: Icon(
+                                        MdiIcons.bookEditOutline,
+                                        size: 18,
+                                        color: appSuccess,
+                                      ),
+                                    ),
+                                   ],
+                                  
+                                ],
+                              )
+                              
+                            ],
+                          ),
+                        
+                          const SizedBox(height: 50,)
                     ],
                   ),
-
-
-                  const SizedBox(height: 50,)
-            ],
-          ),
+                ),
+              ),
+            ),
+      
+            AnimatedContainer(
+              padding: EdgeInsets.all(8),
+              duration: Duration(milliseconds: 200),
+              height: _height,
+              color: appOrange.shade100,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      padding: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(15)
+                      ),
+                      child: TextField(
+                        maxLines: 2,
+                        decoration: InputDecoration.collapsed(hintText: 'write a comment'),
+                        focusNode: _focus,
+                      ),
+                    )
+                  ),
+                  SizedBox(width: 5,),
+                  IconButton(
+                    onPressed: null,
+                    icon: Icon(
+                      MdiIcons.send
+                    ))
+                ],
+              ),
+            )
+          ],
         ),
       ),
 

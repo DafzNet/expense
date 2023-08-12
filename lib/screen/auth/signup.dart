@@ -75,8 +75,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
-                              letterSpacing: 1.4,
-                              wordSpacing: 1.4
+                              wordSpacing: 1.2
                             ),
                           )
                         ],
@@ -251,7 +250,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         children: [
                           const Text('Already have an account?',
                           style: TextStyle(
-                            fontSize: 18
+                            fontSize: 14
                           ),
                         ),
                 
@@ -267,7 +266,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           },
                           child: const Text(' Sign In',
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 14,
                               color: Colors.orangeAccent
                             ),
                           ),

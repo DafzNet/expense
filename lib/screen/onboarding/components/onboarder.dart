@@ -36,21 +36,22 @@ class OnboarderTemplate extends StatefulWidget {
 }
 
 class _OnboarderTemplateState extends State<OnboarderTemplate> {
+
+
+
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 30),
+      padding: const EdgeInsets.only(bottom: 20),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.center,
-
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
 
           Padding(
             padding: const EdgeInsets.only(bottom: 10),
             child: SizedBox(
-              width: MediaQuery.of(context).size.width-40,
-              height: MediaQuery.of(context).size.width-40,
+              width: MediaQuery.of(context).size.width-60,
+              height: MediaQuery.of(context).size.width-60,
               child: Image.asset(
                 widget.img,
                 fit: BoxFit.cover,
@@ -58,7 +59,9 @@ class _OnboarderTemplateState extends State<OnboarderTemplate> {
             ),
           ),
 
-          Center(
+          Column(
+            children: [
+              Center(
             child: DotsIndicator(
               dotsCount: 4,
               position: widget.dotPosition,
@@ -80,7 +83,7 @@ class _OnboarderTemplateState extends State<OnboarderTemplate> {
 
             style: TextStyle(
               fontWeight: FontWeight.w700,
-              fontSize: 23,
+              fontSize: 20,
               height: 1.8
             ),
           ),
@@ -90,32 +93,34 @@ class _OnboarderTemplateState extends State<OnboarderTemplate> {
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: Text(
               widget.body,
-
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontWeight: FontWeight.w400,
-                fontSize: 14,
-                height: 1.8
+                fontSize: 13,
+                height: 1.3
               ),
             ),
           ),
 
-          SizedBox(height: 40,),
+          
+
+          SizedBox(height: 20,),
 
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: DefaultButton(
               text: widget.buttonText??'Next',
               onTap: widget.onTap,
-              ),
+            ),
           ),
+
           SizedBox(height: 15,),
 
           GestureDetector(
             onTap: widget.onTap2,
             child: Text(
-              widget.button2text??'',
-          
+              widget.button2text ?? '',
+
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontWeight: FontWeight.w700,
@@ -125,6 +130,8 @@ class _OnboarderTemplateState extends State<OnboarderTemplate> {
               ),
             ),
           ),
+            ],
+          )
         ],
       ),
     );

@@ -44,7 +44,7 @@ class _IncomeCardState extends State<IncomeCard> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                width: 0.2,
+                width: 0.5,
                 color: Colors.black26
               )
             ),
@@ -115,15 +115,16 @@ class _IncomeCardState extends State<IncomeCard> {
                               overflow: TextOverflow.ellipsis,
                           
                               style: const TextStyle(
-                                fontSize: 16,
+                                fontSize: 14,
                               ),
                             ),
                           ),
+
                         ],
                       ),
         
                       Padding(
-                        padding: const EdgeInsets.all(12.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 20),
                         child: LinearPercentIndicator(
                             progressColor: const Color.fromARGB(255, 2, 142, 6),
                             //width: MediaQuery.of(context).size.width-60,
@@ -147,7 +148,7 @@ class _IncomeCardState extends State<IncomeCard> {
                                 overflow: TextOverflow.ellipsis,
                               
                                 style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 12,
                                 ),
                               ),
         
@@ -158,7 +159,7 @@ class _IncomeCardState extends State<IncomeCard> {
                                 overflow: TextOverflow.ellipsis,
                               
                                 style: const TextStyle(
-                                  fontSize: 18,
+                                  fontSize: 14,
                                 ),
                               ),
                             ],
@@ -168,14 +169,14 @@ class _IncomeCardState extends State<IncomeCard> {
                           Row(
                             children: [
                               const SizedBox(width: 20,),
-                              const Text(
-                                'Balance: ',
+                              Text(
+                                widget.income.carriedOverIncome? 'Carried over Balance: ': 'Balance: ',
                               
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               
                                 style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 12,
                                 ),
                               ),
         
@@ -186,7 +187,7 @@ class _IncomeCardState extends State<IncomeCard> {
                                 overflow: TextOverflow.ellipsis,
                               
                                 style: TextStyle(
-                                  fontSize: 18,
+                                  fontSize: 14,
                                   color: (widget.income.balance/widget.income.amount)*100 < 20 ? Colors.red: const Color.fromARGB(255, 6, 146, 11)
                                 ),
                               ),

@@ -10,6 +10,8 @@ import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:sembast/sembast.dart';
+import '../../../../../dbs/vault_db.dart';
+import '../../../../../models/vault.dart';
 import '../../../../../procedures/income/income_procedure.dart';
 import '../../../../../utils/capitalize.dart';
 import '../../../../../utils/constants/colors.dart';
@@ -89,8 +91,6 @@ class _IncomeScreenState extends State<IncomeScreen> {
     });
   }
 
-
-
   List<IncomeModel>? _incomes; 
 
   final IncomeDb incomeDb = IncomeDb();
@@ -103,6 +103,66 @@ class _IncomeScreenState extends State<IncomeScreen> {
     });
   }
 
+
+  Future<void> broughtDown() async {
+  final vaultDb = VaultDb();
+  final incomeDb = IncomeDb();
+  final vaults = await vaultDb.retrieveData();
+
+  DateTime previousMonthDate = DateTime.now().subtract(Duration(days: DateTime.now().day));
+  String previousMonth = Month().getMonth(previousMonthDate.month);
+
+  double broughtDownBalance = 0;
+  List<String> notes = [];
+  int incomeCounter = 1;
+
+  List<IncomeModel> incomes = await incomeDb.retrieveBasedOn(
+    Filter.and([
+      Filter.equals('month', previousMonthDate.month),
+      Filter.equals('year', previousMonthDate.year),
+      Filter.greaterThan('balance', 0.0),
+      Filter.equals('carriedOverIncome', false),
+    ]),
+  );
+
+  for (var income in incomes) {
+    broughtDownBalance += income.balance;
+    notes.add('$incomeCounter. ${income.name}\n  source: ${income.source}\n  amount: ${income.balance}');
+    incomeCounter++;
+
+    final incomeUpdated = income.copyWith(
+      carriedOverIncome: true,
+    );
+
+    final vaultToUpdate = vaults.firstWhere((vault) => vault == income.incomeVault);
+    await vaultDb.updateData(
+      vaultToUpdate.copyWith(
+        amountInVault: vaultToUpdate.amountInVault - income.balance,
+      ),
+    );
+
+    await incomeDb.updateData(incomeUpdated);
+  }
+
+  if (broughtDownBalance > 0.0) {
+    final incomeBroughtDown = IncomeModel(
+      id: DateTime.now().millisecondsSinceEpoch,
+      name: 'Brought Down',
+      source: previousMonth,
+      amount: broughtDownBalance,
+      balance: broughtDownBalance,
+      date: DateTime.now(),
+      broughtDownIncome: true,
+      incomeVault: incomes.first.incomeVault,
+      day: DateTime.now().day,
+      month: DateTime.now().month,
+      year: DateTime.now().year,
+      note: 'This income is generated from last month\'s balances. The following are the incomes from which this was taken:\n${notes.join('\n')}',
+    );
+
+    await addIncomeProcedure(incomeBroughtDown);
+  }
+}
 
 
   @override
@@ -127,6 +187,14 @@ class _IncomeScreenState extends State<IncomeScreen> {
             title: const Text('Income'),
 
             actions: [
+
+              // TextButton(
+              //   onPressed:()async{
+              //     await broughtDown();
+              //   } , 
+              //   child: Text('bd inc')
+              // ),
+
               GestureDetector(
                 onTap: () async{
                   await showModalBottomSheet(

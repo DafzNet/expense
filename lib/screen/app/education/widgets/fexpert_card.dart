@@ -201,50 +201,98 @@ class _FexpertCardState extends State<FexpertCard> {
               
                      ],
 
-                    const SizedBox(height: 5,),
+                    const SizedBox(height: 10,),
 
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Icon(
-                              liked? MdiIcons.heart : MdiIcons.heartOutline,
-                              size: 18,
-                              color: liked? Colors.redAccent : Colors.black,
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 5),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                border: Border.all()
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                      liked? MdiIcons.heart : MdiIcons.heartOutline,
+                                      size: 18,
+                                      color: liked? Colors.redAccent : Colors.black,
+                                    ),
+                            
+                                  const SizedBox(width: 5,), 
+                            
+                                  Text(
+                                    likes.toString(),
+                            
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
 
-                          const SizedBox(width: 7,), 
+                          const SizedBox(width: 10,),
 
-                          Text(
-                            likes.toString(),
 
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 5),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              border: Border.all()
                             ),
-                          )
-                          ],
-                        ),
-
-                         const Icon(
-                            MdiIcons.share,
-                            size: 20,
+                            child: Row(
+                              children: [
+                                const Icon(
+                                  MdiIcons.chatOutline,
+                                  size: 18,
+                                ),
+                          
+                                const SizedBox(width: 5,), 
+                          
+                                Text(
+                                  (3).toString(),
+                          
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
+
+                         
                       ],
                     ),
 
-                    Divider(
-                      thickness: .3,
-                    )
-
+                    const Icon(
+                      MdiIcons.share,
+                      size: 20,
+                    ),
                   ],
                 ),
+
+                SizedBox(height: 10,),
+
+                Divider(
+                  height: 12,
+                  thickness: 6,
+                  color: Color.fromARGB(255, 243, 243, 243),
+                )
+
+                ]
+                
               ),
             ),
           ),
 
-          
+          )
         ],
       ),
     );
