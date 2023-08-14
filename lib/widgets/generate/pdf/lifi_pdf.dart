@@ -6,11 +6,11 @@ import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
 
-import '../../models/budget.dart';
-import '../../models/expense_model.dart';
-import '../../models/income_model.dart';
-import '../../utils/currency/currency.dart';
-import '../../utils/month.dart';
+import '../../../models/budget.dart';
+import '../../../models/expense_model.dart';
+import '../../../models/income_model.dart';
+import '../../../utils/currency/currency.dart';
+import '../../../utils/month.dart';
 
 class LifiPDF{
 

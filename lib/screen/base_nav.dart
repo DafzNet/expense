@@ -11,6 +11,7 @@ import '../../utils/constants/colors.dart';
 import '../firebase/db/user.dart';
 import '../models/user_model.dart';
 import '../utils/adManager/ad_mob.dart';
+import '../utils/capitalize.dart';
 import 'app/education/education.dart';
 import 'app/home/home.dart';
 import 'app/more/more.dart';
@@ -202,7 +203,7 @@ class _AppBaseNavigationState extends State<AppBaseNavigation> {
 
 
               child: Text(
-                _currentUser!.firstName!.substring(0,1).toUpperCase()+_currentUser!.lastName!.substring(0,1).toUpperCase(),//'${widget.user.firstName.substring(0,1).toUpperCase()}${widget.user.lastName.substring(0,1).toUpperCase()}',
+                _currentUser!.firstName!.substring(0,1).toUpperCase()+'${_currentUser!.lastName != null && _currentUser!.lastName!.isNotEmpty? capitalize(_currentUser!.lastName!.substring(0,1)):''}',//'${widget.user.firstName.substring(0,1).toUpperCase()}${widget.user.lastName.substring(0,1).toUpperCase()}',
 
                 style: TextStyle(
                   color: Colors.white

@@ -14,13 +14,16 @@ import 'package:expense/utils/constants/colors.dart';
 import 'package:expense/utils/constants/images.dart';
 import 'package:expense/utils/currency/currency.dart';
 import 'package:expense/utils/month.dart';
-import 'package:expense/widgets/pdf/lifi_pdf.dart';
+import 'package:expense/widgets/generate/pdf/lifi_pdf.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:sembast/sembast.dart';
 
 import '../../../../../models/budget.dart';
+import '../../../../../widgets/generate/excel.dart';
+import 'excel.dart';
 
 class Accountability extends StatefulWidget {
   final LightUser user;
@@ -37,11 +40,6 @@ class _AccountabilityState extends State<Accountability> {
 
   /////Create Pdfs
   LifiPDF lifiPDF = LifiPDF();
-
-
-
-
-
 
   bool reload = false;
 
@@ -1061,72 +1059,81 @@ class _AccountabilityState extends State<Accountability> {
                 ),
               ),
 
-              SizedBox(
+              AnimatedContainer(
+                duration: Duration(
+                  milliseconds: 200
+                ),
                 height: 60,
-                child: Container(
-                  color: appOrange.shade50,
 
-                  child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 4),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                                      
-                        children: [
-                          GestureDetector(
-                            onTap: () async{
-                              await showMenu(
-                                context: context, 
-                                position: RelativeRect.fromLTRB(
-                                  100, (MediaQuery.of(context).size.height/5)*4, 10, 10), 
-                                items: [
-                                 PopupMenuItem(
-                                    child: const Text('To PDF'),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                                  
+                    children: [
 
-                                    onTap: ()async{
-                                      File myPdf = await lifiPDF.savePdf(
-                                        '${DateTime.now().millisecondsSinceEpoch}.pdf', 
-                                        Currency(context).currencySymbol, 
-                                        dateR == 'cm'? '${Month().currentMonth} ${DateTime.now().year}':
-                                          dateR == 'pa'?'${Month().getMonth(reportDate.month)} ${reportDate.year.toString()}':
-                                            dateR == 'ya'?'${Month().getMonth(reportDate.month)} ${reportDate.year} till date':reportPeriod,
-                                        incomes: incomes,
-                                        expByCat: expByCat,
-                                        ctx: context,
-                                        incomeTotal: incomeTotal,
-                                        expTotal: expTotal,
-                                        expenses: expenses,
-                                        budgets: budgets,
-                                        logo:myLogo,
-                                        username: '${widget.user.firstName} ${widget.user.lastName}');
-                                      await lifiPDF.openPDF(myPdf);
-                                    },
-                                  ),
-
-                                 const PopupMenuItem(
-                                    child: Text('To CSV'),
-                                  ),
-   
-                                ]
-                              );
-                            },
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: const [
-                                Icon(
-                                  MdiIcons.databaseExportOutline
-                                ),
-                                              
-                                Text('Export')
-                              ],
-                            ),
-                          ),
-                    
-                          
-                        ],
+                      Text(
+                        'Export to:'
                       ),
-                    ),
+
+                      GestureDetector(
+                        onTap: ()async{
+                            File myPdf = await lifiPDF.savePdf(
+                                '${DateTime.now().millisecondsSinceEpoch}.pdf', 
+                                Currency(context).currencySymbol, 
+                                dateR == 'cm'? '${Month().currentMonth} ${DateTime.now().year}':
+                                  dateR == 'pa'?'${Month().getMonth(reportDate.month)} ${reportDate.year.toString()}':
+                                    dateR == 'ya'?'${Month().getMonth(reportDate.month)} ${reportDate.year} till date':reportPeriod,
+                                incomes: incomes,
+                                expByCat: expByCat,
+                                ctx: context,
+                                incomeTotal: incomeTotal,
+                                expTotal: expTotal,
+                                expenses: expenses,
+                                budgets: budgets,
+                                logo:myLogo,
+                                username: '${widget.user.firstName} ${widget.user.lastName}');
+                              await lifiPDF.openPDF(myPdf);
+                          },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                          decoration: BoxDecoration(
+                            border: Border.all(),
+                            borderRadius: BorderRadius.circular(12)
+                          ),
+                          child: Text(
+                              'PDF'
+                            ),
+                        ),
+                      ),
+
+
+                      GestureDetector(
+                        onTap: ()async{
+                            Navigator.push(
+                              context,
+                              PageTransition(
+                                child: ExcelOptions(),
+                                type: PageTransitionType.rightToLeft
+                              )
+                            );
+                          },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                          decoration: BoxDecoration(
+                            border: Border.all(),
+                            borderRadius: BorderRadius.circular(12)
+                          ),
+                          child: Text(
+                              'Excel'
+                            ),
+                        ),
+                      ),
+
+                      
+                      
+                    ],
                   ),
                 ),
               )
