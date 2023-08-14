@@ -288,7 +288,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         children: [
                           const Text('Don\'t have an account?',
                           style: TextStyle(
-                            fontSize: 18
+                            fontSize: 14
                           ),
                         ),
               
@@ -304,7 +304,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           },
                           child: const Text(' Sign up',
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 14,
                               color: Colors.orangeAccent
                             ),
                           ),

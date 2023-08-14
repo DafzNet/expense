@@ -119,7 +119,7 @@ class _MoreScreenState extends State<MoreScreen> {
                                   
                                         child: Center(
                                           child: Text(
-                                            '${widget.user.firstName!.substring(0,1).toUpperCase()}${widget.user.lastName!.substring(0,1).toUpperCase()}',
+                                            '${widget.user.firstName!.substring(0,1).toUpperCase()}${widget.user.lastName != null && widget.user.lastName!.isNotEmpty? widget.user.lastName!.substring(0,1).toUpperCase():''}',
                                                             
                                             style: const TextStyle(
                                               fontSize: 30,
@@ -242,7 +242,7 @@ class _MoreScreenState extends State<MoreScreen> {
                                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                                   children: [
                                     Text(
-                                      '${capitalize(widget.user.firstName!)} ${capitalize(widget.user.lastName!)}',
+                                      '${capitalize(widget.user.firstName!)} ${widget.user.lastName != null && widget.user.lastName!.isNotEmpty? capitalize(widget.user.lastName!):''}',
                                               
                                       style: const TextStyle(
                                         fontSize: 20,
@@ -253,7 +253,7 @@ class _MoreScreenState extends State<MoreScreen> {
                                     Text(
                                       widget.user.email!,
                               
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontSize: 14
                                       ),
                                     ),

@@ -201,7 +201,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
 
                             Text(
-                              '${capitalize(_currentUser!.firstName!)} ${capitalize(_currentUser!.lastName!)}',
+                              '${capitalize(_currentUser!.firstName!)} ${_currentUser!.lastName != null && _currentUser!.lastName!.isNotEmpty? capitalize(_currentUser!.lastName!):''}',
                               style: const TextStyle(
                                 fontSize: 18,
                                 height: 1.4,
@@ -236,31 +236,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 },
                                 child: Image.asset(lifiIcon)
                               )
-                              // _currentUser!.dp != null && _currentUser!.dp!.isNotEmpty?
-                              // CachedNetworkImage(
-                              //   imageUrl: widget.user2!.dp!,
-                              // ):
-                              //  Container(
-                              //   color: appOrange,
-                          
-                              //   child: Center(
-                              //     child: Text(
-                              //       _currentUser!.firstName!.substring(0,1).toUpperCase()+_currentUser!.lastName!.substring(0,1).toUpperCase(),
-                              //       style: const TextStyle(
-                              //             fontSize: 24,
-                              //             color: Colors.white,
-                              //             fontWeight: FontWeight.w900,
-                              //             shadows: [
-                              //               Shadow(
-                              //                 blurRadius: 10,
-                              //                 offset: Offset(1, 1)
-                              //               )
-                              //             ]
-                              //           ),
-                              //     ),
-                              //   ),
-                                
-                              // ),
+                              
                             ),
                           ),
                         )
