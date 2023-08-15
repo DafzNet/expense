@@ -237,35 +237,35 @@ class _FexpertCardState extends State<FexpertCard> {
                               ),
                             ),
 
-                          const SizedBox(width: 10,),
+                          // const SizedBox(width: 10,),
 
 
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 5),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              border: Border.all()
-                            ),
-                            child: Row(
-                              children: [
-                                const Icon(
-                                  MdiIcons.chatOutline,
-                                  size: 18,
-                                ),
+                          // Container(
+                          //   padding: const EdgeInsets.symmetric(horizontal: 5),
+                          //   decoration: BoxDecoration(
+                          //     borderRadius: BorderRadius.circular(5),
+                          //     border: Border.all()
+                          //   ),
+                          //   child: Row(
+                          //     children: [
+                          //       const Icon(
+                          //         MdiIcons.chatOutline,
+                          //         size: 18,
+                          //       ),
                           
-                                const SizedBox(width: 5,), 
+                          //       const SizedBox(width: 5,), 
                           
-                                Text(
-                                  (3).toString(),
+                          //       Text(
+                          //         (3).toString(),
                           
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                          //         style: const TextStyle(
+                          //           fontSize: 14,
+                          //           fontWeight: FontWeight.bold
+                          //         ),
+                          //       ),
+                          //     ],
+                          //   ),
+                          // ),
 
                          
                       ],

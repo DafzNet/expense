@@ -6,7 +6,7 @@ import 'package:expense/dbs/settings.dart';
 import 'package:expense/providers/settings_provider.dart';
 import 'package:expense/utils/constants/colors.dart';
 import 'package:expense/utils/currency/currency.dart';
-import 'package:flutter_background_service/flutter_background_service.dart';
+//import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:expense/utils/settings/settings.dart';
 import 'package:expense/widgets/snack_bar.dart';
@@ -20,43 +20,43 @@ import '../../../../../dbs/category_db.dart';
 
 //com.light.cashflowpad
 
-Future<void> _handleMethod(MethodCall call) async {
-  if (call.method == 'start') {
-    // Start the background service and execute your background task
-    onStart();
-  }
-}
+// Future<void> _handleMethod(MethodCall call) async {
+//   if (call.method == 'start') {
+//     // Start the background service and execute your background task
+//     onStart();
+//   }
+// }
 
 
-Future<void> onStart() async {
-  final service = FlutterBackgroundService();
+// Future<void> onStart() async {
+//   final service = FlutterBackgroundService();
 
-  final _time = TimeOfDay.now();
+//   final _time = TimeOfDay.now();
 
-  final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+//   final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-  const AndroidNotificationDetails androidPlatformChannelSpecifics = AndroidNotificationDetails(
-    'lifi_id',
-    'LiFi',
-    channelDescription: 'Your Channel Description',
-    importance: Importance.high,
-    priority: Priority.max,
-  );
+//   const AndroidNotificationDetails androidPlatformChannelSpecifics = AndroidNotificationDetails(
+//     'lifi_id',
+//     'LiFi',
+//     channelDescription: 'Your Channel Description',
+//     importance: Importance.high,
+//     priority: Priority.max,
+//   );
 
-  const NotificationDetails platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
+//   const NotificationDetails platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
 
-  await flutterLocalNotificationsPlugin.zonedSchedule(
-    DateTime.now().millisecondsSinceEpoch,
-    'LiFi',
-    'Update your daily transactions',
-    tz.TZDateTime.from(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, _time.hour, _time.minute), tz.local),
-    platformChannelSpecifics,
-    uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
-    matchDateTimeComponents: DateTimeComponents.time,
-  );
+//   await flutterLocalNotificationsPlugin.zonedSchedule(
+//     DateTime.now().millisecondsSinceEpoch,
+//     'LiFi',
+//     'Update your daily transactions',
+//     tz.TZDateTime.from(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, _time.hour, _time.minute), tz.local),
+//     platformChannelSpecifics,
+//     uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+//     matchDateTimeComponents: DateTimeComponents.time,
+//   );
 
 
-}
+// }
 
 
 

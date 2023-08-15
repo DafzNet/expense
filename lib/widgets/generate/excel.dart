@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:excel/excel.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 
-Future<void> generateExcel(BuildContext context, List<List<dynamic>> data) async {
+Future<void> generateExcel(BuildContext context, List<List<dynamic>> data, {required String name}) async {
   // Create an Excel workbook
   var excel = Excel.createExcel();
 
@@ -20,15 +21,22 @@ Future<void> generateExcel(BuildContext context, List<List<dynamic>> data) async
     sheet.appendRow(row);
   }
 
+  print('object');
+
+  // DeviceInfoPlugin info = DeviceInfoPlugin();
+  // AndroidDeviceInfo andInfo = await info.androidInfo;
+  // print(andInfo.version.release);
+
   // Request external storage permission
   var status = await Permission.storage.request();
+
   if (status.isGranted) {
     // Let the user choose the storage location
-    FilePickerResult? result = await FilePicker.platform.pickFiles();
+    String? result = await FilePicker.platform.getDirectoryPath(dialogTitle: 'Save Path');
     if (result != null) {
-      String chosenDirectory = result.paths.first!;
+      String chosenDirectory = result;
 
-      String filePath = '$chosenDirectory/data.xlsx';
+      String filePath = '$chosenDirectory/$name.xlsx';
 
       // Save the Excel file
       File file = File(filePath);

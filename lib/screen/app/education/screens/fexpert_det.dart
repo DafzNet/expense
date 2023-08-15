@@ -4,11 +4,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:expense/firebase/db/fexpert/likes.dart';
 import 'package:expense/models/fexpert_like.dart';
 import 'package:expense/models/user_model.dart';
+import 'package:expense/screen/app/education/widgets/comment_tile.dart';
 import 'package:expense/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../../../dbs/fexpert.dart';
 import '../../../../dbs/fxlikes.dart';
@@ -255,45 +257,53 @@ class _FexpertDetailScreenState extends State<FexpertDetailScreen> {
                                   ),
                         
                         
-                                  SizedBox(width: 20,),
+                                  // SizedBox(width: 20,),
                         
-                                  GestureDetector(
-                                    onTap: () {
-                                      setState(() {
+                                  // GestureDetector(
+                                  //   onTap: () {
+                                  //     setState(() {
                                         
-                                        _height = 70;
-                                      });
-                                      _focus.requestFocus();
-                                    },
-                                    child: Row(
-                                        children: [
-                                          const Icon(
-                                            MdiIcons.chatOutline,
-                                            size: 18,
-                                          ),
+                                  //       _height = 70;
+                                  //     });
+                                  //     _focus.requestFocus();
+                                  //   },
+                                  //   child: Row(
+                                  //       children: [
+                                  //         const Icon(
+                                  //           MdiIcons.chatOutline,
+                                  //           size: 18,
+                                  //         ),
                                     
-                                          const SizedBox(width: 3,), 
+                                  //         const SizedBox(width: 3,), 
                                     
-                                          Text(
-                                            (3).toString(),
+                                  //         Text(
+                                  //           (3).toString(),
                                     
-                                            style: const TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.bold
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                  ),
+                                  //           style: const TextStyle(
+                                  //             fontSize: 14,
+                                  //             fontWeight: FontWeight.bold
+                                  //           ),
+                                  //         ),
+                                  //       ],
+                                  //     ),
+                                  // ),
                                 ],
                               ),
                         
                         
                               Row(
                                 children: [
-                                  const Icon(
-                                    MdiIcons.share,
-                                    size: 24,
+                                  GestureDetector(
+                                    onTap:()async{
+                                      await Share.share(
+                                       '${widget.fexpert.poster.firstName} ${widget.fexpert.poster.lastName}\n${DateFormat.yMMMEd().format(widget.fexpert.date)}' +widget.fexpert.body+'\nGet more from LiFi App',
+                                        subject: widget.fexpert.topic
+                                      );
+                                    },
+                                    child: const Icon(
+                                      MdiIcons.share,
+                                      size: 24,
+                                    ),
                                   ),
                         
                                   if(widget.fexpert.poster == widget.user)...
@@ -345,6 +355,8 @@ class _FexpertDetailScreenState extends State<FexpertDetailScreen> {
                               
                             ],
                           ),
+
+                          //CommentTile(),
                         
                           const SizedBox(height: 50,)
                     ],

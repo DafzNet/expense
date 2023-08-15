@@ -74,7 +74,7 @@ void main() async{
     )
   );
 
-  FlutterBackgroundService().startService();
+  // FlutterBackgroundService().startService();
 }
 
 class MyApp extends StatefulWidget {
