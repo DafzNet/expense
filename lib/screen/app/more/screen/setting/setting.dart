@@ -4,8 +4,10 @@
 
 import 'package:expense/dbs/settings.dart';
 import 'package:expense/providers/settings_provider.dart';
+import 'package:expense/screen/auth/pinscreen.dart';
 import 'package:expense/utils/constants/colors.dart';
 import 'package:expense/utils/currency/currency.dart';
+import 'package:page_transition/page_transition.dart';
 //import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:expense/utils/settings/settings.dart';
@@ -655,6 +657,39 @@ class _SettingScreenState extends State<SettingScreen> {
 
               subtitle: const Text(
                 'Set a reminder to record your daily financial flow'
+              ),
+
+              
+            ),
+
+
+
+            ListTile(
+              onTap: () async{
+                Navigator.push(
+                  context,
+                  PageTransition(
+                    child: PinScreen(),
+                    type: PageTransitionType.fade
+                  )
+                );
+
+              },
+              title: const Text(
+                'Security'
+              ),
+
+              subtitle: const Text(
+                'Request a pin before access - turn on'
+              ),
+
+              trailing: Text(
+                'OFF',
+
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold
+                ),
               ),
 
               

@@ -12,6 +12,14 @@ const String lifiIcon = 'assets/icons/still/lifi.png';
 const String googleIcon = 'assets/icons/still/google.png';
 
 
+const String v1 = 'assets/lock/vee.jpg';
+const String v2 = 'assets/lock/vee2.jpg';
+const String d1 = 'assets/lock/deb.jpg';
+const String d2 = 'assets/lock/deb2.jpg';
+const String c1 = 'assets/lock/css.jpg';
+const String c2 = 'assets/lock/cs.png';
+
+
 const String boardOne = 'assets/icons/anim/onboarder1.gif';
 const String boardTwo = 'assets/icons/anim/onboarder2.gif';
 const String boardThree = 'assets/icons/anim/onboarder3.gif';

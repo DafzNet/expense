@@ -296,7 +296,7 @@ class _FexpertDetailScreenState extends State<FexpertDetailScreen> {
                                   GestureDetector(
                                     onTap:()async{
                                       await Share.share(
-                                       '${widget.fexpert.poster.firstName} ${widget.fexpert.poster.lastName}\n${DateFormat.yMMMEd().format(widget.fexpert.date)}' +widget.fexpert.body+'\nGet more from LiFi App',
+                                       '${widget.fexpert.poster.firstName} ${widget.fexpert.poster.lastName}\n${DateFormat.yMMMEd().format(widget.fexpert.date)}\n\n${widget.fexpert.topic}\n\n' +widget.fexpert.body+'\nGet more from LiFi App',
                                         subject: widget.fexpert.topic
                                       );
                                     },

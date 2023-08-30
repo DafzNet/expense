@@ -10,7 +10,6 @@ class LightUser {
   String? dp;
   String? motif;
 
-
   LightUser({
     required this.id,
     required this.firstName,

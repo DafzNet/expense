@@ -53,6 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
 ///////Google ads
  BannerAd? _bannerAd;
+ NativeAd? _nativeAd;
 
 
 ////////////////////////////////////////////////////
@@ -134,6 +135,22 @@ class _HomeScreenState extends State<HomeScreen> {
         
       });
     }
+
+
+
+  // MobileAds.initialize();
+
+  // // Create an ad unit for native ads.
+  // final adUnitId = 'ca-app-pub-6035268765330115/8990277272';
+
+  // // Create a NativeAd object and load it with an ad request.
+  // final nativeAd = NativeAd(
+  //   adUnitId: adUnitId,
+  //   request: AdRequest(),
+  // );
+
+
+
 
   @override
   void initState() {
@@ -516,16 +533,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       )),
                     ),
                   )
+                ],
 
-                ]
-
-
-
-              
-        
-        
-        
-        
             ],
           ),
         ),

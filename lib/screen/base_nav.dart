@@ -50,7 +50,9 @@ class _AppBaseNavigationState extends State<AppBaseNavigation> {
         user: widget.user,
         user2: _currentUser,
       ),
+      Scaffold(),
       ExpenseScreen(),
+      
       SavingsScreen(),
       Fexperts(
         user: _currentUser!,
@@ -84,7 +86,7 @@ class _AppBaseNavigationState extends State<AppBaseNavigation> {
     listener: BannerAdListener(
       onAdLoaded: (ad) {
         setState(() {
-          for (var i = 0; i < 5; i++) {
+          for (var i = 0; i < 6; i++) {
             _bannerAd.add(ad as BannerAd);
           }
         });
@@ -149,6 +151,19 @@ class _AppBaseNavigationState extends State<AppBaseNavigation> {
             ),
       
             label: 'Home'
+          ),
+
+
+          BottomNavigationBarItem(
+            icon: Icon(
+              MdiIcons.homeOutline
+            ),
+
+            activeIcon: Icon(
+              MdiIcons.home
+            ),
+      
+            label: 'Sales'
           ),
 
           
