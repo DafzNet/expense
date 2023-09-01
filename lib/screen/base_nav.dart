@@ -50,7 +50,7 @@ class _AppBaseNavigationState extends State<AppBaseNavigation> {
         user: widget.user,
         user2: _currentUser,
       ),
-      Scaffold(),
+      // Scaffold(),
       ExpenseScreen(),
       
       SavingsScreen(),
@@ -154,17 +154,17 @@ class _AppBaseNavigationState extends State<AppBaseNavigation> {
           ),
 
 
-          BottomNavigationBarItem(
-            icon: Icon(
-              MdiIcons.homeOutline
-            ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(
+          //     MdiIcons.homeOutline
+          //   ),
 
-            activeIcon: Icon(
-              MdiIcons.home
-            ),
+          //   activeIcon: Icon(
+          //     MdiIcons.home
+          //   ),
       
-            label: 'Sales'
-          ),
+          //   label: 'Sales'
+          // ),
 
           
           /////Chat
