@@ -16,8 +16,13 @@ class FirebaseUserDb{
 
 
   Future<LightUser?> getUserData()async{
-    DocumentSnapshot _doc = await users.doc(uid).get(const GetOptions(source: Source.cache));
-    Map<String, dynamic> docUser = _doc.data() as Map<String, dynamic>;
+    DocumentSnapshot? _doc;
+    try {
+      _doc = await users.doc(uid).get(const GetOptions(source: Source.cache));
+    } catch (e) {
+      DocumentSnapshot _doc = await users.doc(uid).get(const GetOptions(source: Source.serverAndCache));
+    }
+    Map<String, dynamic> docUser = _doc!.data() as Map<String, dynamic>;
 
     return LightUser.fromMap(docUser);
   }

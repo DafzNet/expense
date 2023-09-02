@@ -8,6 +8,7 @@ class SettingsObj {
   String currencySymbolPosition;
 
   DateTime? reminder;
+  bool pin;
 
 
   SettingsObj({
@@ -16,6 +17,7 @@ class SettingsObj {
     this.currencySymbol = '₦',
     this.currencySymbolPosition = 'Left',
     this.reminder,
+    this.pin = false
   });
 
   @override
@@ -24,15 +26,17 @@ class SettingsObj {
       currencyCode.hashCode ^
       currencySymbol.hashCode ^
       currencySymbolPosition.hashCode ^
-      reminder.hashCode;
+      reminder.hashCode ^
+      pin.hashCode;
   }
 
   SettingsObj copyWith({
-    dynamic id,
+    dynamic? id,
     String? currencyCode,
     String? currencySymbol,
     String? currencySymbolPosition,
     DateTime? reminder,
+    bool? pin,
   }) {
     return SettingsObj(
       id: id ?? this.id,
@@ -40,6 +44,7 @@ class SettingsObj {
       currencySymbol: currencySymbol ?? this.currencySymbol,
       currencySymbolPosition: currencySymbolPosition ?? this.currencySymbolPosition,
       reminder: reminder ?? this.reminder,
+      pin: pin ?? this.pin,
     );
   }
 
@@ -50,6 +55,7 @@ class SettingsObj {
       currencySymbol: map['currencySymbol'] as String,
       currencySymbolPosition: map['currencySymbolPosition'] as String,
       reminder: map['reminder'] != null ? DateTime.fromMillisecondsSinceEpoch(map['reminder'] as int) : null,
+      pin: map['pin']??false as bool,
     );
   }
 
@@ -62,6 +68,7 @@ class SettingsObj {
       'currencySymbol': currencySymbol,
       'currencySymbolPosition': currencySymbolPosition,
       'reminder': reminder?.millisecondsSinceEpoch,
+      'pin': pin,
     };
   }
 
@@ -69,7 +76,7 @@ class SettingsObj {
 
   @override
   String toString() {
-    return 'SettingsObj(id: $id, currencyCode: $currencyCode, currencySymbol: $currencySymbol, currencySymbolPosition: $currencySymbolPosition, reminder: $reminder)';
+    return 'SettingsObj(id: $id, currencyCode: $currencyCode, currencySymbol: $currencySymbol, currencySymbolPosition: $currencySymbolPosition, reminder: $reminder, pin: $pin)';
   }
 
   @override
@@ -77,10 +84,6 @@ class SettingsObj {
     if (identical(this, other)) return true;
   
     return 
-      other.id == id &&
-      other.currencyCode == currencyCode &&
-      other.currencySymbol == currencySymbol &&
-      other.currencySymbolPosition == currencySymbolPosition &&
-      other.reminder == reminder;
+      other.id == id;
   }
 }

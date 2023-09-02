@@ -2,12 +2,14 @@
 
 // ignore_for_file: prefer_const_constructors, use_build_context_synchronously, no_leading_underscores_for_local_identifiers, unused_local_variable
 
+import 'package:expense/dbs/pin.dart';
 import 'package:expense/dbs/settings.dart';
 import 'package:expense/providers/settings_provider.dart';
 import 'package:expense/screen/auth/pinscreen.dart';
 import 'package:expense/utils/constants/colors.dart';
 import 'package:expense/utils/currency/currency.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 //import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:expense/utils/settings/settings.dart';
@@ -19,6 +21,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:provider/provider.dart';
 
 import '../../../../../dbs/category_db.dart';
+import '../../../../../models/pin_model.dart';
 
 //com.light.cashflowpad
 
@@ -327,8 +330,6 @@ class _SettingScreenState extends State<SettingScreen> {
                         currencyCode: currencyCode,
                         currencySymbolPosition: currencySymbolPos
                       );
-
-                
 
                       Provider.of<SettingsProvider>(context, listen: false).changeSettings(newSetting);
                         await settingsDb.addData(newSetting);
@@ -658,18 +659,88 @@ class _SettingScreenState extends State<SettingScreen> {
               subtitle: const Text(
                 'Set a reminder to record your daily financial flow'
               ),
-
-              
             ),
-
-
 
             ListTile(
               onTap: () async{
                 Navigator.push(
                   context,
                   PageTransition(
-                    child: PinScreen(),
+                    child: PinScreen(
+                      header: 'Set Your Security Pin',
+
+                      onCompleted: (pin, ctx) async {
+                        SharedPreferences pref = await SharedPreferences.getInstance();
+                        await pref.setString('pin', pin);
+
+                        Navigator.pushReplacement(
+                          context,
+                          PageTransition(
+                            child: PinScreen(
+                              header: 'Confirm Pin',
+
+                              onCompleted: (p, ctx) async{
+                                SharedPreferences pref = await SharedPreferences.getInstance();
+                                String? _pin = await pref.getString('pin');
+
+                                if (_pin == p) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    financeSnackBar('Pin successfully set')
+                                  );
+
+                                  PinDb pinDb = PinDb();
+                                  SettingsDb settingsDb = SettingsDb();
+                                  Pin pin = Pin(p);
+
+                                  await pinDb.commit(pin);
+
+
+                                  final settings = await settingsDb.retrieveData();
+                                  SettingsObj? setting;
+
+                                  if (settings.isNotEmpty) {
+                                    setting = settings.last;
+                                  } else {
+                                    
+                                  }
+
+                                  if(settings.isNotEmpty){
+
+                                    final nSet = setting!.copyWith(
+                                      pin: true
+                                    );
+
+                                    Provider.of<SettingsProvider>(context, listen: false).changeSettings(nSet);
+                                    await settingsDb.updateData(nSet);
+
+                                  }else{
+                                    
+                                    final id = DateTime.now().millisecondsSinceEpoch;
+
+                                    final nSet = SettingsObj(
+                                      pin: true,
+                                      id: id,
+                                    );
+
+                                    Provider.of<SettingsProvider>(context, listen: false).changeSettings(nSet);
+                                    await settingsDb.addData(nSet);
+                                  }
+
+
+                                  Navigator.pop(context);
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    financeSnackBar('Pin does not match, try again')
+                                  );
+                                }
+                                
+                              },
+                            ),
+                            type: PageTransitionType.fade
+                          )
+                        );
+                      },
+                    ),
                     type: PageTransitionType.fade
                   )
                 );
@@ -683,12 +754,17 @@ class _SettingScreenState extends State<SettingScreen> {
                 'Request a pin before access - turn on'
               ),
 
-              trailing: Text(
-                'OFF',
-
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold
+              trailing: Container(
+                padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                color: Provider.of<SettingsProvider>(context, listen: false).mySettings.pin?Colors.green:Colors.grey,
+                child: Text(
+                  Provider.of<SettingsProvider>(context, listen: false).mySettings.pin?'ON':'OFF',
+              
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Provider.of<SettingsProvider>(context, listen: false).mySettings.pin?Colors.white:Colors.black,
+                    fontWeight: FontWeight.bold
+                  ),
                 ),
               ),
 
