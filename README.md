@@ -54,12 +54,27 @@ Lifi is a comprehensive personal finance management app built with Flutter and F
 - Visualize spending patterns and identify areas for improvement
 
 ### 6. Financial Statement Export
-![Export Screenshot](path/to/export.png)
+
+<p float="left">
+  <img src="statement1.png" width="48%" />
+  <img src="statement%202.png" width="48%" /> 
+</p>
+
+<p float="left">
+  <img src="generated%20pdf.png" width="48%" />
+</p>
+
 - Generate and export professional-looking financial statements as PDFs
 - Easily share with accountants or financial advisors
 
 ### 7. Smart Purchase Planner
-![Planner Screenshot](path/to/planner.png)
+
+<p float="left">
+  <img src="planners%20home.png" width="48%" />
+  <img src="plannerdetail.png" width="48%" /> 
+</p>
+
+
 - Plan future purchases and receive intelligent recommendations
 - Make informed buying decisions aligned with financial goals
 
