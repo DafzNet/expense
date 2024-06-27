@@ -1,6 +1,6 @@
 # Lifi - Your Ultimate Financial Companion
 
-![Lifi Logo](me.png)
+![Lifi Logo](me.jpg)
 
 Lifi is a comprehensive personal finance management app built with Flutter and Firebase. Designed to empower users to take control of their finances and achieve their financial goals, Lifi offers an intuitive interface and powerful features catering to users of all financial backgrounds.
 
