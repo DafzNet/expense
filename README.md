@@ -39,7 +39,17 @@ Lifi is a comprehensive personal finance management app built with Flutter and F
 - Generate reports to help stick to budgetary goals
 
 ### 5. Reports and Visualization
-![Reports Screenshot](path/to/reports.png)
+
+<p float="left">
+  <img src="report%20income.png" width="48%" />
+  <img src="report%20expenses.png" width="48%" /> 
+</p>
+
+<p float="left">
+  <img src="report%20income%202.png" width="48%" />
+  <img src="report%20budget.png" width="48%" /> 
+</p>
+
 - Gain insights through detailed financial reports
 - Visualize spending patterns and identify areas for improvement
 
