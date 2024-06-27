@@ -15,6 +15,12 @@ Lifi is a comprehensive personal finance management app built with Flutter and F
 
 ### 2. Income Tracking
 ![Income Tracking Screenshot](income_screen.png)
+
+<p float="left">
+  <img src="income%20screen.png" width="48%" />
+  <img src="income%20details.png" width="48%" /> 
+</p>
+
 - Monitor various income sources (salary, freelance, investments)
 - Maintain a complete overview of financial inflows
 
