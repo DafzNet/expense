@@ -1,16 +1,64 @@
-# expense
+# Lifi - Your Ultimate Financial Companion
 
-A new Flutter project.
+![Lifi Logo](path/to/logo.png)
+
+Lifi is a comprehensive personal finance management app built with Flutter and Firebase. Designed to empower users to take control of their finances and achieve their financial goals, Lifi offers an intuitive interface and powerful features catering to users of all financial backgrounds.
+
+## Key Features
+
+### 1. Expense Tracking
+![Expense Tracking Screenshot](path/to/expense_tracking.png)
+- Record and categorize daily and recurring expenses
+- Gain clear insights into spending patterns
+
+### 2. Income Tracking
+![Income Tracking Screenshot](path/to/income_tracking.png)
+- Monitor various income sources (salary, freelance, investments)
+- Maintain a complete overview of financial inflows
+
+### 3. Targeted Savings
+![Targeted Savings Screenshot](path/to/targeted_savings.png)
+- Set and visualize financial goals
+- Track progress towards savings targets
+
+### 4. Budgeting
+![Budgeting Screenshot](path/to/budgeting.png)
+- Create customized budgets for different categories
+- Set spending limits with real-time notifications
+- Generate reports to help stick to budgetary goals
+
+### 5. Reports and Visualization
+![Reports Screenshot](path/to/reports.png)
+- Gain insights through detailed financial reports
+- Visualize spending patterns and identify areas for improvement
+
+### 6. Financial Statement Export
+![Export Screenshot](path/to/export.png)
+- Generate and export professional-looking financial statements as PDFs
+- Easily share with accountants or financial advisors
+
+### 7. Smart Purchase Planner
+![Planner Screenshot](path/to/planner.png)
+- Plan future purchases and receive intelligent recommendations
+- Make informed buying decisions aligned with financial goals
+
+## Tech Stack
+
+- Frontend: Flutter
+- Backend: Firebase
+- Database: Cloud Firestore
+- Authentication: Firebase Authentication
+- Cloud Functions: Firebase Cloud Functions
+- Analytics: Firebase Analytics
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+### Prerequisites
 
-A few resources to get you started if this is your first Flutter project:
+- Flutter SDK
+- Dart SDK
+- Firebase account and project set up
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### Installation
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+1. Clone the repository:
