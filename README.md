@@ -7,7 +7,9 @@ Lifi is a comprehensive personal finance management app built with Flutter and F
 ## Key Features
 
 ### 1. Expense Tracking
-![Expense Tracking Screenshot](path/to/expense_tracking.png)
+![Expense Tracking Screenshot](expenses.png)
+
+![Expense Detail_Screenshot](expenses details.png)
 - Record and categorize daily and recurring expenses
 - Gain clear insights into spending patterns
 
